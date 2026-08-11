@@ -79,11 +79,23 @@ export default function WhatsAppConnect() {
     );
   };
 
+  const handleDisconnect = async () => {
+    if (!confirm('Disconnect WhatsApp? You can reconnect anytime.')) return;
+    try {
+      await businessApi.disconnectWhatsApp();
+      setWaStatus(null);
+      setStatus('idle');
+    } catch (err) {
+      setErrorMsg(err.response?.data?.message ?? 'Failed to disconnect');
+    }
+  };
+
   if (waStatus) {
     return (
       <ConnectedState
         displayPhone={waStatus.displayPhone}
         onContinue={() => navigate('/dashboard')}
+        onDisconnect={handleDisconnect}
       />
     );
   }
@@ -189,7 +201,7 @@ export default function WhatsAppConnect() {
   );
 }
 
-function ConnectedState({ displayPhone, onContinue }) {
+function ConnectedState({ displayPhone, onContinue, onDisconnect }) {
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
       <div className="text-center max-w-sm">
@@ -199,12 +211,20 @@ function ConnectedState({ displayPhone, onContinue }) {
         <h1 className="text-xl font-semibold text-gray-900 mb-2">WhatsApp already connected</h1>
         <p className="text-gray-500 text-sm mb-2">{displayPhone}</p>
         <p className="text-gray-400 text-sm mb-6">Your AI is active and handling customer messages.</p>
-        <button
-          onClick={onContinue}
-          className="px-6 py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-medium rounded-xl transition-colors"
-        >
-          Go to dashboard
-        </button>
+        <div className="flex flex-col gap-2">
+          <button
+            onClick={onContinue}
+            className="px-6 py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-medium rounded-xl transition-colors"
+          >
+            Go to dashboard
+          </button>
+          <button
+            onClick={onDisconnect}
+            className="px-6 py-2.5 border border-gray-300 text-gray-600 hover:bg-gray-50 font-medium rounded-xl transition-colors"
+          >
+            Disconnect
+          </button>
+        </div>
       </div>
     </div>
   );

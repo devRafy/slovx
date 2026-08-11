@@ -61,6 +61,60 @@ export const getLeads = asyncHandler(async (req, res) => {
   sendSuccess(res, { leads, total, page, limit });
 });
 
+export const getConversations = asyncHandler(async (req, res) => {
+  const sid = req.subscriber.id;
+
+  const conversations = await db.conversation.findMany({
+    where:   { subscriberId: sid },
+    orderBy: { updatedAt: 'desc' },
+    select: {
+      id: true,
+      customerPhone: true,
+      messages: true,
+      stage: true,
+      updatedAt: true,
+      lead: { select: { customerName: true, status: true } },
+    },
+  });
+
+  const summaries = conversations.map((c) => {
+    const msgs = Array.isArray(c.messages) ? c.messages : [];
+    const last = msgs[msgs.length - 1];
+    return {
+      id:            c.id,
+      customerPhone: c.customerPhone,
+      customerName:  c.lead?.customerName ?? null,
+      status:        c.lead?.status ?? 'LEAD',
+      stage:         c.stage,
+      lastMessage:   last?.content ?? null,
+      lastRole:      last?.role ?? null,
+      lastAt:        last?.timestamp ?? c.updatedAt,
+      messageCount:  msgs.length,
+    };
+  });
+
+  sendSuccess(res, summaries);
+});
+
+export const getConversationMessages = asyncHandler(async (req, res) => {
+  const sid = req.subscriber.id;
+  const { phone } = req.params;
+
+  const conversation = await db.conversation.findFirst({
+    where: { subscriberId: sid, customerPhone: phone },
+    select: {
+      id: true,
+      customerPhone: true,
+      messages: true,
+      stage: true,
+      updatedAt: true,
+      lead: { select: { customerName: true, status: true } },
+    },
+  });
+
+  sendSuccess(res, conversation);
+});
+
 export const getLeadDetail = asyncHandler(async (req, res) => {
   const sid   = req.subscriber.id;
   const { phone } = req.params;

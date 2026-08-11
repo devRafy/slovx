@@ -18,8 +18,12 @@ export const connectWhatsApp = asyncHandler(async (req, res) => {
   const accessToken  = await exchangeCodeForToken(code);
   const { wabaId, phoneNumberId, displayPhone } = await fetchWabaDetails(accessToken);
 
-  // Register our webhook for this phone number
-  await subscribeWebhook(phoneNumberId, accessToken);
+  // Register our webhook against the WABA (non-fatal — if it fails, connection still saves)
+  try {
+    await subscribeWebhook(wabaId, accessToken);
+  } catch (err) {
+    console.warn('[whatsapp] webhook subscription failed:', err.message);
+  }
 
   // Check if another subscriber already has this number
   const existing = await db.whatsappConnection.findUnique({ where: { phoneNumberId } });

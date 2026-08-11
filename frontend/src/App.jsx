@@ -8,6 +8,7 @@ import WhatsAppConnect from './pages/onboarding/WhatsAppConnect.jsx';
 import Overview      from './pages/dashboard/Overview.jsx';
 import Leads         from './pages/dashboard/Leads.jsx';
 import LeadDetail    from './pages/dashboard/LeadDetail.jsx';
+import Chats         from './pages/dashboard/Chats.jsx';
 import Layout        from './components/layout/Layout.jsx';
 import Privacy       from './pages/legal/Privacy.jsx';
 import Terms         from './pages/legal/Terms.jsx';
@@ -41,6 +42,7 @@ export default function App() {
         {/* Dashboard — requires auth */}
         <Route path="/dashboard" element={<PrivateRoute><Layout /></PrivateRoute>}>
           <Route index         element={<Overview />} />
+          <Route path="chats"  element={<Chats />} />
           <Route path="leads"  element={<Leads />} />
           <Route path="leads/:phone" element={<LeadDetail />} />
         </Route>

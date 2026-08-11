@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { businessApi } from '../../api/business.api.js';
-import { Zap, Plus, Trash2 } from 'lucide-react';
+import { Zap, Plus, Trash2, Loader2 } from 'lucide-react';
 
 const TIMEZONES = [
   'Asia/Karachi', 'Asia/Dubai', 'Asia/Kolkata', 'Asia/Riyadh',
@@ -31,6 +31,7 @@ const PERSONALITIES = [
 export default function BusinessSetup() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [fetching, setFetching] = useState(true);
   const [error, setError] = useState('');
   const [form, setForm] = useState({
     companyName: '',
@@ -42,6 +43,35 @@ export default function BusinessSetup() {
     aiPersonality: 'professional',
     products: [blankProduct()],
   });
+
+  // Pre-fill form with existing config if the user has already saved one
+  useEffect(() => {
+    businessApi.getConfig()
+      .then(({ data }) => {
+        const cfg = data.data;
+        if (!cfg) return;
+        setForm({
+          companyName:    cfg.companyName    ?? '',
+          industry:       cfg.industry       ?? '',
+          discountPolicy: cfg.discountPolicy ?? '',
+          refundPolicy:   cfg.refundPolicy   ?? '',
+          calendarLink:   cfg.calendarLink   ?? '',
+          timezone:       cfg.timezone       ?? 'Asia/Karachi',
+          aiPersonality:  cfg.aiPersonality  ?? 'professional',
+          products: Array.isArray(cfg.products) && cfg.products.length > 0
+            ? cfg.products.map((p) => ({
+                name:         p.name         ?? '',
+                price:        p.price        ?? '',
+                billingCycle: p.billingCycle ?? 'monthly',
+                description:  p.description  ?? '',
+                features:     Array.isArray(p.features) ? p.features.join(', ') : (p.features ?? ''),
+              }))
+            : [blankProduct()],
+        });
+      })
+      .catch(() => {})
+      .finally(() => setFetching(false));
+  }, []);
 
   const set = (key, val) => setForm((f) => ({ ...f, [key]: val }));
 
@@ -80,6 +110,14 @@ export default function BusinessSetup() {
       setLoading(false);
     }
   };
+
+  if (fetching) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 py-10 px-4">

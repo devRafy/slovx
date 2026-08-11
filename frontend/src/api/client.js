@@ -1,7 +1,13 @@
 import axios from 'axios';
 import { useAuthStore } from '../store/auth.store.js';
 
-const client = axios.create({ baseURL: '/api' });
+// VITE_API_URL points to the backend (Railway URL in prod). In dev, empty string
+// means requests go through Vite's proxy at /api → localhost:4000.
+const API_BASE = import.meta.env.VITE_API_URL
+  ? `${import.meta.env.VITE_API_URL.replace(/\/$/, '')}/api`
+  : '/api';
+
+const client = axios.create({ baseURL: API_BASE });
 
 // Attach access token to every request
 client.interceptors.request.use((config) => {
@@ -19,7 +25,7 @@ client.interceptors.response.use(
       original._retry = true;
       try {
         const { refreshToken } = useAuthStore.getState();
-        const { data } = await axios.post('/api/auth/refresh', { refreshToken });
+        const { data } = await axios.post(`${API_BASE}/auth/refresh`, { refreshToken });
         useAuthStore.getState().setTokens(data.data.accessToken, data.data.refreshToken);
         original.headers.Authorization = `Bearer ${data.data.accessToken}`;
         return client(original);
