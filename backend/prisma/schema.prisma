@@ -1,0 +1,189 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ─────────────────────────────────────────────
+// Subscriber — the business owner using your platform
+// ─────────────────────────────────────────────
+model Subscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  plan      Plan     @default(TRIAL)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  businessConfig     BusinessConfig?
+  whatsappConnection WhatsappConnection?
+  conversations      Conversation[]
+  leads              Lead[]
+  guardrailLogs      GuardrailLog[]
+  refreshTokens      RefreshToken[]
+
+  @@map("subscribers")
+}
+
+enum Plan {
+  TRIAL
+  STARTER
+  PRO
+}
+
+// ─────────────────────────────────────────────
+// BusinessConfig — the subscriber's company info
+// Xavier uses this as its "brain config" per tenant
+// ─────────────────────────────────────────────
+model BusinessConfig {
+  id           String   @id @default(cuid())
+  subscriberId String   @unique
+  subscriber   Subscriber @relation(fields: [subscriberId], references: [id], onDelete: Cascade)
+
+  companyName    String
+  industry       String
+  products       Json     // Product[]
+  discountPolicy String
+  refundPolicy   String
+  calendarLink   String?
+  ownerPhone     String?
+  timezone       String   @default("Asia/Karachi")
+  aiPersonality  String   @default("professional") // professional | friendly | formal
+
+  isComplete Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("business_configs")
+}
+
+// ─────────────────────────────────────────────
+// WhatsappConnection — subscriber's Meta API credentials
+// ─────────────────────────────────────────────
+model WhatsappConnection {
+  id           String   @id @default(cuid())
+  subscriberId String   @unique
+  subscriber   Subscriber @relation(fields: [subscriberId], references: [id], onDelete: Cascade)
+
+  phoneNumberId  String  @unique // Meta's phone_number_id — used for routing
+  wabaId         String           // WhatsApp Business Account ID
+  accessToken    String           // AES-256 encrypted
+  displayPhone   String           // Human-readable phone number
+  isActive       Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("whatsapp_connections")
+}
+
+// ─────────────────────────────────────────────
+// Conversation — one per (subscriber, customer phone)
+// ─────────────────────────────────────────────
+model Conversation {
+  id           String   @id @default(cuid())
+  subscriberId String
+  subscriber   Subscriber @relation(fields: [subscriberId], references: [id], onDelete: Cascade)
+
+  customerPhone String
+  messages      Json     @default("[]") // Message[]
+  stage         Stage    @default(QUALIFICATION)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  lead Lead?
+
+  @@unique([subscriberId, customerPhone])
+  @@index([subscriberId])
+  @@map("conversations")
+}
+
+enum Stage {
+  QUALIFICATION
+  NEGOTIATION
+  CLOSED
+}
+
+// ─────────────────────────────────────────────
+// Lead — CRM record per customer contact
+// ─────────────────────────────────────────────
+model Lead {
+  id             String   @id @default(cuid())
+  subscriberId   String
+  subscriber     Subscriber @relation(fields: [subscriberId], references: [id], onDelete: Cascade)
+  conversationId String   @unique
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  customerPhone String
+  customerName  String?
+  email         String?
+  status        LeadStatus @default(LEAD)
+  sentiment     Float?
+  buyingIntent  Float?
+  notes         String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([subscriberId, status])
+  @@index([subscriberId])
+  @@map("leads")
+}
+
+enum LeadStatus {
+  LEAD
+  QUALIFIED
+  CLOSED
+  LOST
+}
+
+// ─────────────────────────────────────────────
+// GuardrailLog — safety & compliance audit trail
+// ─────────────────────────────────────────────
+model GuardrailLog {
+  id           String   @id @default(cuid())
+  subscriberId String
+  subscriber   Subscriber @relation(fields: [subscriberId], references: [id], onDelete: Cascade)
+
+  customerPhone   String?
+  alertType       AlertType
+  flaggedInput    String?
+  blockedResponse String?
+
+  createdAt DateTime @default(now())
+
+  @@index([subscriberId])
+  @@index([subscriberId, alertType])
+  @@map("guardrail_logs")
+}
+
+enum AlertType {
+  HALLUCINATION
+  POLICY_VIOLATION
+  COMPLEXITY_HANDOFF
+  LOW_CONFIDENCE_HANDOFF
+  DELIVERY_FAILURE
+}
+
+// ─────────────────────────────────────────────
+// RefreshToken — JWT refresh token rotation
+// ─────────────────────────────────────────────
+model RefreshToken {
+  id           String   @id @default(cuid())
+  subscriberId String
+  subscriber   Subscriber @relation(fields: [subscriberId], references: [id], onDelete: Cascade)
+
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([subscriberId])
+  @@map("refresh_tokens")
+}
