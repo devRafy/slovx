@@ -1,13 +1,14 @@
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, MessageSquare, Users, Settings, LogOut, Zap } from 'lucide-react';
+import { LayoutDashboard, MessageSquare, Users, Settings, CreditCard, LogOut, Zap } from 'lucide-react';
 import { useAuthStore } from '../../store/auth.store.js';
 import { authApi } from '../../api/auth.api.js';
 
 const navItems = [
-  { to: '/dashboard',            label: 'Overview', icon: LayoutDashboard, end: true },
-  { to: '/dashboard/chats',      label: 'Chats',    icon: MessageSquare },
-  { to: '/dashboard/leads',      label: 'Leads',    icon: Users },
-  { to: '/onboarding/business',  label: 'Settings', icon: Settings },
+  { to: '/dashboard',           label: 'Overview', icon: LayoutDashboard, end: true },
+  { to: '/dashboard/chats',     label: 'Chats',    icon: MessageSquare },
+  { to: '/dashboard/leads',     label: 'Leads',    icon: Users },
+  { to: '/dashboard/settings',  label: 'Settings', icon: Settings },
+  { to: '/dashboard/billing',   label: 'Billing',  icon: CreditCard },
 ];
 
 export default function Layout() {

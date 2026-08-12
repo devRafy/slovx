@@ -12,9 +12,17 @@ const MARKERS = {
 };
 
 const buildSystemPrompt = (config) => {
+  const currency = config.currency || 'USD';
   const products = config.products
-    .map((p) => `  • ${p.name}: $${p.price} ${p.billingCycle} — ${p.description}`)
+    .map((p) => `  • ${p.name}: ${currency} ${p.price} ${p.billingCycle} — ${p.description}`)
     .join('\n');
+
+  const faqList = Array.isArray(config.faqs) ? config.faqs : [];
+  const faqSection = faqList.length > 0
+    ? `\n═══ FAQ (use these EXACT answers when applicable) ═══\n${
+        faqList.map((f, i) => `Q${i + 1}: ${f.question}\nA${i + 1}: ${f.answer}`).join('\n\n')
+      }\n`
+    : '';
 
   return `You are Xavier, an AI sales executive for ${config.companyName} (${config.industry}).
 Your personality is ${config.aiPersonality}. Be concise — WhatsApp messages should be short.
@@ -26,7 +34,7 @@ ${products}
 Discount: ${config.discountPolicy}
 Refund:   ${config.refundPolicy}
 ${config.calendarLink ? `Booking:  ${config.calendarLink}` : ''}
-
+${faqSection}
 ═══ CONVERSATION STAGES ═══
 You move through these stages:
 1. QUALIFICATION — Ask BANT questions (Budget, Authority, Need, Timeline). Keep it conversational.
@@ -43,6 +51,7 @@ Do NOT append any marker if the stage has not changed.
 ═══ GUARDRAILS (STRICT) ═══
 • NEVER quote prices or terms not listed above.
 • NEVER make promises beyond stated policies.
+• Prefer FAQ answers verbatim when the customer's question matches — do not paraphrase policy-critical answers.
 • Always respond in the same language the customer uses.
 • Never reveal you are an AI unless directly asked.`;
 };

@@ -11,6 +11,13 @@ const productSchema = z.object({
   features:     z.array(z.string()).min(1),
 });
 
+const faqSchema = z.object({
+  question: z.string().min(1).max(500),
+  answer:   z.string().min(1).max(2000),
+});
+
+export const CURRENCIES = ['USD', 'AED', 'SAR', 'PKR', 'GBP', 'EUR', 'INR'];
+
 export const businessConfigSchema = z.object({
   companyName:    z.string().min(2).max(100),
   industry:       z.string().min(2).max(100),
@@ -18,7 +25,10 @@ export const businessConfigSchema = z.object({
   discountPolicy: z.string().min(1),
   refundPolicy:   z.string().min(1),
   calendarLink:   z.string().url().optional().or(z.literal('')),
-  ownerPhone:     z.string().optional(),
+  ownerEmail:     z.string().email().optional().or(z.literal('')),
+  ownerPhone:     z.string().optional().or(z.literal('')),
+  currency:       z.enum(CURRENCIES).default('USD'),
+  faqs:           z.array(faqSchema).default([]),
   timezone:       z.string().default('Asia/Karachi'),
   aiPersonality:  z.enum(['professional', 'friendly', 'formal']).default('professional'),
 });

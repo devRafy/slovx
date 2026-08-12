@@ -67,6 +67,25 @@ export const fetchWabaDetails = async (accessToken) => {
   };
 };
 
+// Register a phone number with WhatsApp Cloud API so it can send/receive messages.
+// Required once per number after Embedded Signup. Idempotent — safe to call again.
+// Meta returns error #133010 "Account not registered" until this runs.
+export const registerPhoneNumber = async (phoneNumberId, accessToken, pin = '123456') => {
+  try {
+    await axios.post(
+      graphUrl(env.META_GRAPH_API_VERSION, `${phoneNumberId}/register`),
+      { messaging_product: 'whatsapp', pin },
+      { headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' } },
+    );
+    return { success: true };
+  } catch (err) {
+    const meta = err.response?.data?.error;
+    // Code 133005 = already registered — treat as success
+    if (meta?.code === 133005) return { success: true, alreadyRegistered: true };
+    return { success: false, error: meta ? `${meta.message} (code ${meta.code})` : err.message };
+  }
+};
+
 // Subscribe our app to the subscriber's WABA so webhooks are delivered here.
 // Endpoint: POST /{waba-id}/subscribed_apps  (NOT phone_number_id)
 export const subscribeWebhook = async (wabaId, accessToken) => {

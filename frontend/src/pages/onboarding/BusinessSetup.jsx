@@ -14,6 +14,16 @@ const INDUSTRIES = [
   'Technology', 'Finance', 'Retail', 'Hospitality', 'Other',
 ];
 
+const CURRENCIES = [
+  { value: 'USD', label: 'USD — US Dollar' },
+  { value: 'AED', label: 'AED — UAE Dirham' },
+  { value: 'SAR', label: 'SAR — Saudi Riyal' },
+  { value: 'PKR', label: 'PKR — Pakistani Rupee' },
+  { value: 'GBP', label: 'GBP — British Pound' },
+  { value: 'EUR', label: 'EUR — Euro' },
+  { value: 'INR', label: 'INR — Indian Rupee' },
+];
+
 const blankProduct = () => ({
   name: '',
   price: '',
@@ -21,6 +31,8 @@ const blankProduct = () => ({
   description: '',
   features: '',
 });
+
+const blankFaq = () => ({ question: '', answer: '' });
 
 const PERSONALITIES = [
   { value: 'professional', label: 'Professional — polished, concise, businesslike' },
@@ -39,6 +51,10 @@ export default function BusinessSetup() {
     discountPolicy: '',
     refundPolicy: '',
     calendarLink: '',
+    ownerEmail: '',
+    ownerPhone: '',
+    currency: 'USD',
+    faqs: [],
     timezone: 'Asia/Karachi',
     aiPersonality: 'professional',
     products: [blankProduct()],
@@ -56,6 +72,10 @@ export default function BusinessSetup() {
           discountPolicy: cfg.discountPolicy ?? '',
           refundPolicy:   cfg.refundPolicy   ?? '',
           calendarLink:   cfg.calendarLink   ?? '',
+          ownerEmail:     cfg.ownerEmail     ?? '',
+          ownerPhone:     cfg.ownerPhone     ?? '',
+          currency:       cfg.currency       ?? 'USD',
+          faqs:           Array.isArray(cfg.faqs) ? cfg.faqs : [],
           timezone:       cfg.timezone       ?? 'Asia/Karachi',
           aiPersonality:  cfg.aiPersonality  ?? 'professional',
           products: Array.isArray(cfg.products) && cfg.products.length > 0
@@ -87,6 +107,18 @@ export default function BusinessSetup() {
   const removeProduct = (i) =>
     setForm((f) => ({ ...f, products: f.products.filter((_, idx) => idx !== i) }));
 
+  const setFaq = (i, key, val) =>
+    setForm((f) => {
+      const faqs = [...f.faqs];
+      faqs[i] = { ...faqs[i], [key]: val };
+      return { ...f, faqs };
+    });
+
+  const addFaq = () => setForm((f) => ({ ...f, faqs: [...f.faqs, blankFaq()] }));
+
+  const removeFaq = (i) =>
+    setForm((f) => ({ ...f, faqs: f.faqs.filter((_, idx) => idx !== i) }));
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -102,6 +134,10 @@ export default function BusinessSetup() {
             .map((f) => f.trim())
             .filter(Boolean),
         })),
+        // Strip empty FAQ rows (users may add-then-abandon)
+        faqs: form.faqs
+          .map((f) => ({ question: f.question.trim(), answer: f.answer.trim() }))
+          .filter((f) => f.question && f.answer),
       });
       navigate('/onboarding/whatsapp');
     } catch (err) {
@@ -182,6 +218,46 @@ export default function BusinessSetup() {
                   {TIMEZONES.map((tz) => <option key={tz}>{tz}</option>)}
                 </select>
               </div>
+              <div>
+                <Label>Currency *</Label>
+                <select
+                  required
+                  value={form.currency}
+                  onChange={(e) => set('currency', e.target.value)}
+                  className={selectCls}
+                >
+                  {CURRENCIES.map((c) => (
+                    <option key={c.value} value={c.value}>{c.label}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </Card>
+
+          <Card title="Owner contact">
+            <p className="text-xs text-gray-500 mb-3">
+              Used for handoff alerts, night-time fallback notifications, and account-critical emails.
+              Keep this different from your public WhatsApp Business number.
+            </p>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label>Owner email</Label>
+                <Input
+                  type="email"
+                  value={form.ownerEmail}
+                  onChange={(e) => set('ownerEmail', e.target.value)}
+                  placeholder="owner@yourcompany.com"
+                />
+              </div>
+              <div>
+                <Label>Owner direct number</Label>
+                <Input
+                  type="tel"
+                  value={form.ownerPhone}
+                  onChange={(e) => set('ownerPhone', e.target.value)}
+                  placeholder="+92 300 1234567"
+                />
+              </div>
             </div>
           </Card>
 
@@ -212,7 +288,7 @@ export default function BusinessSetup() {
                       />
                     </div>
                     <div>
-                      <Label>Price (USD) *</Label>
+                      <Label>Price ({form.currency}) *</Label>
                       <Input
                         type="number"
                         min="0.01"
@@ -263,6 +339,59 @@ export default function BusinessSetup() {
                 className="flex items-center gap-2 text-sm text-brand-600 hover:text-brand-700 font-medium"
               >
                 <Plus className="w-4 h-4" /> Add product
+              </button>
+            </div>
+          </Card>
+
+          <Card title="FAQs / Knowledge base">
+            <p className="text-xs text-gray-500 mb-3">
+              Common questions and their exact answers. Xavier uses these verbatim to avoid hallucination.
+              Example: "Do you ship internationally?" → "Yes, we ship to UAE and USA."
+            </p>
+            <div className="space-y-3">
+              {form.faqs.length === 0 && (
+                <p className="text-sm text-gray-400 italic">
+                  No FAQs added yet. Click "Add FAQ" below to start.
+                </p>
+              )}
+              {form.faqs.map((f, i) => (
+                <div key={i} className="p-4 rounded-lg border border-gray-200 bg-gray-50 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium text-gray-700">FAQ {i + 1}</span>
+                    <button
+                      type="button"
+                      onClick={() => removeFaq(i)}
+                      className="text-gray-400 hover:text-red-500 transition-colors"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                  <div>
+                    <Label>Question</Label>
+                    <Input
+                      value={f.question}
+                      onChange={(e) => setFaq(i, 'question', e.target.value)}
+                      placeholder="Do you offer refunds?"
+                    />
+                  </div>
+                  <div>
+                    <Label>Answer</Label>
+                    <textarea
+                      rows={2}
+                      value={f.answer}
+                      onChange={(e) => setFaq(i, 'answer', e.target.value)}
+                      className={textareaCls}
+                      placeholder="Yes, we offer full refunds within 14 days of purchase."
+                    />
+                  </div>
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={addFaq}
+                className="flex items-center gap-2 text-sm text-brand-600 hover:text-brand-700 font-medium"
+              >
+                <Plus className="w-4 h-4" /> Add FAQ
               </button>
             </div>
           </Card>

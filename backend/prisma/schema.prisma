@@ -12,14 +12,16 @@ datasource db {
 // Subscriber — the business owner using your platform
 // ─────────────────────────────────────────────
 model Subscriber {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  password  String
-  name      String
-  plan      Plan     @default(TRIAL)
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id               String    @id @default(cuid())
+  email            String    @unique
+  password         String
+  name             String
+  plan             Plan      @default(TRIAL)
+  isActive         Boolean   @default(true)
+  botEnabled       Boolean   @default(true)
+  acceptedTermsAt  DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
 
   businessConfig     BusinessConfig?
   whatsappConnection WhatsappConnection?
@@ -52,7 +54,10 @@ model BusinessConfig {
   discountPolicy String
   refundPolicy   String
   calendarLink   String?
+  ownerEmail     String?
   ownerPhone     String?
+  currency       String   @default("USD") // USD | AED | SAR | PKR | GBP | EUR | INR
+  faqs           Json     @default("[]")  // Array<{ question: string, answer: string }>
   timezone       String   @default("Asia/Karachi")
   aiPersonality  String   @default("professional") // professional | friendly | formal
 

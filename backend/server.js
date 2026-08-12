@@ -18,6 +18,9 @@ import whatsappRoutes from './src/routes/whatsapp.routes.js';
 
 const app = express();
 
+// Behind Railway's proxy — trust the first hop so rate-limit + IP logging work correctly.
+app.set('trust proxy', 1);
+
 // ── Security & logging ────────────────────────────────────────
 app.use(helmet());
 app.use(cors({ origin: env.FRONTEND_URL, credentials: true }));

@@ -15,6 +15,9 @@ export const registerSchema = z.object({
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
     'Password must contain uppercase, lowercase, and a number',
   ),
+  acceptTerms: z.literal(true, {
+    errorMap: () => ({ message: 'You must accept the Terms of Service and Privacy Policy' }),
+  }),
 });
 
 export const loginSchema = z.object({
@@ -30,7 +33,7 @@ export const register = asyncHandler(async (req, res) => {
 
   const hashed = await hashPassword(password);
   const subscriber = await db.subscriber.create({
-    data: { name, email, password: hashed },
+    data: { name, email, password: hashed, acceptedTermsAt: new Date() },
     select: { id: true, name: true, email: true, plan: true },
   });
 
@@ -74,7 +77,8 @@ export const me = asyncHandler(async (req, res) => {
   const subscriber = await db.subscriber.findUnique({
     where: { id: req.subscriber.id },
     select: {
-      id: true, name: true, email: true, plan: true, createdAt: true,
+      id: true, name: true, email: true, plan: true,
+      botEnabled: true, acceptedTermsAt: true, createdAt: true,
       businessConfig:     { select: { isComplete: true, companyName: true } },
       whatsappConnection: { select: { displayPhone: true, isActive: true } },
     },

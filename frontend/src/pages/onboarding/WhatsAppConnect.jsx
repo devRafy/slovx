@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { businessApi } from '../../api/business.api.js';
-import { Zap, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
+import { Zap, CheckCircle2, AlertCircle, Loader2, Send } from 'lucide-react';
 
 const META_APP_ID = import.meta.env.VITE_META_APP_ID ?? '';
 
@@ -203,15 +203,20 @@ export default function WhatsAppConnect() {
 
 function ConnectedState({ displayPhone, onContinue, onDisconnect }) {
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
-      <div className="text-center max-w-sm">
-        <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
-          <CheckCircle2 className="w-8 h-8 text-green-600" />
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-10">
+      <div className="max-w-sm w-full">
+        <div className="text-center mb-6">
+          <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
+            <CheckCircle2 className="w-8 h-8 text-green-600" />
+          </div>
+          <h1 className="text-xl font-semibold text-gray-900 mb-2">WhatsApp connected</h1>
+          <p className="text-gray-500 text-sm mb-1">{displayPhone}</p>
+          <p className="text-gray-400 text-sm">Send a test message to confirm everything works.</p>
         </div>
-        <h1 className="text-xl font-semibold text-gray-900 mb-2">WhatsApp already connected</h1>
-        <p className="text-gray-500 text-sm mb-2">{displayPhone}</p>
-        <p className="text-gray-400 text-sm mb-6">Your AI is active and handling customer messages.</p>
-        <div className="flex flex-col gap-2">
+
+        <TestMessagePanel />
+
+        <div className="flex flex-col gap-2 mt-6">
           <button
             onClick={onContinue}
             className="px-6 py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-medium rounded-xl transition-colors"
@@ -227,6 +232,128 @@ function ConnectedState({ displayPhone, onContinue, onDisconnect }) {
         </div>
       </div>
     </div>
+  );
+}
+
+function TestMessagePanel() {
+  const [toPhone, setToPhone] = useState('');
+  const [body, setBody] = useState('');
+  const [state, setState] = useState('idle'); // idle | sending | registering | success | error
+  const [message, setMessage] = useState('');
+
+  const isNotRegisteredError = (msg) => typeof msg === 'string' && msg.includes('133010');
+
+  const doSend = () =>
+    businessApi.sendWhatsAppTestMessage({ toPhone: toPhone.trim(), body: body.trim() });
+
+  const handleSend = async (e) => {
+    e.preventDefault();
+    setMessage('');
+    setState('sending');
+    try {
+      await doSend();
+      setState('success');
+      setMessage('Sent! Check WhatsApp on that number.');
+      return;
+    } catch (err) {
+      const errMsg = err.response?.data?.message ?? '';
+      // If the number wasn't registered with Meta Cloud API yet, auto-register + retry once.
+      if (isNotRegisteredError(errMsg)) {
+        setState('registering');
+        setMessage('Registering number with Meta Cloud API… (one-time step)');
+        try {
+          await businessApi.registerWhatsAppNumber();
+          await doSend();
+          setState('success');
+          setMessage('Number registered and message sent. Check WhatsApp on that number.');
+          return;
+        } catch (regErr) {
+          setState('error');
+          setMessage(regErr.response?.data?.message ?? 'Registration or send failed after retry.');
+          return;
+        }
+      }
+      setState('error');
+      setMessage(errMsg || 'Failed to send. Check the number and try again.');
+    }
+  };
+
+  const handleManualRegister = async () => {
+    setState('registering');
+    setMessage('Registering number with Meta Cloud API…');
+    try {
+      const { data } = await businessApi.registerWhatsAppNumber();
+      setState('success');
+      setMessage(data.message ?? 'Number registered.');
+    } catch (err) {
+      setState('error');
+      setMessage(err.response?.data?.message ?? 'Registration failed.');
+    }
+  };
+
+  return (
+    <form onSubmit={handleSend} className="bg-white rounded-xl border border-gray-200 p-5 space-y-3">
+      <div className="flex items-center gap-2">
+        <Send className="w-4 h-4 text-brand-600" />
+        <h2 className="text-sm font-semibold text-gray-900">Send test message</h2>
+      </div>
+      <div>
+        <label className="block text-xs text-gray-600 mb-1">Recipient number (with country code)</label>
+        <input
+          type="tel"
+          required
+          value={toPhone}
+          onChange={(e) => setToPhone(e.target.value)}
+          placeholder="923001234567"
+          className="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+        />
+        <p className="mt-1 text-[11px] text-gray-400">
+          Digits only, no + sign. On Meta test numbers, the recipient must be in your allowed list.
+        </p>
+      </div>
+      <div>
+        <label className="block text-xs text-gray-600 mb-1">Message (optional)</label>
+        <textarea
+          rows={2}
+          value={body}
+          onChange={(e) => setBody(e.target.value)}
+          placeholder="Leave blank for the default test message"
+          className="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 resize-none"
+        />
+      </div>
+      {message && (
+        <div className={`text-xs px-3 py-2 rounded-lg ${
+          state === 'success'
+            ? 'bg-green-50 text-green-700 border border-green-200'
+            : state === 'registering'
+              ? 'bg-blue-50 text-blue-700 border border-blue-200'
+              : 'bg-red-50 text-red-700 border border-red-200'
+        }`}>
+          {message}
+        </div>
+      )}
+      <button
+        type="submit"
+        disabled={state === 'sending' || state === 'registering' || !toPhone.trim()}
+        className="w-full flex items-center justify-center gap-2 py-2 bg-brand-600 hover:bg-brand-700 disabled:opacity-60 text-white text-sm font-medium rounded-lg transition-colors"
+      >
+        {state === 'sending' ? (
+          <><Loader2 className="w-4 h-4 animate-spin" /> Sending…</>
+        ) : state === 'registering' ? (
+          <><Loader2 className="w-4 h-4 animate-spin" /> Registering…</>
+        ) : (
+          <><Send className="w-3.5 h-3.5" /> Send test</>
+        )}
+      </button>
+      <button
+        type="button"
+        onClick={handleManualRegister}
+        disabled={state === 'registering' || state === 'sending'}
+        className="w-full text-xs text-gray-500 hover:text-brand-600 transition-colors disabled:opacity-60"
+      >
+        Number not registered? Register it manually
+      </button>
+    </form>
   );
 }
 

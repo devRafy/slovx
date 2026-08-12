@@ -66,6 +66,14 @@ async function handleIncoming(phoneNumberId, customerPhone, text) {
     return;
   }
 
+  // Bot paused → still persist the incoming customer message so the owner can see it,
+  // but don't invoke the AI or send an auto-reply.
+  if (subscriber.botEnabled === false) {
+    await saveIncomingOnly(subscriber.id, customerPhone, text);
+    console.log(`Bot paused for subscriber ${subscriber.id} — message saved without AI reply`);
+    return;
+  }
+
   const { reply } = await processMessage(
     subscriber.id,
     customerPhone,
@@ -91,4 +99,26 @@ async function handleIncoming(phoneNumberId, customerPhone, text) {
       },
     });
   }
+}
+
+async function saveIncomingOnly(subscriberId, customerPhone, text) {
+  const conversation = await db.conversation.upsert({
+    where:  { subscriberId_customerPhone: { subscriberId, customerPhone } },
+    create: { subscriberId, customerPhone, messages: [], stage: 'QUALIFICATION' },
+    update: {},
+  });
+
+  await db.lead.upsert({
+    where:  { conversationId: conversation.id },
+    create: { subscriberId, conversationId: conversation.id, customerPhone },
+    update: {},
+  });
+
+  const messages = Array.isArray(conversation.messages) ? [...conversation.messages] : [];
+  messages.push({ role: 'user', content: text, timestamp: new Date().toISOString() });
+
+  await db.conversation.update({
+    where: { id: conversation.id },
+    data:  { messages },
+  });
 }

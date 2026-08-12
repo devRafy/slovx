@@ -6,6 +6,7 @@ import { Zap } from 'lucide-react';
 
 export default function Register() {
   const [form, setForm] = useState({ name: '', email: '', password: '' });
+  const [acceptTerms, setAcceptTerms] = useState(false);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const { login } = useAuthStore();
@@ -14,9 +15,13 @@ export default function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors({});
+    if (!acceptTerms) {
+      setErrors({ acceptTerms: 'You must accept the Terms and Privacy Policy to continue' });
+      return;
+    }
     setLoading(true);
     try {
-      const { data } = await authApi.register(form);
+      const { data } = await authApi.register({ ...form, acceptTerms: true });
       login(data.data);
       navigate('/onboarding/business');
     } catch (err) {
@@ -86,6 +91,29 @@ export default function Register() {
                 placeholder="••••••••"
               />
             </Field>
+            <div>
+              <label className="flex items-start gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={acceptTerms}
+                  onChange={(e) => setAcceptTerms(e.target.checked)}
+                  className="mt-0.5 w-4 h-4 rounded border-gray-300 text-brand-600 focus:ring-brand-500"
+                />
+                <span className="text-xs text-gray-600">
+                  I agree to the{' '}
+                  <Link to="/terms" target="_blank" className="text-brand-600 hover:underline">
+                    Terms of Service
+                  </Link>
+                  {' '}and{' '}
+                  <Link to="/privacy" target="_blank" className="text-brand-600 hover:underline">
+                    Privacy Policy
+                  </Link>
+                </span>
+              </label>
+              {errors.acceptTerms && (
+                <p className="mt-1 text-xs text-red-600">{errors.acceptTerms}</p>
+              )}
+            </div>
             <button
               type="submit"
               disabled={loading}
