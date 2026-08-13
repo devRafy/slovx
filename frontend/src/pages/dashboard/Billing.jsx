@@ -31,10 +31,10 @@ export default function Billing() {
   const currentPlan = subscriber?.plan ?? 'TRIAL';
 
   return (
-    <div className="flex-1 p-8 max-w-4xl">
-      <div className="mb-6">
-        <h1 className="text-2xl font-semibold text-gray-900">Billing & subscription</h1>
-        <p className="text-sm text-gray-500 mt-1">Manage your plan and view invoices.</p>
+    <div className="flex-1 p-4 sm:p-6 lg:p-8 max-w-4xl w-full">
+      <div className="mb-4 sm:mb-6">
+        <h1 className="text-xl sm:text-2xl font-semibold text-gray-900">Billing & subscription</h1>
+        <p className="text-xs sm:text-sm text-gray-500 mt-1">Manage your plan and view invoices.</p>
       </div>
 
       {/* Coming soon banner */}
@@ -51,7 +51,7 @@ export default function Billing() {
       </div>
 
       {/* Plan cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mb-6 sm:mb-8">
         {PLANS.map((plan) => {
           const isCurrent = plan.key === currentPlan;
           return (
@@ -95,7 +95,7 @@ export default function Billing() {
       </div>
 
       {/* Invoice history placeholder */}
-      <div className="bg-white rounded-xl border border-gray-200 p-6">
+      <div className="bg-white rounded-xl border border-gray-200 p-4 sm:p-6">
         <div className="flex items-center gap-2 mb-3">
           <CreditCard className="w-4 h-4 text-gray-400" />
           <h2 className="text-sm font-semibold text-gray-900">Invoice history</h2>

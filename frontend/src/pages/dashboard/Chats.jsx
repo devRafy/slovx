@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { dashboardApi } from '../../api/dashboard.api.js';
-import { MessageSquare, User, Bot, RefreshCw, Search } from 'lucide-react';
+import { MessageSquare, User, Bot, RefreshCw, Search, ArrowLeft } from 'lucide-react';
 
 const STAGE_STYLES = {
   QUALIFICATION: { bg: 'bg-gray-100',   text: 'text-gray-600'  },
@@ -20,9 +20,10 @@ export default function Chats() {
     refetchInterval: 5000,
   });
 
-  // Auto-select first conversation once loaded
+  // Auto-select first conversation on desktop (>= sm breakpoint). On mobile,
+  // let the user tap to choose — auto-select would hide the list they just landed on.
   useEffect(() => {
-    if (!selectedPhone && conversations.length > 0) {
+    if (!selectedPhone && conversations.length > 0 && window.innerWidth >= 640) {
       setSelectedPhone(conversations[0].customerPhone);
     }
   }, [conversations, selectedPhone]);
@@ -37,17 +38,26 @@ export default function Chats() {
     );
   });
 
+  // On mobile: show list OR thread (never both). On sm+: show both side-by-side.
+  const showListOnMobile = !selectedPhone;
+
   return (
-    <div className="flex flex-1 h-screen">
-      {/* Conversation list */}
-      <aside className="w-80 border-r border-gray-200 bg-white flex flex-col shrink-0">
+    <div className="flex flex-1 h-[calc(100vh-3.5rem)] md:h-screen">
+      {/* Conversation list — full width on mobile when no chat selected, sidebar otherwise */}
+      <aside
+        className={`
+          ${showListOnMobile ? 'flex' : 'hidden'} sm:flex
+          w-full sm:w-80 border-r border-gray-200 bg-white flex-col shrink-0
+        `}
+      >
         <header className="px-4 py-4 border-b border-gray-200">
           <div className="flex items-center justify-between mb-3">
             <h1 className="text-lg font-semibold text-gray-900">Chats</h1>
             <button
               onClick={() => refetch()}
-              className="text-gray-400 hover:text-gray-600"
+              className="text-gray-400 hover:text-gray-600 p-1"
               title="Refresh"
+              aria-label="Refresh chats"
             >
               <RefreshCw className="w-4 h-4" />
             </button>
@@ -82,13 +92,18 @@ export default function Chats() {
         </div>
       </aside>
 
-      {/* Thread */}
-      <section className="flex-1 flex flex-col bg-gray-50">
+      {/* Thread — hidden on mobile when no chat selected */}
+      <section
+        className={`
+          ${selectedPhone ? 'flex' : 'hidden'} sm:flex
+          flex-1 flex-col bg-gray-50 min-w-0
+        `}
+      >
         {selectedPhone ? (
-          <ChatThread phone={selectedPhone} />
+          <ChatThread phone={selectedPhone} onBack={() => setSelectedPhone(null)} />
         ) : (
           <div className="flex-1 flex items-center justify-center text-gray-400">
-            <div className="text-center">
+            <div className="text-center px-4">
               <MessageSquare className="w-12 h-12 mx-auto mb-3 opacity-40" />
               <p className="text-sm">Select a chat to view messages</p>
             </div>
@@ -137,7 +152,7 @@ function ConversationRow({ conv, active, onClick }) {
   );
 }
 
-function ChatThread({ phone }) {
+function ChatThread({ phone, onBack }) {
   const scrollRef = useRef(null);
 
   const { data, isLoading } = useQuery({
@@ -160,20 +175,28 @@ function ChatThread({ phone }) {
 
   return (
     <>
-      <header className="px-6 py-4 bg-white border-b border-gray-200 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center text-sm font-bold">
+      <header className="px-4 sm:px-6 py-3 sm:py-4 bg-white border-b border-gray-200 flex items-center justify-between gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+          {/* Back button — mobile only */}
+          <button
+            onClick={onBack}
+            className="sm:hidden p-1 -ml-1 text-gray-500 hover:text-gray-700"
+            aria-label="Back to chat list"
+          >
+            <ArrowLeft className="w-5 h-5" />
+          </button>
+          <div className="w-9 h-9 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center text-sm font-bold shrink-0">
             {(data?.lead?.customerName || phone)[0]?.toUpperCase() ?? '?'}
           </div>
-          <div>
-            <div className="text-sm font-semibold text-gray-900">
+          <div className="min-w-0">
+            <div className="text-sm font-semibold text-gray-900 truncate">
               {data?.lead?.customerName || phone}
             </div>
-            <div className="text-xs text-gray-500">{phone}</div>
+            <div className="text-xs text-gray-500 truncate">{phone}</div>
           </div>
         </div>
         {data?.stage && (
-          <span className={`text-xs px-2 py-1 rounded font-medium ${
+          <span className={`text-[10px] sm:text-xs px-2 py-1 rounded font-medium shrink-0 ${
             STAGE_STYLES[data.stage]?.bg ?? 'bg-gray-100'
           } ${STAGE_STYLES[data.stage]?.text ?? 'text-gray-600'}`}>
             {data.stage}
@@ -181,7 +204,7 @@ function ChatThread({ phone }) {
         )}
       </header>
 
-      <div ref={scrollRef} className="flex-1 overflow-y-auto px-6 py-6 space-y-3">
+      <div ref={scrollRef} className="flex-1 overflow-y-auto px-3 sm:px-6 py-4 sm:py-6 space-y-3">
         {messages.length === 0 ? (
           <div className="text-center text-sm text-gray-400 py-10">
             No messages in this conversation yet.

@@ -1,5 +1,9 @@
-import { Outlet, NavLink, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, MessageSquare, Users, Settings, CreditCard, LogOut, Zap } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Outlet, NavLink, useNavigate, useLocation } from 'react-router-dom';
+import {
+  LayoutDashboard, MessageSquare, Users, Settings, CreditCard,
+  LogOut, Zap, Menu, X,
+} from 'lucide-react';
 import { useAuthStore } from '../../store/auth.store.js';
 import { authApi } from '../../api/auth.api.js';
 
@@ -14,6 +18,17 @@ const navItems = [
 export default function Layout() {
   const { subscriber, refreshToken, logout } = useAuthStore();
   const navigate = useNavigate();
+  const location = useLocation();
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  // Auto-close mobile drawer whenever route changes
+  useEffect(() => { setMobileOpen(false); }, [location.pathname]);
+
+  // Lock body scroll while drawer is open on mobile
+  useEffect(() => {
+    document.body.style.overflow = mobileOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [mobileOpen]);
 
   const handleLogout = async () => {
     await authApi.logout(refreshToken).catch(() => {});
@@ -22,10 +37,47 @@ export default function Layout() {
   };
 
   return (
-    <div className="flex min-h-screen">
-      {/* Sidebar */}
-      <aside className="w-60 bg-brand-950 text-white flex flex-col shrink-0">
-        <div className="px-6 py-7 border-b border-white/10">
+    <div className="flex min-h-screen bg-gray-50">
+      {/* Mobile top bar (only < md) */}
+      <header className="md:hidden fixed top-0 inset-x-0 z-30 h-14 bg-brand-950 text-white flex items-center justify-between px-4">
+        <button
+          onClick={() => setMobileOpen(true)}
+          className="p-2 -ml-2 rounded-lg hover:bg-white/10"
+          aria-label="Open menu"
+        >
+          <Menu className="w-5 h-5" />
+        </button>
+        <div className="flex items-center gap-2">
+          <div className="w-6 h-6 bg-brand-500 rounded-md flex items-center justify-center">
+            <Zap className="w-3.5 h-3.5 text-white" />
+          </div>
+          <span className="text-sm font-bold">Xavier</span>
+        </div>
+        <div className="w-9 h-9 rounded-full bg-brand-600 flex items-center justify-center text-xs font-bold">
+          {subscriber?.name?.[0]?.toUpperCase() ?? 'U'}
+        </div>
+      </header>
+
+      {/* Backdrop for mobile drawer */}
+      {mobileOpen && (
+        <div
+          className="md:hidden fixed inset-0 bg-black/50 z-40"
+          onClick={() => setMobileOpen(false)}
+          aria-hidden
+        />
+      )}
+
+      {/* Sidebar — off-canvas on mobile, fixed on desktop */}
+      <aside
+        className={`
+          fixed md:sticky top-0 left-0 z-50 md:z-0
+          w-64 h-screen shrink-0
+          bg-brand-950 text-white flex flex-col
+          transform transition-transform duration-200
+          ${mobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+        `}
+      >
+        <div className="px-6 py-6 border-b border-white/10 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-brand-500 rounded-lg flex items-center justify-center">
               <Zap className="w-4 h-4 text-white" />
@@ -35,9 +87,16 @@ export default function Layout() {
               <div className="text-white/40 text-xs">AI Sales Platform</div>
             </div>
           </div>
+          <button
+            onClick={() => setMobileOpen(false)}
+            className="md:hidden p-2 -mr-2 rounded-lg hover:bg-white/10"
+            aria-label="Close menu"
+          >
+            <X className="w-5 h-5" />
+          </button>
         </div>
 
-        <nav className="flex-1 px-3 py-4 space-y-1">
+        <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
           {navItems.map(({ to, label, icon: Icon, end }) => (
             <NavLink
               key={to}
@@ -76,8 +135,8 @@ export default function Layout() {
         </div>
       </aside>
 
-      {/* Main */}
-      <main className="flex-1 flex flex-col overflow-auto">
+      {/* Main content — top padding on mobile to clear the fixed header */}
+      <main className="flex-1 flex flex-col min-w-0 pt-14 md:pt-0">
         <Outlet />
       </main>
     </div>

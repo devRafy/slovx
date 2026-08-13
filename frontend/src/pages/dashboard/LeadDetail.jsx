@@ -26,41 +26,43 @@ export default function LeadDetail() {
   const style = STATUS_STYLES[lead.status] ?? STATUS_STYLES.NEW;
 
   return (
-    <div className="flex-1 p-8 max-w-4xl">
+    <div className="flex-1 p-4 sm:p-6 lg:p-8 max-w-4xl w-full">
       <Link
         to="/dashboard/leads"
-        className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 mb-6"
+        className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 mb-4 sm:mb-6"
       >
         <ArrowLeft className="w-4 h-4" /> Back to Leads
       </Link>
 
       {/* Header */}
-      <div className="flex items-start justify-between mb-6">
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center text-lg font-bold">
+      <div className="flex items-start justify-between gap-3 mb-5 sm:mb-6">
+        <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+          <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center text-base sm:text-lg font-bold shrink-0">
             {lead.customerName?.[0]?.toUpperCase() ?? '?'}
           </div>
-          <div>
-            <h1 className="text-xl font-semibold text-gray-900">{lead.customerName ?? 'Unknown'}</h1>
-            <div className="flex items-center gap-3 mt-1 flex-wrap">
-              <span className="flex items-center gap-1 text-sm text-gray-500">
-                <Phone className="w-3.5 h-3.5" /> {lead.customerPhone}
+          <div className="min-w-0">
+            <h1 className="text-lg sm:text-xl font-semibold text-gray-900 truncate">{lead.customerName ?? 'Unknown'}</h1>
+            <div className="flex items-center gap-2 sm:gap-3 mt-1 flex-wrap">
+              <span className="flex items-center gap-1 text-xs sm:text-sm text-gray-500">
+                <Phone className="w-3.5 h-3.5 shrink-0" />
+                <span className="truncate">{lead.customerPhone}</span>
               </span>
               {lead.email && (
-                <span className="flex items-center gap-1 text-sm text-gray-500">
-                  <Mail className="w-3.5 h-3.5" /> {lead.email}
+                <span className="flex items-center gap-1 text-xs sm:text-sm text-gray-500 truncate">
+                  <Mail className="w-3.5 h-3.5 shrink-0" />
+                  <span className="truncate">{lead.email}</span>
                 </span>
               )}
             </div>
           </div>
         </div>
-        <span className={`px-3 py-1 rounded-full text-sm font-medium ${style.bg} ${style.text}`}>
+        <span className={`px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium shrink-0 ${style.bg} ${style.text}`}>
           {fmtStatus(lead.status)}
         </span>
       </div>
 
-      {/* Score cards */}
-      <div className="grid grid-cols-3 gap-4 mb-6">
+      {/* Score cards — stack 1-col on mobile, 3-col from sm */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-5 sm:mb-6">
         <ScoreCard
           label="Sentiment"
           value={lead.sentiment}
@@ -100,7 +102,7 @@ export default function LeadDetail() {
       </div>
 
       {/* Meta */}
-      <div className="mt-4 text-xs text-gray-400 flex gap-4">
+      <div className="mt-4 text-xs text-gray-400 flex flex-col sm:flex-row gap-1 sm:gap-4">
         {lead.createdAt && <span>First contact: {new Date(lead.createdAt).toLocaleString()}</span>}
         {lead.updatedAt && <span>Last updated: {new Date(lead.updatedAt).toLocaleString()}</span>}
       </div>

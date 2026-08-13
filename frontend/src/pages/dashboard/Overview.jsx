@@ -13,17 +13,17 @@ export default function Overview() {
   });
 
   return (
-    <div className="flex-1 p-8">
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-2xl font-semibold text-gray-900">Overview</h1>
-          <p className="text-sm text-gray-500 mt-0.5">Real-time snapshot of your AI sales performance</p>
+    <div className="flex-1 p-4 sm:p-6 lg:p-8">
+      <div className="flex items-center justify-between mb-6 sm:mb-8 gap-3">
+        <div className="min-w-0">
+          <h1 className="text-xl sm:text-2xl font-semibold text-gray-900">Overview</h1>
+          <p className="text-xs sm:text-sm text-gray-500 mt-0.5">Real-time snapshot of your AI sales performance</p>
         </div>
         <button
           onClick={() => refetch()}
-          className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors"
+          className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors shrink-0"
         >
-          <RefreshCw className="w-4 h-4" /> Refresh
+          <RefreshCw className="w-4 h-4" /> <span className="hidden sm:inline">Refresh</span>
         </button>
       </div>
 
@@ -37,7 +37,7 @@ export default function Overview() {
 
       {data && (
         <>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
             <StatCard
               label="Total conversations"
               value={data.totalConversations}
@@ -64,7 +64,7 @@ export default function Overview() {
             />
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mb-6 sm:mb-8">
             <MetricCard
               label="Lost deals"
               value={data.closedLost}
@@ -85,7 +85,7 @@ export default function Overview() {
             />
           </div>
 
-          <div className="bg-white rounded-xl border border-gray-200 p-6">
+          <div className="bg-white rounded-xl border border-gray-200 p-4 sm:p-6">
             <h2 className="text-sm font-semibold text-gray-900 mb-4">Conversion funnel</h2>
             <FunnelBar label="Conversations" value={data.totalConversations} max={data.totalConversations} color="bg-blue-500" />
             <FunnelBar label="Leads captured" value={data.totalLeads} max={data.totalConversations} color="bg-indigo-500" />
@@ -106,12 +106,12 @@ function StatCard({ label, value, icon: Icon, color }) {
     green:  'bg-green-50 text-green-600',
   };
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-5">
+    <div className="bg-white rounded-xl border border-gray-200 p-4 sm:p-5">
       <div className={`w-9 h-9 rounded-lg flex items-center justify-center mb-3 ${colors[color]}`}>
         <Icon className="w-4 h-4" />
       </div>
-      <div className="text-2xl font-bold text-gray-900">{value ?? 0}</div>
-      <div className="text-sm text-gray-500 mt-0.5">{label}</div>
+      <div className="text-xl sm:text-2xl font-bold text-gray-900">{value ?? 0}</div>
+      <div className="text-xs sm:text-sm text-gray-500 mt-0.5">{label}</div>
     </div>
   );
 }

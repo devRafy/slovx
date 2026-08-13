@@ -41,15 +41,15 @@ export default function Leads() {
     : leads;
 
   return (
-    <div className="flex-1 p-8">
-      <div className="mb-6">
-        <h1 className="text-2xl font-semibold text-gray-900">Leads</h1>
-        <p className="text-sm text-gray-500 mt-0.5">{total} total leads across all stages</p>
+    <div className="flex-1 p-4 sm:p-6 lg:p-8">
+      <div className="mb-4 sm:mb-6">
+        <h1 className="text-xl sm:text-2xl font-semibold text-gray-900">Leads</h1>
+        <p className="text-xs sm:text-sm text-gray-500 mt-0.5">{total} total leads across all stages</p>
       </div>
 
       {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-3 mb-5">
-        <div className="relative flex-1 max-w-xs">
+        <div className="relative flex-1 sm:max-w-xs">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
           <input
             value={search}
@@ -75,8 +75,60 @@ export default function Leads() {
         </div>
       </div>
 
-      {/* Table */}
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+      {/* Card list — mobile only */}
+      <div className="sm:hidden space-y-2 mb-4">
+        {isLoading &&
+          Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="bg-white rounded-xl border border-gray-200 p-4 animate-pulse">
+              <div className="h-4 bg-gray-100 rounded w-1/2 mb-2" />
+              <div className="h-3 bg-gray-100 rounded w-1/3" />
+            </div>
+          ))}
+        {!isLoading && filtered.length === 0 && (
+          <div className="bg-white rounded-xl border border-gray-200 py-10 text-center text-sm text-gray-400">
+            No leads found
+          </div>
+        )}
+        {!isLoading &&
+          filtered.map((lead) => (
+            <Link
+              key={lead.id}
+              to={`/dashboard/leads/${encodeURIComponent(lead.customerPhone)}`}
+              className="block bg-white rounded-xl border border-gray-200 p-4 active:bg-gray-50"
+            >
+              <div className="flex items-start justify-between gap-3 mb-2">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="w-8 h-8 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center text-xs font-semibold shrink-0">
+                    {lead.customerName?.[0]?.toUpperCase() ?? <User className="w-4 h-4" />}
+                  </div>
+                  <div className="min-w-0">
+                    <div className="text-sm font-medium text-gray-900 truncate">{lead.customerName ?? 'Unknown'}</div>
+                    <div className="text-xs text-gray-500 font-mono truncate">{lead.customerPhone}</div>
+                  </div>
+                </div>
+                <span className={`px-2 py-0.5 rounded-full text-[10px] font-medium shrink-0 ${STATUS_STYLES[lead.status] ?? ''}`}>
+                  {fmtStatus(lead.status)}
+                </span>
+              </div>
+              <div className="flex items-center gap-4 mt-2">
+                <div className="flex-1">
+                  <div className="text-[10px] text-gray-400 mb-0.5">Sentiment</div>
+                  <ScoreBar value={lead.sentiment} color="bg-purple-400" />
+                </div>
+                <div className="flex-1">
+                  <div className="text-[10px] text-gray-400 mb-0.5">Intent</div>
+                  <ScoreBar value={lead.buyingIntent} color="bg-brand-500" />
+                </div>
+                <div className="text-[10px] text-gray-400 shrink-0">
+                  {lead.updatedAt ? new Date(lead.updatedAt).toLocaleDateString() : '—'}
+                </div>
+              </div>
+            </Link>
+          ))}
+      </div>
+
+      {/* Table — desktop / tablet */}
+      <div className="hidden sm:block bg-white rounded-xl border border-gray-200 overflow-hidden">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-gray-100 bg-gray-50">
@@ -142,22 +194,24 @@ export default function Leads() {
           </tbody>
         </table>
 
-        {totalPages > 1 && (
-          <div className="flex items-center justify-between px-5 py-3 border-t border-gray-100">
-            <span className="text-xs text-gray-400">
-              Page {page} of {totalPages}
-            </span>
-            <div className="flex gap-1">
-              <PageBtn onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page === 1}>
-                <ChevronLeft className="w-4 h-4" />
-              </PageBtn>
-              <PageBtn onClick={() => setPage((p) => Math.min(totalPages, p + 1))} disabled={page === totalPages}>
-                <ChevronRight className="w-4 h-4" />
-              </PageBtn>
-            </div>
-          </div>
-        )}
       </div>
+
+      {/* Pagination — shared by mobile card list + desktop table */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between mt-4 px-1">
+          <span className="text-xs text-gray-400">
+            Page {page} of {totalPages}
+          </span>
+          <div className="flex gap-1">
+            <PageBtn onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page === 1}>
+              <ChevronLeft className="w-4 h-4" />
+            </PageBtn>
+            <PageBtn onClick={() => setPage((p) => Math.min(totalPages, p + 1))} disabled={page === totalPages}>
+              <ChevronRight className="w-4 h-4" />
+            </PageBtn>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
