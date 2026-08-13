@@ -3,7 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { businessApi } from '../../api/business.api.js';
 import { Zap, CheckCircle2, AlertCircle, Loader2, Send } from 'lucide-react';
 
-const META_APP_ID = import.meta.env.VITE_META_APP_ID ?? '';
+// Strip BOM/whitespace — Vercel env vars added via piped stdin can carry a UTF-8 BOM
+const stripBom = (s) => (s || '').replace(/^﻿/, '').trim();
+const META_APP_ID   = stripBom(import.meta.env.VITE_META_APP_ID);
+const META_CONFIG_ID = stripBom(import.meta.env.VITE_META_CONFIG_ID);
 
 export default function WhatsAppConnect() {
   const navigate = useNavigate();
@@ -71,7 +74,7 @@ export default function WhatsAppConnect() {
         }
       },
       {
-        config_id: import.meta.env.VITE_META_CONFIG_ID ?? '',
+        config_id: META_CONFIG_ID,
         response_type: 'code',
         override_default_response_type: true,
         extras: { sessionInfoVersion: '3' },

@@ -3,9 +3,10 @@ import { useAuthStore } from '../store/auth.store.js';
 
 // VITE_API_URL points to the backend (Railway URL in prod). In dev, empty string
 // means requests go through Vite's proxy at /api → localhost:4000.
-const API_BASE = import.meta.env.VITE_API_URL
-  ? `${import.meta.env.VITE_API_URL.replace(/\/$/, '')}/api`
-  : '/api';
+// Strip BOM + whitespace defensively — some CI env stores (Vercel via piped stdin)
+// prepend a UTF-8 BOM which silently breaks fetch.
+const rawApi = (import.meta.env.VITE_API_URL || '').replace(/^﻿/, '').trim();
+const API_BASE = rawApi ? `${rawApi.replace(/\/$/, '')}/api` : '/api';
 
 const client = axios.create({ baseURL: API_BASE });
 
