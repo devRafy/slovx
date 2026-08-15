@@ -5,31 +5,35 @@ import { asyncHandler } from '../utils/asyncHandler.js';
 export const getStats = asyncHandler(async (req, res) => {
   const sid = req.subscriber.id;
 
-  const [total, qualified, closed, lost, incidents, conversations] = await Promise.all([
-    db.lead.count({ where: { subscriberId: sid } }),
-    db.lead.count({ where: { subscriberId: sid, status: 'QUALIFIED' } }),
-    db.lead.count({ where: { subscriberId: sid, status: 'CLOSED' } }),
-    db.lead.count({ where: { subscriberId: sid, status: 'LOST' } }),
+  // 4 lead status counts collapsed into a single groupBy query.
+  // Round-trips cut from 7 to 4 (leads-groupBy, guardrails-count, conversations-count, leads-aggregate).
+  const [leadGroups, incidents, conversations, avgResult] = await Promise.all([
+    db.lead.groupBy({
+      by: ['status'],
+      where: { subscriberId: sid },
+      _count: { _all: true },
+    }),
     db.guardrailLog.count({ where: { subscriberId: sid } }),
     db.conversation.count({ where: { subscriberId: sid } }),
+    db.lead.aggregate({
+      where: { subscriberId: sid, sentiment: { not: null } },
+      _avg:  { sentiment: true, buyingIntent: true },
+    }),
   ]);
 
-  // Avg sentiment & buying intent from leads
-  const avgResult = await db.lead.aggregate({
-    where: { subscriberId: sid, sentiment: { not: null } },
-    _avg:  { sentiment: true, buyingIntent: true },
-  });
+  const byStatus = Object.fromEntries(leadGroups.map((g) => [g.status, g._count._all]));
+  const total = Object.values(byStatus).reduce((sum, n) => sum + n, 0);
 
   sendSuccess(res, {
-    totalLeads:      total,
-    qualified,
-    closedWon:       closed,
-    lost,
-    inProgress:      total - qualified - closed - lost,
+    totalLeads:         total,
+    qualified:          byStatus.QUALIFIED ?? 0,
+    closedWon:          byStatus.CLOSED    ?? 0,
+    lost:               byStatus.LOST      ?? 0,
+    inProgress:         byStatus.LEAD      ?? 0,
     conversations,
     guardrailIncidents: incidents,
-    avgSentiment:    avgResult._avg.sentiment   ? +avgResult._avg.sentiment.toFixed(2)   : 0,
-    avgBuyingIntent: avgResult._avg.buyingIntent ? +avgResult._avg.buyingIntent.toFixed(2) : 0,
+    avgSentiment:       avgResult._avg.sentiment    ? +avgResult._avg.sentiment.toFixed(2)    : 0,
+    avgBuyingIntent:    avgResult._avg.buyingIntent ? +avgResult._avg.buyingIntent.toFixed(2) : 0,
   });
 });
 
