@@ -4,13 +4,22 @@ import { Link } from 'react-router-dom';
 import { dashboardApi } from '../../api/dashboard.api.js';
 import { Search, ChevronLeft, ChevronRight, TrendingUp, User } from 'lucide-react';
 
-const STATUSES = ['ALL', 'NEW', 'QUALIFIED', 'CLOSED_WON', 'CLOSED_LOST'];
+// Uses the actual Prisma LeadStatus enum values.
+// Display labels via fmtStatus() below (LEAD → "New", CLOSED → "Closed - Won", etc.)
+const STATUSES = ['ALL', 'LEAD', 'QUALIFIED', 'CLOSED', 'LOST'];
 
 const STATUS_STYLES = {
-  NEW:         'bg-gray-100 text-gray-600',
-  QUALIFIED:   'bg-amber-100 text-amber-700',
-  CLOSED_WON:  'bg-green-100 text-green-700',
-  CLOSED_LOST: 'bg-red-100 text-red-700',
+  LEAD:      'bg-gray-100 text-gray-600',
+  QUALIFIED: 'bg-amber-100 text-amber-700',
+  CLOSED:    'bg-green-100 text-green-700',
+  LOST:      'bg-red-100 text-red-700',
+};
+
+const STATUS_LABELS = {
+  LEAD:      'New',
+  QUALIFIED: 'Qualified',
+  CLOSED:    'Closed - Won',
+  LOST:      'Closed - Lost',
 };
 
 export default function Leads() {
@@ -241,5 +250,5 @@ function PageBtn({ children, ...props }) {
 }
 
 function fmtStatus(s) {
-  return s.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+  return STATUS_LABELS[s] ?? s;
 }

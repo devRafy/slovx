@@ -37,9 +37,23 @@ export const getStats = asyncHandler(async (req, res) => {
   });
 });
 
+// Normalize UI-friendly status filter values to the Prisma LeadStatus enum.
+// The UI shows "New / Closed - Won / Closed - Lost" but the enum is LEAD/CLOSED/LOST.
+// Accept both so old clients + new UI labels both work.
+const LEAD_STATUS_ALIASES = {
+  NEW:         'LEAD',
+  LEAD:        'LEAD',
+  QUALIFIED:   'QUALIFIED',
+  CLOSED_WON:  'CLOSED',
+  CLOSED:      'CLOSED',
+  CLOSED_LOST: 'LOST',
+  LOST:        'LOST',
+};
+
 export const getLeads = asyncHandler(async (req, res) => {
   const sid    = req.subscriber.id;
-  const status = req.query.status;
+  const rawStatus = req.query.status;
+  const status = rawStatus ? LEAD_STATUS_ALIASES[rawStatus.toUpperCase()] : undefined;
   const page   = Math.max(1, parseInt(req.query.page) || 1);
   const limit  = Math.min(50, parseInt(req.query.limit) || 20);
   const skip   = (page - 1) * limit;

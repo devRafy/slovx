@@ -3,11 +3,19 @@ import { useParams, Link } from 'react-router-dom';
 import { dashboardApi } from '../../api/dashboard.api.js';
 import { ArrowLeft, Phone, Mail, Star, Zap, MessageSquare } from 'lucide-react';
 
+// Keys match the Prisma LeadStatus enum. Labels are user-facing via fmtStatus.
 const STATUS_STYLES = {
-  NEW:         { bg: 'bg-gray-100',   text: 'text-gray-700'  },
-  QUALIFIED:   { bg: 'bg-amber-100',  text: 'text-amber-700' },
-  CLOSED_WON:  { bg: 'bg-green-100',  text: 'text-green-700' },
-  CLOSED_LOST: { bg: 'bg-red-100',    text: 'text-red-700'   },
+  LEAD:      { bg: 'bg-gray-100',  text: 'text-gray-700'  },
+  QUALIFIED: { bg: 'bg-amber-100', text: 'text-amber-700' },
+  CLOSED:    { bg: 'bg-green-100', text: 'text-green-700' },
+  LOST:      { bg: 'bg-red-100',   text: 'text-red-700'   },
+};
+
+const STATUS_LABELS = {
+  LEAD:      'New',
+  QUALIFIED: 'Qualified',
+  CLOSED:    'Closed - Won',
+  LOST:      'Closed - Lost',
 };
 
 export default function LeadDetail() {
@@ -23,7 +31,7 @@ export default function LeadDetail() {
 
   const { lead, conversation } = data;
   const messages = conversation?.messages ?? [];
-  const style = STATUS_STYLES[lead.status] ?? STATUS_STYLES.NEW;
+  const style = STATUS_STYLES[lead.status] ?? STATUS_STYLES.LEAD;
 
   return (
     <div className="flex-1 p-4 sm:p-6 lg:p-8 max-w-4xl w-full">
@@ -186,5 +194,5 @@ function ErrorState({ phone }) {
 }
 
 function fmtStatus(s) {
-  return s.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+  return STATUS_LABELS[s] ?? s;
 }
