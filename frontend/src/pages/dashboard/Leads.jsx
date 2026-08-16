@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
-import { dashboardApi } from '../../api/dashboard.api.js';
-import { Search, ChevronLeft, ChevronRight, TrendingUp, User } from 'lucide-react';
+import { dashboardApi, downloadExport } from '../../api/dashboard.api.js';
+import { Search, ChevronLeft, ChevronRight, TrendingUp, User, Download, FileText, FileSpreadsheet } from 'lucide-react';
 
 // Uses the actual Prisma LeadStatus enum values.
 // Display labels via fmtStatus() below (LEAD → "New", CLOSED → "Closed - Won", etc.)
@@ -49,11 +49,31 @@ export default function Leads() {
       )
     : leads;
 
+  const today = new Date().toISOString().slice(0, 10);
+
   return (
     <div className="flex-1 p-4 sm:p-6 lg:p-8">
-      <div className="mb-4 sm:mb-6">
-        <h1 className="text-xl sm:text-2xl font-semibold text-gray-900">Leads</h1>
-        <p className="text-xs sm:text-sm text-gray-500 mt-0.5">{total} total leads across all stages</p>
+      <div className="mb-4 sm:mb-6 flex items-start justify-between gap-3 flex-wrap">
+        <div>
+          <h1 className="text-xl sm:text-2xl font-semibold text-gray-900">Leads</h1>
+          <p className="text-xs sm:text-sm text-gray-500 mt-0.5">{total} total leads across all stages</p>
+        </div>
+        <div className="flex gap-2">
+          <button
+            onClick={() => downloadExport('/export/leads.csv', `leads-${today}.csv`)}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-white border border-gray-300 text-gray-700 hover:bg-gray-50"
+            title="Download all leads as CSV"
+          >
+            <FileSpreadsheet className="w-3.5 h-3.5" /> CSV
+          </button>
+          <button
+            onClick={() => downloadExport('/export/leads.pdf', `leads-${today}.pdf`)}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-white border border-gray-300 text-gray-700 hover:bg-gray-50"
+            title="Download leads report as PDF"
+          >
+            <FileText className="w-3.5 h-3.5" /> PDF
+          </button>
+        </div>
       </div>
 
       {/* Filters */}

@@ -24,6 +24,11 @@ const CURRENCIES = [
   { value: 'INR', label: 'INR — Indian Rupee' },
 ];
 
+const REGIONS = ['', 'Gulf', 'South Asia', 'Europe', 'Americas', 'Africa', 'Other'];
+
+const HOURS = Array.from({ length: 24 }, (_, i) => i);
+const fmtHour = (h) => `${String(h).padStart(2, '0')}:00`;
+
 const blankProduct = () => ({
   name: '',
   price: '',
@@ -57,6 +62,10 @@ export default function BusinessSetup() {
     faqs: [],
     timezone: 'Asia/Karachi',
     aiPersonality: 'professional',
+    region: '',
+    dialect: '',
+    businessHoursStart: 9,
+    businessHoursEnd: 21,
     products: [blankProduct()],
   });
 
@@ -78,6 +87,10 @@ export default function BusinessSetup() {
           faqs:           Array.isArray(cfg.faqs) ? cfg.faqs : [],
           timezone:       cfg.timezone       ?? 'Asia/Karachi',
           aiPersonality:  cfg.aiPersonality  ?? 'professional',
+          region:         cfg.region         ?? '',
+          dialect:        cfg.dialect        ?? '',
+          businessHoursStart: cfg.businessHoursStart ?? 9,
+          businessHoursEnd:   cfg.businessHoursEnd   ?? 21,
           products: Array.isArray(cfg.products) && cfg.products.length > 0
             ? cfg.products.map((p) => ({
                 name:         p.name         ?? '',
@@ -428,6 +441,55 @@ export default function BusinessSetup() {
                   onChange={(e) => set('calendarLink', e.target.value)}
                   placeholder="https://calendly.com/yourname"
                 />
+              </div>
+            </div>
+          </Card>
+
+          <Card title="Region & business hours">
+            <p className="text-xs text-gray-500 mb-3">
+              Helps the AI adapt tone (Gulf/Khaleeji vs neutral English) and use polite after-hours language.
+            </p>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label>Region</Label>
+                <select
+                  value={form.region}
+                  onChange={(e) => set('region', e.target.value)}
+                  className={selectCls}
+                >
+                  <option value="">— none —</option>
+                  {REGIONS.filter(Boolean).map((r) => (
+                    <option key={r} value={r}>{r}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <Label>Dialect / tone preference</Label>
+                <Input
+                  value={form.dialect}
+                  onChange={(e) => set('dialect', e.target.value)}
+                  placeholder="e.g. Khaleeji Arabic, Formal English"
+                />
+              </div>
+              <div>
+                <Label>Business hours — opens at</Label>
+                <select
+                  value={form.businessHoursStart}
+                  onChange={(e) => set('businessHoursStart', Number(e.target.value))}
+                  className={selectCls}
+                >
+                  {HOURS.map((h) => <option key={h} value={h}>{fmtHour(h)}</option>)}
+                </select>
+              </div>
+              <div>
+                <Label>Business hours — closes at</Label>
+                <select
+                  value={form.businessHoursEnd}
+                  onChange={(e) => set('businessHoursEnd', Number(e.target.value))}
+                  className={selectCls}
+                >
+                  {HOURS.map((h) => <option key={h} value={h}>{fmtHour(h)}</option>)}
+                </select>
               </div>
             </div>
           </Card>

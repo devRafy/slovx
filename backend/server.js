@@ -15,6 +15,7 @@ import businessRoutes from './src/routes/business.routes.js';
 import webhookRoutes from './src/routes/webhook.routes.js';
 import dashboardRoutes from './src/routes/dashboard.routes.js';
 import whatsappRoutes from './src/routes/whatsapp.routes.js';
+import exportRoutes from './src/routes/export.routes.js';
 
 const app = express();
 
@@ -42,6 +43,7 @@ app.use('/api/business',   businessRoutes);
 app.use('/api/webhook',    webhookRoutes);
 app.use('/api/dashboard',  dashboardRoutes);
 app.use('/api/whatsapp',   whatsappRoutes);
+app.use('/api/export',     exportRoutes);
 
 // ── Health check ──────────────────────────────────────────────
 app.get('/health', (_req, res) => {

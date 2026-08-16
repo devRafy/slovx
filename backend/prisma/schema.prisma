@@ -60,6 +60,10 @@ model BusinessConfig {
   faqs           Json     @default("[]")  // Array<{ question: string, answer: string }>
   timezone       String   @default("Asia/Karachi")
   aiPersonality  String   @default("professional") // professional | friendly | formal
+  region         String?  // Gulf | South Asia | Europe | Americas — for cultural adapter
+  dialect        String?  // Khaleeji | Egyptian | Formal Arabic | Neutral English — free-form
+  businessHoursStart Int  @default(9)  // Local hour when business opens (0-23)
+  businessHoursEnd   Int  @default(21) // Local hour when business closes (0-23)
 
   isComplete Boolean  @default(false)
   createdAt  DateTime @default(now())
@@ -96,9 +100,11 @@ model Conversation {
   subscriberId String
   subscriber   Subscriber @relation(fields: [subscriberId], references: [id], onDelete: Cascade)
 
-  customerPhone String
-  messages      Json     @default("[]") // Message[]
-  stage         Stage    @default(QUALIFICATION)
+  customerPhone         String
+  messages              Json      @default("[]") // Message[]
+  stage                 Stage     @default(QUALIFICATION)
+  lastCustomerMessageAt DateTime? // used for the 24h Meta messaging window
+  humanTakeover         Boolean   @default(false) // when true, AI stops replying for this conversation
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -133,6 +139,8 @@ model Lead {
   sentiment     Float?
   buyingIntent  Float?
   notes         String?
+  optedOut      Boolean   @default(false) // customer sent STOP / unsubscribe
+  optedOutAt    DateTime?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

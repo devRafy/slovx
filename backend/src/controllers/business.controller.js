@@ -18,6 +18,8 @@ const faqSchema = z.object({
 
 export const CURRENCIES = ['USD', 'AED', 'SAR', 'PKR', 'GBP', 'EUR', 'INR'];
 
+export const REGIONS  = ['Gulf', 'South Asia', 'Europe', 'Americas', 'Africa', 'Other'];
+
 export const businessConfigSchema = z.object({
   companyName:    z.string().min(2).max(100),
   industry:       z.string().min(2).max(100),
@@ -31,6 +33,10 @@ export const businessConfigSchema = z.object({
   faqs:           z.array(faqSchema).default([]),
   timezone:       z.string().default('Asia/Karachi'),
   aiPersonality:  z.enum(['professional', 'friendly', 'formal']).default('professional'),
+  region:         z.enum(REGIONS).optional().or(z.literal('')),
+  dialect:        z.string().max(100).optional().or(z.literal('')),
+  businessHoursStart: z.coerce.number().int().min(0).max(23).default(9),
+  businessHoursEnd:   z.coerce.number().int().min(0).max(23).default(21),
 });
 
 export const getConfig = asyncHandler(async (req, res) => {

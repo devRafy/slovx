@@ -1,6 +1,9 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { env } from '../config/env.js';
 import { db } from '../config/database.js';
+import { buildFxContext } from './currency.service.js';
+import { isBusinessOpen, afterHoursHint } from './hours.service.js';
+import { hasBookingIntent, bookingHint } from './booking.service.js';
 
 const anthropic = new Anthropic({ apiKey: env.ANTHROPIC_API_KEY });
 
@@ -11,7 +14,9 @@ const MARKERS = {
   CLOSED_LOST: '[CLOSED_LOST]',
 };
 
-const buildSystemPrompt = (config) => {
+// Builds the full Claude system prompt from business config + live context (FX, hours, booking).
+// Async because it awaits live FX rates. All sections omit gracefully if data is missing.
+const buildSystemPrompt = async (config, incomingText) => {
   const currency = config.currency || 'USD';
   const products = config.products
     .map((p) => `  • ${p.name}: ${currency} ${p.price} ${p.billingCycle} — ${p.description}`)
@@ -24,9 +29,28 @@ const buildSystemPrompt = (config) => {
       }\n`
     : '';
 
+  // Cultural / dialect adapter — quiet hint if configured, otherwise nothing.
+  const dialectLine = config.dialect || config.region
+    ? `\nCULTURAL: Region=${config.region ?? 'unspecified'}, dialect preference="${config.dialect ?? 'default'}". Match this in your replies.\n`
+    : '';
+
+  // Live FX context — only added if the customer asks about currency (keeps prompt small).
+  let fxSection = '';
+  if (incomingText && /\b(usd|aed|sar|pkr|gbp|eur|inr|dollar|dirham|riyal|rupee|pound|euro|convert|exchange)\b/i.test(incomingText)) {
+    fxSection = await buildFxContext(currency);
+  }
+
+  // Time-aware fallback — inject an "outside hours" hint when appropriate.
+  const hoursSection = !isBusinessOpen(config) ? `\n${afterHoursHint(config)}\n` : '';
+
+  // Booking intent — inject calendar link when detected AND a link is configured.
+  const bookingSection = hasBookingIntent(incomingText) && config.calendarLink
+    ? `\n${bookingHint(config.calendarLink)}\n`
+    : '';
+
   return `You are Xavier, an AI sales executive for ${config.companyName} (${config.industry}).
 Your personality is ${config.aiPersonality}. Be concise — WhatsApp messages should be short.
-
+${dialectLine}
 ═══ PRODUCTS ═══
 ${products}
 
@@ -34,7 +58,7 @@ ${products}
 Discount: ${config.discountPolicy}
 Refund:   ${config.refundPolicy}
 ${config.calendarLink ? `Booking:  ${config.calendarLink}` : ''}
-${faqSection}
+${faqSection}${fxSection}${hoursSection}${bookingSection}
 ═══ CONVERSATION STAGES ═══
 You move through these stages:
 1. QUALIFICATION — Ask BANT questions (Budget, Authority, Need, Timeline). Keep it conversational.
@@ -94,11 +118,12 @@ export const processMessage = async (subscriberId, customerPhone, incomingText, 
     { role: 'user', content: incomingText },
   ];
 
-  // Call Claude
+  // Call Claude (system prompt is now async because of live FX context)
+  const systemPrompt = await buildSystemPrompt(businessConfig, incomingText);
   const response = await anthropic.messages.create({
     model:      env.ANTHROPIC_MODEL,
     max_tokens: 512,
-    system:     buildSystemPrompt(businessConfig),
+    system:     systemPrompt,
     messages:   claudeMessages,
   });
 

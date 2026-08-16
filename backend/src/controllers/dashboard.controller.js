@@ -1,5 +1,5 @@
 import { db } from '../config/database.js';
-import { sendSuccess } from '../utils/response.js';
+import { sendSuccess, sendError } from '../utils/response.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 
 export const getStats = asyncHandler(async (req, res) => {
@@ -125,12 +125,30 @@ export const getConversationMessages = asyncHandler(async (req, res) => {
       customerPhone: true,
       messages: true,
       stage: true,
+      humanTakeover: true,
       updatedAt: true,
       lead: { select: { customerName: true, status: true } },
     },
   });
 
   sendSuccess(res, conversation);
+});
+
+// PATCH /api/dashboard/conversations/:phone/takeover  { enabled: boolean }
+// Toggles per-conversation human takeover. When enabled, AI stops replying to this customer.
+export const toggleConversationTakeover = asyncHandler(async (req, res) => {
+  const sid = req.subscriber.id;
+  const { phone } = req.params;
+  const enabled = req.body?.enabled;
+  if (typeof enabled !== 'boolean') return sendError(res, 'body.enabled must be a boolean', 400);
+
+  const updated = await db.conversation.updateMany({
+    where: { subscriberId: sid, customerPhone: phone },
+    data:  { humanTakeover: enabled },
+  });
+  if (updated.count === 0) return sendError(res, 'Conversation not found', 404);
+
+  sendSuccess(res, { humanTakeover: enabled }, enabled ? 'You are now handling this chat' : 'AI has resumed on this chat');
 });
 
 export const getLeadDetail = asyncHandler(async (req, res) => {

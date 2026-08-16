@@ -3,16 +3,18 @@ import { authenticate } from '../middleware/auth.js';
 import {
   getStats, getLeads, getLeadDetail,
   getConversations, getConversationMessages,
+  toggleConversationTakeover,
 } from '../controllers/dashboard.controller.js';
 
 const router = Router();
 
 router.use(authenticate);
 
-router.get('/stats',                getStats);
-router.get('/leads',                getLeads);
-router.get('/leads/:phone',         getLeadDetail);
-router.get('/conversations',        getConversations);
-router.get('/conversations/:phone', getConversationMessages);
+router.get('/stats',                          getStats);
+router.get('/leads',                          getLeads);
+router.get('/leads/:phone',                   getLeadDetail);
+router.get('/conversations',                  getConversations);
+router.get('/conversations/:phone',           getConversationMessages);
+router.patch('/conversations/:phone/takeover', toggleConversationTakeover);
 
 export default router;
