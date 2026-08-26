@@ -20,19 +20,20 @@ export default function TrustedBy() {
       <div className="container-narrow relative z-10">
         <div className="text-center max-w-4xl mx-auto">
           <motion.p
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-80px' }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             className="text-xs sm:text-sm text-white/40 tracking-[0.3em] uppercase font-medium mb-6"
           >
             {trustedBy.title}
           </motion.p>
 
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 60 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
+            viewport={{ once: true, margin: '-80px' }}
+            transition={{ duration: 1.0, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
             className="font-display font-bold leading-none mb-16"
           >
             <div className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl text-gradient">

@@ -2,18 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ─── Native scroll-snap ───────────────────────────────────
-   One full viewport per section. Desktop only — snap on mobile
-   feels janky when sections have content that overflows 100vh. */
-@media (min-width: 768px) {
-  html {
-    scroll-snap-type: y mandatory;
-    scroll-behavior: smooth;
-  }
-  .snap-section {
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
-  }
+/* ─── Smooth scrolling ─────────────────────────────────────
+   No hard snap — sections flow into each other, blending via the
+   gradient bridges on .snap-section below. */
+html {
+  scroll-behavior: smooth;
 }
 
 @layer base {
@@ -36,7 +29,7 @@
 }
 
 @layer components {
-  /* Every top-level section uses this class — full-viewport, centered content */
+  /* Every top-level section uses this class — full-viewport, centered content. */
   .snap-section {
     min-height: 100vh;
     display: flex;
@@ -44,6 +37,27 @@
     justify-content: center;
     position: relative;
     overflow: hidden;
+  }
+
+  /* Gradient bridges — top and bottom fades so 3D backgrounds of adjacent
+     sections bleed into each other. Behind everything (z-1). */
+  .snap-section::before,
+  .snap-section::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 10vh;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .snap-section::before {
+    top: 0;
+    background: linear-gradient(to bottom, #050508 0%, rgba(5, 5, 8, 0) 100%);
+  }
+  .snap-section::after {
+    bottom: 0;
+    background: linear-gradient(to top, #050508 0%, rgba(5, 5, 8, 0) 100%);
   }
 
   /* Container inside sections */

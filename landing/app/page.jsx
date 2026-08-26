@@ -8,8 +8,8 @@ import Faq         from '../components/sections/Faq';
 import CtaFooter   from '../components/sections/CtaFooter';
 
 /**
- * Main landing page. Each section is a self-contained client component.
- * Server-rendered where possible for SEO, hydrates for animations.
+ * Main landing page. Sections use pure CSS for smooth scroll + gradient
+ * bridges between backgrounds (see .snap-section rules in globals.css).
  */
 export default function Page() {
   return (

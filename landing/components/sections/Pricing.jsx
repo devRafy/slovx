@@ -27,10 +27,10 @@ export default function Pricing() {
           {pricing.tiers.map((tier, i) => (
             <motion.div
               key={tier.name}
-              initial={{ opacity: 0, y: 40 }}
+              initial={{ opacity: 0, y: 60 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-40px' }}
-              transition={{ duration: 0.6, delay: i * 0.1 }}
+              viewport={{ once: true, margin: '-60px' }}
+              transition={{ duration: 0.9, delay: 0.4 + i * 0.15, ease: [0.16, 1, 0.3, 1] }}
               className={`relative rounded-2xl p-6 md:p-7 backdrop-blur-md transition-all ${
                 tier.featured
                   ? 'bg-gradient-to-b from-brand-500/10 to-brand-950/50 border-2 border-brand-500/40 lg:-translate-y-4 shadow-2xl shadow-brand-500/20'

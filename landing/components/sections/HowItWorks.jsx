@@ -51,10 +51,10 @@ export default function HowItWorks() {
               return (
                 <motion.div
                   key={step.number}
-                  initial={{ opacity: 0, y: 30 }}
+                  initial={{ opacity: 0, y: 60 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: '-80px' }}
-                  transition={{ duration: 0.6, delay: i * 0.15 }}
+                  transition={{ duration: 0.9, delay: 0.4 + i * 0.2, ease: [0.16, 1, 0.3, 1] }}
                   className="relative text-center"
                 >
                   <div className="relative inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-ink-800 border border-brand-500/30 mb-6 glow-ring backdrop-blur-sm">

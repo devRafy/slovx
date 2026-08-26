@@ -101,10 +101,10 @@ function PhoneMock({ messages, typing }) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 60 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.7 }}
+      viewport={{ once: true, margin: '-60px' }}
+      transition={{ duration: 0.9, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
       className="relative"
     >
       <div className="absolute inset-0 blur-3xl bg-brand-500/20 rounded-full" />

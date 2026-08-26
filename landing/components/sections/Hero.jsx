@@ -32,32 +32,34 @@ export default function Hero() {
       <div className="container-narrow relative z-10 pt-20 md:pt-0">
         <div className="grid lg:grid-cols-[1.1fr_1fr] gap-8 lg:gap-12 items-center">
           {/* ─── LEFT COLUMN: Content ─────────────────────────── */}
+          {/* Hero content drops in from the TOP with a slow staggered cascade.
+             Each element starts ~40-60px above its final position and eases down. */}
           <div className="text-center lg:text-left">
-            {/* Eyebrow */}
+            {/* Eyebrow — drops in first */}
             <motion.div
-              initial={{ opacity: 0, y: -10 }}
+              initial={{ opacity: 0, y: -30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
+              transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
               className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-500/10 border border-brand-500/20 backdrop-blur-sm mb-6"
             >
               <span className="w-1.5 h-1.5 rounded-full bg-brand-400 animate-pulse" />
               <span className="text-xs font-semibold tracking-widest text-brand-200">{hero.eyebrow}</span>
             </motion.div>
 
-            {/* Headline */}
+            {/* Headline — line 1 then line 2, dropping down */}
             <h1 className="font-display font-bold leading-[0.95] tracking-tight">
               <motion.span
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: -50 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ duration: 1.1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
                 className="block text-white text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] xl:text-[6.5rem]"
               >
                 {hero.headlineLine1}
               </motion.span>
               <motion.span
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: -50 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ duration: 1.1, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
                 className="block text-gradient text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] xl:text-[6.5rem]"
               >
                 {hero.headlineLine2}
@@ -66,9 +68,9 @@ export default function Hero() {
 
             {/* Subhead */}
             <motion.p
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: -30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.35 }}
+              transition={{ duration: 1.0, delay: 0.65, ease: [0.16, 1, 0.3, 1] }}
               className="mt-6 md:mt-8 max-w-xl mx-auto lg:mx-0 text-base sm:text-lg text-white/60 leading-relaxed"
             >
               {hero.subhead}
@@ -76,9 +78,9 @@ export default function Hero() {
 
             {/* CTAs */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: -25 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.5 }}
+              transition={{ duration: 0.9, delay: 0.9, ease: [0.16, 1, 0.3, 1] }}
               className="mt-8 md:mt-10 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3"
             >
               <a
@@ -97,11 +99,11 @@ export default function Hero() {
               </a>
             </motion.div>
 
-            {/* Stats row */}
+            {/* Stats row — comes last, cascade continues */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.7 }}
+              transition={{ duration: 0.9, delay: 1.15, ease: [0.16, 1, 0.3, 1] }}
               className="mt-10 md:mt-12 grid grid-cols-3 gap-4 max-w-md mx-auto lg:mx-0"
             >
               {[hero.stat1, hero.stat2, hero.stat3].map((stat, i) => (
