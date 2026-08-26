@@ -4,18 +4,22 @@ import {
   LayoutDashboard, MessageSquare, Users, Settings, CreditCard,
   LogOut, Zap, Menu, X,
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../../store/auth.store.js';
 import { authApi } from '../../api/auth.api.js';
+import LanguageSwitcher from '../LanguageSwitcher.jsx';
 
-const navItems = [
-  { to: '/dashboard',           label: 'Overview', icon: LayoutDashboard, end: true },
-  { to: '/dashboard/chats',     label: 'Chats',    icon: MessageSquare },
-  { to: '/dashboard/leads',     label: 'Leads',    icon: Users },
-  { to: '/dashboard/settings',  label: 'Settings', icon: Settings },
-  { to: '/dashboard/billing',   label: 'Billing',  icon: CreditCard },
+const buildNavItems = (t) => [
+  { to: '/dashboard',           label: t('nav.overview'), icon: LayoutDashboard, end: true },
+  { to: '/dashboard/chats',     label: t('nav.chats'),    icon: MessageSquare },
+  { to: '/dashboard/leads',     label: t('nav.leads'),    icon: Users },
+  { to: '/dashboard/settings',  label: t('nav.settings'), icon: Settings },
+  { to: '/dashboard/billing',   label: t('nav.billing'),  icon: CreditCard },
 ];
 
 export default function Layout() {
+  const { t } = useTranslation();
+  const navItems = buildNavItems(t);
   const { subscriber, refreshToken, logout } = useAuthStore();
   const navigate = useNavigate();
   const location = useLocation();
@@ -53,8 +57,11 @@ export default function Layout() {
           </div>
           <span className="text-sm font-bold">Xavier</span>
         </div>
-        <div className="w-9 h-9 rounded-full bg-brand-600 flex items-center justify-center text-xs font-bold">
-          {subscriber?.name?.[0]?.toUpperCase() ?? 'U'}
+        <div className="flex items-center gap-1">
+          <LanguageSwitcher variant="dark" align="right" />
+          <div className="w-9 h-9 rounded-full bg-brand-600 flex items-center justify-center text-xs font-bold">
+            {subscriber?.name?.[0]?.toUpperCase() ?? 'U'}
+          </div>
         </div>
       </header>
 
@@ -116,8 +123,8 @@ export default function Layout() {
           ))}
         </nav>
 
-        <div className="px-4 py-4 border-t border-white/10">
-          <div className="flex items-center gap-3 mb-3 px-1">
+        <div className="px-4 py-4 border-t border-white/10 space-y-2">
+          <div className="flex items-center gap-3 px-1">
             <div className="w-7 h-7 rounded-full bg-brand-600 flex items-center justify-center text-xs font-bold">
               {subscriber?.name?.[0]?.toUpperCase() ?? 'U'}
             </div>
@@ -126,11 +133,14 @@ export default function Layout() {
               <div className="text-xs text-white/40 truncate">{subscriber?.plan}</div>
             </div>
           </div>
+          <div className="hidden md:block">
+            <LanguageSwitcher variant="dark" />
+          </div>
           <button
             onClick={handleLogout}
             className="flex items-center gap-2 w-full px-3 py-2 rounded-lg text-white/60 hover:bg-white/10 hover:text-white text-sm transition-colors"
           >
-            <LogOut className="w-4 h-4" /> Log out
+            <LogOut className="w-4 h-4" /> {t('nav.logout')}
           </button>
         </div>
       </aside>

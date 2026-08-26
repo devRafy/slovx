@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 import { dashboardApi, downloadExport } from '../../api/dashboard.api.js';
 import { MessageSquare, User, Bot, RefreshCw, Search, ArrowLeft, Hand, Loader2, FileSpreadsheet } from 'lucide-react';
 
@@ -10,6 +11,7 @@ const STAGE_STYLES = {
 };
 
 export default function Chats() {
+  const { t } = useTranslation();
   const [selectedPhone, setSelectedPhone] = useState(null);
   const [search, setSearch] = useState('');
 
@@ -52,7 +54,7 @@ export default function Chats() {
       >
         <header className="px-4 py-4 border-b border-gray-200">
           <div className="flex items-center justify-between mb-3">
-            <h1 className="text-lg font-semibold text-gray-900">Chats</h1>
+            <h1 className="text-lg font-semibold text-gray-900">{t('chats.title')}</h1>
             <div className="flex items-center gap-2">
               <button
                 onClick={() => downloadExport(
@@ -81,7 +83,7 @@ export default function Chats() {
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search chats…"
+              placeholder={t('chats.searchPlaceholder')}
               className="w-full pl-9 pr-3 py-2 rounded-lg bg-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
             />
           </div>
@@ -89,7 +91,7 @@ export default function Chats() {
 
         <div className="flex-1 overflow-y-auto">
           {isLoading ? (
-            <div className="text-center text-sm text-gray-400 py-10">Loading…</div>
+            <div className="text-center text-sm text-gray-400 py-10">{t('common.loading')}</div>
           ) : filtered.length === 0 ? (
             <EmptyList hasSearch={!!search} />
           ) : (
@@ -118,7 +120,7 @@ export default function Chats() {
           <div className="flex-1 flex items-center justify-center text-gray-400">
             <div className="text-center px-4">
               <MessageSquare className="w-12 h-12 mx-auto mb-3 opacity-40" />
-              <p className="text-sm">Select a chat to view messages</p>
+              <p className="text-sm">{t('chats.selectChat')}</p>
             </div>
           </div>
         )}
@@ -166,6 +168,7 @@ function ConversationRow({ conv, active, onClick }) {
 }
 
 function ChatThread({ phone, onBack }) {
+  const { t } = useTranslation();
   const scrollRef = useRef(null);
   const qc = useQueryClient();
   const [toggling, setToggling] = useState(false);
@@ -198,7 +201,7 @@ function ChatThread({ phone, onBack }) {
   };
 
   if (isLoading) {
-    return <div className="flex-1 flex items-center justify-center text-gray-400 text-sm">Loading…</div>;
+    return <div className="flex-1 flex items-center justify-center text-gray-400 text-sm">{t('common.loading')}</div>;
   }
 
   return (
@@ -234,7 +237,7 @@ function ChatThread({ phone, onBack }) {
           <button
             onClick={handleToggleTakeover}
             disabled={toggling}
-            title={humanTakeover ? 'AI is paused — click to hand back to AI' : 'Take over this chat manually'}
+            title={humanTakeover ? t('chats.handBackTitle') : t('chats.takeOverTitle')}
             className={`flex items-center gap-1.5 text-[11px] sm:text-xs px-2.5 py-1 rounded-lg font-medium border transition-colors ${
               humanTakeover
                 ? 'bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100'
@@ -244,20 +247,20 @@ function ChatThread({ phone, onBack }) {
             {toggling
               ? <Loader2 className="w-3.5 h-3.5 animate-spin" />
               : <Hand className="w-3.5 h-3.5" />}
-            {humanTakeover ? 'You have this' : 'Take over'}
+            {humanTakeover ? t('chats.youHaveThis') : t('chats.takeOver')}
           </button>
         </div>
       </header>
       {humanTakeover && (
         <div className="px-4 sm:px-6 py-2 bg-amber-50 border-b border-amber-200 text-xs text-amber-800">
-          AI is paused for this chat. Reply to the customer directly on your WhatsApp — Xavier won't auto-respond.
+          {t('chats.aiPausedBanner')}
         </div>
       )}
 
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-3 sm:px-6 py-4 sm:py-6 space-y-3">
         {messages.length === 0 ? (
           <div className="text-center text-sm text-gray-400 py-10">
-            No messages in this conversation yet.
+            {t('chats.noMessagesYet')}
           </div>
         ) : (
           messages.map((m, i) => <MessageBubble key={i} msg={m} />)
@@ -295,17 +298,13 @@ function MessageBubble({ msg }) {
 }
 
 function EmptyList({ hasSearch }) {
+  const { t } = useTranslation();
   return (
     <div className="text-center py-12 px-6">
       <MessageSquare className="w-10 h-10 text-gray-300 mx-auto mb-3" />
       <p className="text-sm text-gray-500">
-        {hasSearch ? 'No chats match your search' : 'No conversations yet'}
+        {hasSearch ? t('chats.noSearchResults') : t('chats.noConversations')}
       </p>
-      {!hasSearch && (
-        <p className="text-xs text-gray-400 mt-1">
-          Chats will appear here once customers message your WhatsApp number.
-        </p>
-      )}
     </div>
   );
 }

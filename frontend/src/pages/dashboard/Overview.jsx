@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 import { dashboardApi } from '../../api/dashboard.api.js';
 import {
   Users, MessageSquare, TrendingUp, CheckCircle2,
@@ -6,6 +7,7 @@ import {
 } from 'lucide-react';
 
 export default function Overview() {
+  const { t } = useTranslation();
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ['dashboard-stats'],
     queryFn: () => dashboardApi.getStats().then((r) => r.data.data),
@@ -16,81 +18,54 @@ export default function Overview() {
     <div className="flex-1 p-4 sm:p-6 lg:p-8">
       <div className="flex items-center justify-between mb-6 sm:mb-8 gap-3">
         <div className="min-w-0">
-          <h1 className="text-xl sm:text-2xl font-semibold text-gray-900">Overview</h1>
-          <p className="text-xs sm:text-sm text-gray-500 mt-0.5">Real-time snapshot of your AI sales performance</p>
+          <h1 className="text-xl sm:text-2xl font-semibold text-gray-900">{t('dashboard.overviewTitle')}</h1>
+          <p className="text-xs sm:text-sm text-gray-500 mt-0.5">{t('dashboard.overviewSubtitle')}</p>
         </div>
         <button
           onClick={() => refetch()}
           className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors shrink-0"
         >
-          <RefreshCw className="w-4 h-4" /> <span className="hidden sm:inline">Refresh</span>
+          <RefreshCw className="w-4 h-4" /> <span className="hidden sm:inline">{t('common.refresh')}</span>
         </button>
       </div>
 
       {isLoading && <SkeletonGrid />}
       {isError && (
         <div className="text-center py-16 text-gray-400">
-          <p className="mb-2">Failed to load stats</p>
-          <button onClick={() => refetch()} className="text-brand-600 text-sm hover:underline">Try again</button>
+          <p className="mb-2">{t('dashboard.failedStats')}</p>
+          <button onClick={() => refetch()} className="text-brand-600 text-sm hover:underline">{t('common.tryAgain')}</button>
         </div>
       )}
 
       {data && (
         <>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
-            <StatCard
-              label="Total conversations"
-              value={data.totalConversations}
-              icon={MessageSquare}
-              color="blue"
-            />
-            <StatCard
-              label="Total leads"
-              value={data.totalLeads}
-              icon={Users}
-              color="indigo"
-            />
-            <StatCard
-              label="Qualified leads"
-              value={data.qualifiedLeads}
-              icon={TrendingUp}
-              color="amber"
-            />
-            <StatCard
-              label="Deals closed"
-              value={data.closedWon}
-              icon={CheckCircle2}
-              color="green"
-            />
+            <StatCard label={t('dashboard.totalConversations')} value={data.totalConversations} icon={MessageSquare} color="blue" />
+            <StatCard label={t('dashboard.totalLeads')}         value={data.totalLeads}         icon={Users}         color="indigo" />
+            <StatCard label={t('dashboard.qualifiedLeads')}     value={data.qualifiedLeads}     icon={TrendingUp}    color="amber" />
+            <StatCard label={t('dashboard.dealsClosed')}        value={data.closedWon}          icon={CheckCircle2}  color="green" />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mb-6 sm:mb-8">
+            <MetricCard label={t('dashboard.lostDeals')} value={data.closedLost} icon={XCircle} color="red" />
             <MetricCard
-              label="Lost deals"
-              value={data.closedLost}
-              icon={XCircle}
-              color="red"
-            />
-            <MetricCard
-              label="Avg. sentiment"
+              label={t('dashboard.avgSentiment')}
               value={data.avgSentiment != null ? `${(data.avgSentiment * 10).toFixed(1)} / 10` : '—'}
-              icon={Star}
-              color="purple"
+              icon={Star} color="purple"
             />
             <MetricCard
-              label="Avg. buying intent"
+              label={t('dashboard.avgIntent')}
               value={data.avgBuyingIntent != null ? `${(data.avgBuyingIntent * 10).toFixed(1)} / 10` : '—'}
-              icon={Zap}
-              color="brand"
+              icon={Zap} color="brand"
             />
           </div>
 
           <div className="bg-white rounded-xl border border-gray-200 p-4 sm:p-6">
-            <h2 className="text-sm font-semibold text-gray-900 mb-4">Conversion funnel</h2>
-            <FunnelBar label="Conversations" value={data.totalConversations} max={data.totalConversations} color="bg-blue-500" />
-            <FunnelBar label="Leads captured" value={data.totalLeads} max={data.totalConversations} color="bg-indigo-500" />
-            <FunnelBar label="Qualified" value={data.qualifiedLeads} max={data.totalConversations} color="bg-amber-500" />
-            <FunnelBar label="Closed won" value={data.closedWon} max={data.totalConversations} color="bg-green-500" />
+            <h2 className="text-sm font-semibold text-gray-900 mb-4">{t('dashboard.conversionFunnel')}</h2>
+            <FunnelBar label={t('dashboard.conversations')}   value={data.totalConversations} max={data.totalConversations} color="bg-blue-500" />
+            <FunnelBar label={t('dashboard.leadsCaptured')}   value={data.totalLeads}         max={data.totalConversations} color="bg-indigo-500" />
+            <FunnelBar label={t('dashboard.qualified')}       value={data.qualifiedLeads}     max={data.totalConversations} color="bg-amber-500" />
+            <FunnelBar label={t('dashboard.closedWon')}       value={data.closedWon}          max={data.totalConversations} color="bg-green-500" />
           </div>
         </>
       )}

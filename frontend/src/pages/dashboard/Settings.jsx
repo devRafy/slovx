@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { authApi } from '../../api/auth.api.js';
 import { businessApi } from '../../api/business.api.js';
 import { useAuthStore } from '../../store/auth.store.js';
 import { Bot, Building2, MessageSquare, Loader2, Sliders } from 'lucide-react';
 
 export default function Settings() {
+  const { t } = useTranslation();
   const { subscriber, setSubscriber } = useAuthStore();
   const [botEnabled, setBotEnabled] = useState(subscriber?.botEnabled ?? true);
   const [connection, setConnection] = useState(null);
@@ -31,7 +33,7 @@ export default function Settings() {
     setSaving(true);
     try {
       await businessApi.toggleBot(nextValue);
-      setToast({ type: 'success', message: nextValue ? 'Bot resumed — AI will reply to messages.' : 'Bot paused — messages will be received but not auto-answered.' });
+      setToast({ type: 'success', message: nextValue ? t('settings.botResumed') : t('settings.botPausedToast') });
     } catch (err) {
       setBotEnabled(!nextValue); // revert
       setToast({ type: 'error', message: err.response?.data?.message ?? 'Failed to update' });
@@ -44,8 +46,8 @@ export default function Settings() {
   return (
     <div className="flex-1 p-4 sm:p-6 lg:p-8 max-w-3xl w-full">
       <div className="mb-4 sm:mb-6">
-        <h1 className="text-xl sm:text-2xl font-semibold text-gray-900">Settings</h1>
-        <p className="text-xs sm:text-sm text-gray-500 mt-1">Manage your bot behavior, business config, and WhatsApp connection.</p>
+        <h1 className="text-xl sm:text-2xl font-semibold text-gray-900">{t('settings.title')}</h1>
+        <p className="text-xs sm:text-sm text-gray-500 mt-1">{t('settings.subtitle')}</p>
       </div>
 
       {toast && (
@@ -62,18 +64,16 @@ export default function Settings() {
         {/* Bot Pause / Resume */}
         <Section
           icon={Bot}
-          title="AI Bot"
-          description="When paused, incoming messages are still saved to your Chats but the AI will not auto-reply."
+          title={t('settings.aiBot')}
+          description={t('settings.aiBotDescription')}
         >
           <div className="flex items-center justify-between">
             <div>
               <div className="text-sm font-medium text-gray-900">
-                {botEnabled ? 'Bot is active' : 'Bot is paused'}
+                {botEnabled ? t('settings.botActive') : t('settings.botPaused')}
               </div>
               <div className="text-xs text-gray-500 mt-0.5">
-                {botEnabled
-                  ? 'AI is answering customer messages automatically.'
-                  : 'AI is silent. Reply to customers manually via WhatsApp.'}
+                {botEnabled ? t('settings.botActiveDesc') : t('settings.botPausedDesc')}
               </div>
             </div>
             <Toggle enabled={botEnabled} onChange={handleToggle} disabled={saving} />
@@ -83,23 +83,20 @@ export default function Settings() {
         {/* Business config */}
         <Section
           icon={Building2}
-          title="Business configuration"
-          description="Company details, products, policies, and FAQs used by the AI."
+          title={t('settings.businessConfig')}
+          description={t('settings.businessConfigDesc')}
         >
           <div className="flex items-center justify-between">
             <div>
               <div className="text-sm font-medium text-gray-900">
-                {config?.companyName || 'Not configured yet'}
+                {config?.companyName || t('settings.notConfigured')}
               </div>
               <div className="text-xs text-gray-500 mt-0.5">
-                {config?.isComplete ? 'Configuration complete' : 'Setup incomplete'}
+                {config?.isComplete ? t('settings.configComplete') : t('settings.setupIncomplete')}
               </div>
             </div>
-            <Link
-              to="/onboarding/business"
-              className="text-sm font-medium text-brand-600 hover:text-brand-700"
-            >
-              Edit →
+            <Link to="/onboarding/business" className="text-sm font-medium text-brand-600 hover:text-brand-700">
+              {t('common.edit')} →
             </Link>
           </div>
         </Section>
@@ -107,25 +104,22 @@ export default function Settings() {
         {/* WhatsApp connection */}
         <Section
           icon={MessageSquare}
-          title="WhatsApp connection"
-          description="Your WhatsApp Business number. All customer messages flow through here."
+          title={t('settings.whatsappConnection')}
+          description={t('settings.whatsappConnectionDesc')}
         >
           <div className="flex items-center justify-between">
             <div>
               <div className="text-sm font-medium text-gray-900">
                 {connection?.isActive
-                  ? (connection.displayPhone || 'Connected')
-                  : 'Not connected'}
+                  ? (connection.displayPhone || t('onboarding.whatsappConnected'))
+                  : t('settings.notConnected')}
               </div>
               <div className="text-xs text-gray-500 mt-0.5">
-                {connection?.isActive ? 'Receiving messages' : 'Connect your WhatsApp Business number'}
+                {connection?.isActive ? t('settings.receivingMessages') : t('settings.connectYourNumber')}
               </div>
             </div>
-            <Link
-              to="/onboarding/whatsapp"
-              className="text-sm font-medium text-brand-600 hover:text-brand-700"
-            >
-              {connection?.isActive ? 'Manage →' : 'Connect →'}
+            <Link to="/onboarding/whatsapp" className="text-sm font-medium text-brand-600 hover:text-brand-700">
+              {connection?.isActive ? t('settings.manage') : t('settings.connect')}
             </Link>
           </div>
         </Section>
@@ -133,13 +127,13 @@ export default function Settings() {
         {/* Account (read-only info) */}
         <Section
           icon={Sliders}
-          title="Account"
-          description="Your Xavier account details."
+          title={t('settings.account')}
+          description={t('settings.accountDesc')}
         >
           <div className="space-y-2 text-sm">
-            <Row label="Name"  value={subscriber?.name} />
-            <Row label="Email" value={subscriber?.email} />
-            <Row label="Plan"  value={subscriber?.plan} />
+            <Row label={t('auth.name')}     value={subscriber?.name} />
+            <Row label={t('auth.email')}    value={subscriber?.email} />
+            <Row label={t('settings.plan')} value={subscriber?.plan} />
           </div>
         </Section>
       </div>

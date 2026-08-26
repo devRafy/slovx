@@ -1,11 +1,10 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { dashboardApi, downloadExport } from '../../api/dashboard.api.js';
 import { Search, ChevronLeft, ChevronRight, TrendingUp, User, Download, FileText, FileSpreadsheet } from 'lucide-react';
 
-// Uses the actual Prisma LeadStatus enum values.
-// Display labels via fmtStatus() below (LEAD → "New", CLOSED → "Closed - Won", etc.)
 const STATUSES = ['ALL', 'LEAD', 'QUALIFIED', 'CLOSED', 'LOST'];
 
 const STATUS_STYLES = {
@@ -15,18 +14,23 @@ const STATUS_STYLES = {
   LOST:      'bg-red-100 text-red-700',
 };
 
-const STATUS_LABELS = {
-  LEAD:      'New',
-  QUALIFIED: 'Qualified',
-  CLOSED:    'Closed - Won',
-  LOST:      'Closed - Lost',
+// Translation keys — resolved via t() at render time so language switches propagate live.
+const STATUS_LABEL_KEYS = {
+  ALL:       'leads.statusAll',
+  LEAD:      'leads.statusNew',
+  QUALIFIED: 'leads.statusQualified',
+  CLOSED:    'leads.statusClosedWon',
+  LOST:      'leads.statusClosedLost',
 };
 
 export default function Leads() {
+  const { t } = useTranslation();
   const [status, setStatus] = useState('ALL');
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const limit = 15;
+
+  const fmtStatus = (s) => t(STATUS_LABEL_KEYS[s] ?? '') || s;
 
   const { data, isLoading } = useQuery({
     queryKey: ['leads', status, page],
@@ -55,8 +59,8 @@ export default function Leads() {
     <div className="flex-1 p-4 sm:p-6 lg:p-8">
       <div className="mb-4 sm:mb-6 flex items-start justify-between gap-3 flex-wrap">
         <div>
-          <h1 className="text-xl sm:text-2xl font-semibold text-gray-900">Leads</h1>
-          <p className="text-xs sm:text-sm text-gray-500 mt-0.5">{total} total leads across all stages</p>
+          <h1 className="text-xl sm:text-2xl font-semibold text-gray-900">{t('leads.title')}</h1>
+          <p className="text-xs sm:text-sm text-gray-500 mt-0.5">{t('leads.totalCount', { count: total })}</p>
         </div>
         <div className="flex gap-2">
           <button
@@ -83,7 +87,7 @@ export default function Leads() {
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search name or phone…"
+            placeholder={t('leads.searchPlaceholder')}
             className="w-full pl-9 pr-3 py-2 rounded-lg border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent"
           />
         </div>
@@ -98,7 +102,7 @@ export default function Leads() {
                   : 'bg-white border border-gray-300 text-gray-600 hover:bg-gray-50'
               }`}
             >
-              {s === 'ALL' ? 'All' : fmtStatus(s)}
+              {fmtStatus(s)}
             </button>
           ))}
         </div>
@@ -115,7 +119,7 @@ export default function Leads() {
           ))}
         {!isLoading && filtered.length === 0 && (
           <div className="bg-white rounded-xl border border-gray-200 py-10 text-center text-sm text-gray-400">
-            No leads found
+            {t('leads.noResults')}
           </div>
         )}
         {!isLoading &&
@@ -131,7 +135,7 @@ export default function Leads() {
                     {lead.customerName?.[0]?.toUpperCase() ?? <User className="w-4 h-4" />}
                   </div>
                   <div className="min-w-0">
-                    <div className="text-sm font-medium text-gray-900 truncate">{lead.customerName ?? 'Unknown'}</div>
+                    <div className="text-sm font-medium text-gray-900 truncate">{lead.customerName ?? t('leads.unknown')}</div>
                     <div className="text-xs text-gray-500 font-mono truncate">{lead.customerPhone}</div>
                   </div>
                 </div>
@@ -161,12 +165,12 @@ export default function Leads() {
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-gray-100 bg-gray-50">
-              <th className="text-left px-5 py-3 font-medium text-gray-500">Contact</th>
-              <th className="text-left px-5 py-3 font-medium text-gray-500">Phone</th>
-              <th className="text-left px-5 py-3 font-medium text-gray-500">Status</th>
-              <th className="text-left px-5 py-3 font-medium text-gray-500">Sentiment</th>
-              <th className="text-left px-5 py-3 font-medium text-gray-500">Intent</th>
-              <th className="text-left px-5 py-3 font-medium text-gray-500">Updated</th>
+              <th className="text-left px-5 py-3 font-medium text-gray-500">{t('leads.colContact')}</th>
+              <th className="text-left px-5 py-3 font-medium text-gray-500">{t('leads.colPhone')}</th>
+              <th className="text-left px-5 py-3 font-medium text-gray-500">{t('leads.colStatus')}</th>
+              <th className="text-left px-5 py-3 font-medium text-gray-500">{t('leads.colSentiment')}</th>
+              <th className="text-left px-5 py-3 font-medium text-gray-500">{t('leads.colIntent')}</th>
+              <th className="text-left px-5 py-3 font-medium text-gray-500">{t('leads.colUpdated')}</th>
             </tr>
           </thead>
           <tbody>
@@ -183,7 +187,7 @@ export default function Leads() {
             {!isLoading && filtered.length === 0 && (
               <tr>
                 <td colSpan={6} className="text-center py-12 text-gray-400">
-                  No leads found
+                  {t('leads.noResults')}
                 </td>
               </tr>
             )}
@@ -199,7 +203,7 @@ export default function Leads() {
                         {lead.customerName?.[0]?.toUpperCase() ?? <User className="w-3.5 h-3.5" />}
                       </div>
                       <span className="font-medium text-gray-900 group-hover:text-brand-600 transition-colors">
-                        {lead.customerName ?? 'Unknown'}
+                        {lead.customerName ?? t('leads.unknown')}
                       </span>
                     </Link>
                   </td>
@@ -269,6 +273,3 @@ function PageBtn({ children, ...props }) {
   );
 }
 
-function fmtStatus(s) {
-  return STATUS_LABELS[s] ?? s;
-}

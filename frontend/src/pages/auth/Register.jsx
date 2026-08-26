@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../../store/auth.store.js';
 import { authApi } from '../../api/auth.api.js';
 import { Zap } from 'lucide-react';
+import LanguageSwitcher from '../../components/LanguageSwitcher.jsx';
 
 export default function Register() {
+  const { t } = useTranslation();
   const [form, setForm] = useState({ name: '', email: '', password: '' });
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [errors, setErrors] = useState({});
@@ -16,7 +19,7 @@ export default function Register() {
     e.preventDefault();
     setErrors({});
     if (!acceptTerms) {
-      setErrors({ acceptTerms: 'You must accept the Terms and Privacy Policy to continue' });
+      setErrors({ acceptTerms: t('auth.acceptTermsError') });
       return;
     }
     setLoading(true);
@@ -31,7 +34,7 @@ export default function Register() {
         res.errors.forEach(({ field, message }) => { map[field] = message; });
         setErrors(map);
       } else {
-        setErrors({ _global: res?.message ?? 'Registration failed' });
+        setErrors({ _global: res?.message ?? t('auth.registerFailed') });
       }
     } finally {
       setLoading(false);
@@ -39,7 +42,12 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 relative">
+      {/* Language switcher — top-right of the auth screen */}
+      <div className="absolute top-4 right-4">
+        <LanguageSwitcher variant="light" align="right" />
+      </div>
+
       <div className="w-full max-w-sm">
         <div className="flex justify-center mb-8">
           <div className="flex items-center gap-2">
@@ -51,8 +59,8 @@ export default function Register() {
         </div>
 
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
-          <h1 className="text-xl font-semibold text-gray-900 mb-1">Create account</h1>
-          <p className="text-sm text-gray-500 mb-6">Start your AI sales platform</p>
+          <h1 className="text-xl font-semibold text-gray-900 mb-1">{t('auth.registerTitle')}</h1>
+          <p className="text-sm text-gray-500 mb-6">{t('auth.registerSubtitle')}</p>
 
           {errors._global && (
             <div className="mb-4 px-3 py-2.5 rounded-lg bg-red-50 border border-red-200 text-sm text-red-700">
@@ -61,7 +69,7 @@ export default function Register() {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            <Field label="Full name" error={errors.name}>
+            <Field label={t('auth.name')} error={errors.name}>
               <input
                 type="text"
                 required
@@ -71,7 +79,7 @@ export default function Register() {
                 placeholder="Jane Smith"
               />
             </Field>
-            <Field label="Email" error={errors.email}>
+            <Field label={t('auth.email')} error={errors.email}>
               <input
                 type="email"
                 required
@@ -81,7 +89,7 @@ export default function Register() {
                 placeholder="you@example.com"
               />
             </Field>
-            <Field label="Password" error={errors.password} hint="Min 8 chars, 1 uppercase, 1 number">
+            <Field label={t('auth.password')} error={errors.password} hint={t('auth.passwordHint')}>
               <input
                 type="password"
                 required
@@ -100,13 +108,13 @@ export default function Register() {
                   className="mt-0.5 w-4 h-4 rounded border-gray-300 text-brand-600 focus:ring-brand-500"
                 />
                 <span className="text-xs text-gray-600">
-                  I agree to the{' '}
+                  {t('auth.acceptTerms')}{' '}
                   <Link to="/terms" target="_blank" className="text-brand-600 hover:underline">
-                    Terms of Service
+                    {t('auth.termsOfService')}
                   </Link>
-                  {' '}and{' '}
+                  {' '}{t('auth.and')}{' '}
                   <Link to="/privacy" target="_blank" className="text-brand-600 hover:underline">
-                    Privacy Policy
+                    {t('auth.privacyPolicy')}
                   </Link>
                 </span>
               </label>
@@ -119,15 +127,15 @@ export default function Register() {
               disabled={loading}
               className="w-full py-2.5 px-4 bg-brand-600 hover:bg-brand-700 disabled:opacity-60 text-white text-sm font-medium rounded-lg transition-colors"
             >
-              {loading ? 'Creating account…' : 'Create account'}
+              {loading ? t('auth.creating') : t('auth.signUp')}
             </button>
           </form>
         </div>
 
         <p className="text-center text-sm text-gray-500 mt-6">
-          Already have an account?{' '}
+          {t('auth.haveAccount')}{' '}
           <Link to="/login" className="text-brand-600 font-medium hover:underline">
-            Sign in
+            {t('auth.signIn')}
           </Link>
         </p>
       </div>
