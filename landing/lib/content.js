@@ -1,0 +1,282 @@
+// Single source of truth for all landing page copy.
+// Easier to iterate on tone/wording without hunting through JSX.
+
+export const nav = {
+  links: [
+    { label: 'Home',         href: '/' },
+    { label: 'About us',     href: '/about' },
+    { label: 'Architecture', href: '/architecture' },
+    { label: 'Pricing',      href: '/#pricing' },
+    { label: 'Contact Us',   href: '/contact' },
+  ],
+  ctaSignIn: 'Sign in',
+  ctaStart:  'Start free trial',
+};
+
+export const hero = {
+  eyebrow: 'AI SALES ON WHATSAPP',
+  headlineLine1: 'Your 24/7 AI closer',
+  headlineLine2: 'for WhatsApp.',
+  subhead:
+    "Xavier qualifies leads, handles objections, and books meetings — in 15 languages, on the world's most-used chat app. While you sleep.",
+  ctaPrimary:   'Start free trial',
+  ctaSecondary: 'See it in action',
+  stat1: { value: '3.2s',   label: 'Avg. reply time' },
+  stat2: { value: '87%',    label: 'Qualification rate' },
+  stat3: { value: '24/7',   label: 'Always on' },
+};
+
+export const trustedBy = {
+  title: 'Powering conversations for teams at',
+  // Placeholder brand names — swap for real customer logos when you have them
+  logos: [
+    'ATLAS AI', 'NORTHWIND', 'SUMMIT', 'FRAME.IO',
+    'PILOT LABS', 'MERIDIAN', 'CIPHER', 'HALO CO.',
+  ],
+};
+
+export const howItWorks = {
+  eyebrow: 'HOW IT WORKS',
+  title: 'From cold DM to booked call in one thread.',
+  subtitle:
+    'No new apps for your customers. They message your WhatsApp Business number. Xavier does the rest.',
+  steps: [
+    {
+      number: '01',
+      title:  'Customer messages your WhatsApp',
+      body:   'Any number, any language. Xavier detects intent within the first two messages and matches your tone.',
+    },
+    {
+      number: '02',
+      title:  'AI qualifies + handles objections',
+      body:   'Built on your product catalog, FAQs, and pricing — with anti-hallucination guardrails so it never invents facts.',
+    },
+    {
+      number: '03',
+      title:  'Warm lead lands in your dashboard',
+      body:   'Full conversation, sentiment score, buying intent, and next best action. Take over anytime with one tap.',
+    },
+  ],
+};
+
+export const features = {
+  eyebrow: 'CAPABILITIES',
+  title:   'Every part of the sales conversation, on autopilot.',
+  subtitle: 'Not a chatbot script. A closing agent with real product knowledge.',
+  items: [
+    {
+      icon: 'Globe',
+      title: 'Native in 15 languages',
+      body:  'Detects the customer\'s language and replies in it — including Arabic (RTL), Chinese, and Turkish. Not translated. Native.',
+    },
+    {
+      icon: 'Shield',
+      title: 'Zero hallucinations',
+      body:  'Anti-hallucination guardrail catches invented prices, promises, or terms and hands off before damage is done.',
+    },
+    {
+      icon: 'Brain',
+      title: 'Sentiment + intent scoring',
+      body:  'Every conversation is scored 0–10 for sentiment and buying intent. Prioritize your pipeline by hotness.',
+    },
+    {
+      icon: 'Zap',
+      title: 'Official Meta WhatsApp API',
+      body:  'Not an unofficial bridge. Real Meta Cloud API. Verified sender, no risk of bans, full compliance built in.',
+    },
+    {
+      icon: 'Pause',
+      title: 'Pause anytime',
+      body:  'Full control. Take over any conversation manually, or pause the entire bot with one switch when you want.',
+    },
+    {
+      icon: 'Users',
+      title: 'Human handoff',
+      body:  'One tap and the AI steps aside. Your team steps in mid-conversation, no context loss for the customer.',
+    },
+  ],
+};
+
+export const aiInAction = {
+  eyebrow: 'AI IN ACTION',
+  title:   'Watch Xavier qualify a lead in real time.',
+  subtitle:
+    'Real conversation, real timing. This is a live scenario — Xavier detects budget, timeline, and intent within 4 exchanges.',
+  chat: [
+    { role: 'customer', text: 'Hi, saw your ad. How much is the enterprise plan?', delay: 400 },
+    { role: 'ai',       text: 'Hey! Happy to walk you through it. Quick question first — roughly how many customer conversations does your team handle a month?', delay: 1200 },
+    { role: 'customer', text: 'Around 2,000. Growing fast.',              delay: 1400 },
+    { role: 'ai',       text: 'Got it. At 2k/month you\'re a great fit for BDR Suite ($1,499/mo, up to 1,000 high-ticket convos + overage). Enterprise makes sense if you\'re past 3k. Want me to send a quick side-by-side?', delay: 1600 },
+    { role: 'customer', text: 'Yes please. Also — how fast can we go live?', delay: 1200 },
+    { role: 'ai',       text: 'Under 15 minutes once your WhatsApp Business number is connected. I\'ll drop our onboarding link + comparison table. When\'s a good time this week for a 20-min demo?', delay: 1600 },
+  ],
+};
+
+export const pricing = {
+  eyebrow: 'PRICING',
+  title:   'Simple pricing. Real ROI.',
+  subtitle: 'Every plan pays for itself in the first two closed deals. No credit card for trial.',
+  tiers: [
+    {
+      name:  'Assistant',
+      price: 549,
+      cadence: '/ month',
+      pitch: 'For boutique brands testing AI on their WhatsApp inbound.',
+      limit: '300 inbound leads / month',
+      overage: '$0.50 / extra lead',
+      features: [
+        '24/7 smart screening agent',
+        'Anti-hallucination guardrails',
+        'Multi-language auto-reply',
+        'Smart message-burst queue',
+        'Meta-compliant + STOP handling',
+        'Pause bot switch',
+      ],
+      ctaLabel: 'Start free trial',
+      ctaVariant: 'primary',
+    },
+    {
+      name:  'BDR Suite',
+      price: 1499,
+      cadence: '/ month',
+      pitch: 'For scale-ups and clinics ready to fully outsource inbound qualification.',
+      limit: '1,000 high-ticket conversations / month',
+      overage: '$0.35 / extra conversation',
+      badge: 'MOST POPULAR',
+      features: [
+        'Everything in Assistant, plus:',
+        '2-agent closer combo',
+        'Hands-free calendar booking',
+        'Live Google Sheets sync',
+        'Instant FAQ answer cache',
+        'Audio voice-note transcription',
+      ],
+      ctaLabel: 'Start free trial',
+      ctaVariant: 'primary',
+      featured: true,
+    },
+    {
+      name:  'Enterprise',
+      price: 3500,
+      cadence: '/ month · starting',
+      pitch: 'For agencies and luxury brands running the whole show through Xavier.',
+      limit: '3,000 deep B2B pipelines / month',
+      overage: '$0.25 / extra conversation',
+      features: [
+        'Everything in BDR, plus:',
+        '3-agent full combo + sentiment audit',
+        '"Whale catcher" lead enrichment',
+        'Dynamic tone shifting',
+        'Global cultural adapter (Khaleeji, EU)',
+        'CRM sync (HubSpot / Salesforce / Pipedrive)',
+        'Team access controls (RBAC)',
+      ],
+      ctaLabel: 'Book a demo',
+      ctaVariant: 'secondary',
+    },
+  ],
+};
+
+export const faq = {
+  eyebrow: 'FAQ',
+  title:   'The questions everyone asks before signing up.',
+  items: [
+    {
+      q: 'Will Xavier replace my entire sales team?',
+      a: "No. Xavier handles the repetitive, time-consuming tasks (screening, answering basic questions, and scheduling) so your team can focus exclusively on serious, ready-to-close leads. It doesn't replace your team — it saves their valuable time.",
+    },
+    {
+      q: 'What if Xavier gives a customer the wrong price or incorrect information?',
+      a: 'This cannot happen. Xavier operates on a locked pricing system — it can only quote the exact prices and terms that you have provided to it. If something is not on that list, it stops automatically and tells the customer, "I will confirm and get back to you" — it never guesses.',
+    },
+    {
+      q: 'Can my WhatsApp number get banned because of this?',
+      a: 'No, not if it is used correctly. Xavier strictly follows Meta\'s official guidelines — such as the mandatory 24-hour messaging window and stopping immediately if a customer says "STOP". These compliance rules are already built-in.',
+    },
+    {
+      q: 'How much time or technical knowledge is required for setup?',
+      a: 'You do not need to write code or learn anything technical. Just provide your business information (products, pricing, and FAQs) — we handle the entire setup for you. Connecting your WhatsApp Business account is done in a few simple steps.',
+    },
+    {
+      q: 'What if a customer asks a difficult or sensitive question that Xavier cannot handle?',
+      a: 'Xavier instantly recognizes when a conversation goes beyond its capacity. In these situations, it automatically pauses that specific conversation, sends an urgent alert to your team, and politely tells the customer that a human agent will step in shortly.',
+    },
+    {
+      q: 'What happens if a customer messages at night or during holidays?',
+      a: "Xavier stays active 24/7. If you are asleep and a complex query hits the bot, it won't keep the customer waiting. It safely fields the questions and automatically proposes an open meeting slot on your calendar for the next day, giving you a full update in the morning.",
+    },
+    {
+      q: 'Is my business data safe?',
+      a: 'Yes. All connection pipelines are heavily encrypted, and Xavier does not unnecessarily store processed conversation data — it only retains what you explicitly need for proper lead-tracking and CRM audits.',
+    },
+    {
+      q: 'What if I want to jump into a conversation and talk to a customer manually?',
+      a: 'You can click the "Pause" button on your dashboard at any time to instantly freeze Xavier for that specific chat and reply directly from your screen. Xavier will not interfere in that conversation until you resume it.',
+    },
+    {
+      q: 'What if a customer speaks in Roman Urdu, Arabic, or any other global language?',
+      a: "Xavier automatically detects the customer's incoming language and slang style in real-time, responding perfectly in the exact same language — whether it is English, Roman Urdu, deep Gulf dialects, or any other global tongue. You do not need any external translation setups.",
+    },
+    {
+      q: 'Can I cancel my plan if I change my mind later?',
+      a: 'Absolutely. You can cancel your subscription at any time with a single click from your billing page — there are no lock-in contracts. You can also start a 7-day free trial right now with zero credit card commitment.',
+    },
+    {
+      q: 'What happens if I reach my monthly message limit?',
+      a: "Each plan includes a set number of conversations per month. If you're close to your limit, you'll see it in your dashboard beforehand. If you do reach it, Xavier automatically lets the customer know a team member will follow up, rather than silently going quiet.",
+    },
+    {
+      q: 'Does Xavier connect to my existing CRM?',
+      a: 'Yes — on our Enterprise plan, Xavier automatically syncs qualified leads and closed deals directly to HubSpot, Salesforce, or Pipedrive, so your sales data stays in one place without manual entry.',
+    },
+    {
+      q: 'Can more than one person on my team use Xavier?',
+      a: 'Yes, on our Enterprise plan. You can add team members with different access levels — admins can manage settings and export data, while agents can view conversations and take over chats when needed.',
+    },
+    {
+      q: 'Can Xavier understand voice messages?',
+      a: 'Yes — if a customer sends a WhatsApp voice note, Xavier automatically transcribes it and responds appropriately, just like a text message.',
+    },
+  ],
+};
+
+export const cta = {
+  eyebrow: 'READY?',
+  title:   'Stop losing leads to slow replies.',
+  subtitle:
+    "Every unanswered WhatsApp is a competitor's win. Get Xavier live in 15 minutes — free for the first 20 conversations.",
+  emailPlaceholder: 'you@company.com',
+  ctaPrimary: 'Start free trial',
+  smallPrint: 'No credit card. Cancel anytime.',
+};
+
+export const footer = {
+  tagline: 'The AI that closes deals on WhatsApp — so you can sleep at night.',
+  columns: [
+    {
+      title: 'Product',
+      links: [
+        { label: 'Features',    href: '#features' },
+        { label: 'How it works', href: '#how' },
+        { label: 'Pricing',     href: '#pricing' },
+        { label: 'FAQ',         href: '#faq' },
+      ],
+    },
+    {
+      title: 'Company',
+      links: [
+        { label: 'About',   href: '#' },
+        { label: 'Contact', href: 'mailto:hello@slovx.com' },
+        { label: 'Careers', href: '#' },
+      ],
+    },
+    {
+      title: 'Legal',
+      links: [
+        { label: 'Privacy Policy',  href: '/privacy' },
+        { label: 'Terms of Service', href: '/terms' },
+      ],
+    },
+  ],
+  copyright: '© 2026 SlovX. All rights reserved.',
+};
