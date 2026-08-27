@@ -103,13 +103,27 @@ export const aiInAction = {
   subtitle:
     'Real conversation, real timing. This is a live scenario — Xavier detects budget, timeline, and intent within 4 exchanges.',
   chat: [
-    { role: 'customer', text: 'Hi, saw your ad. How much is the enterprise plan?', delay: 400 },
-    { role: 'ai',       text: 'Hey! Happy to walk you through it. Quick question first — roughly how many customer conversations does your team handle a month?', delay: 1200 },
-    { role: 'customer', text: 'Around 2,000. Growing fast.',              delay: 1400 },
-    { role: 'ai',       text: 'Got it. At 2k/month you\'re a great fit for BDR Suite ($1,499/mo, up to 1,000 high-ticket convos + overage). Enterprise makes sense if you\'re past 3k. Want me to send a quick side-by-side?', delay: 1600 },
-    { role: 'customer', text: 'Yes please. Also — how fast can we go live?', delay: 1200 },
-    { role: 'ai',       text: 'Under 15 minutes once your WhatsApp Business number is connected. I\'ll drop our onboarding link + comparison table. When\'s a good time this week for a 20-min demo?', delay: 1600 },
+    { role: 'customer', text: 'Hi, saw your ad. How much is the enterprise plan?', delay: 400,  time: '9:41 AM' },
+    { role: 'ai',       text: 'Hey! Happy to walk you through it. Quick question first — roughly how many customer conversations does your team handle a month?', delay: 1200, time: '9:41 AM' },
+    { role: 'customer', text: 'Around 2,000. Growing fast.',              delay: 1400, time: '9:42 AM' },
+    { role: 'ai',       text: 'Got it. At 2k/month you\'re a great fit for BDR Suite ($1,499/mo, up to 1,000 high-ticket convos + overage). Enterprise makes sense if you\'re past 3k. Want me to send a quick side-by-side?', delay: 1600, time: '9:42 AM' },
+    { role: 'customer', text: 'Yes please. Also — how fast can we go live?', delay: 1200, time: '9:43 AM' },
+    { role: 'ai',       text: 'Under 15 minutes once your WhatsApp Business number is connected. I\'ll drop our onboarding link + comparison table. When\'s a good time this week for a 20-min demo?', delay: 1600, time: '9:43 AM' },
   ],
+  // Post-demo interactive replies. First matching pattern wins; fallback used
+  // if nothing matches. Keeps the mock feeling alive without a real backend.
+  cannedReplies: [
+    { match: 'price|cost|pricing|plan|how much', text: "Sure! Starter is $299/mo, BDR Suite $1,499/mo, and Enterprise is custom. Roughly how many conversations a month are you handling?" },
+    { match: 'demo|schedule|meeting|call|book',  text: "Happy to book one — I have 20-min slots open this week. What day works best for you?" },
+    { match: 'language|translate|multilingual',  text: "Xavier speaks 15 languages natively — Spanish, Arabic, Hindi, Portuguese, French, Mandarin and more. Which do your customers use most?" },
+    { match: 'whatsapp|meta|api|number',         text: "We run on the official Meta WhatsApp Business API. Once your number is verified we go live in under 15 minutes." },
+    { match: 'integrat|crm|hubspot|salesforce|pipedrive', text: "Native integrations with HubSpot, Salesforce, and Pipedrive out of the box — plus a webhook for anything else." },
+    { match: 'secure|security|gdpr|soc|compli',  text: "SOC 2 Type II, GDPR-ready, AES-256 at rest, and full ReAct reasoning logs. Full breakdown lives on our /architecture page." },
+    { match: 'trial|free|try|start',             text: "14-day trial, no card required. Want me to drop the signup link right here?" },
+    { match: 'hi|hello|hey|yo',                  text: "Hi! I'm Xavier — your 24/7 sales AI. What are you trying to close today?" },
+    { match: 'thank|thanks|cool|great|awesome',  text: "Glad that helps! Anything else you want me to dig into — pricing, integrations, or the security architecture?" },
+  ],
+  fallbackReply: "Great question — let me flag that for a human teammate. In the meantime, want me to book a quick 20-min demo where we can walk through the specifics?",
 };
 
 export const security = {

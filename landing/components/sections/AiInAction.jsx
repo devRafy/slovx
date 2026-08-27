@@ -3,26 +3,48 @@
 import { useRef, useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import dynamic from 'next/dynamic';
-import { Wifi, Battery, Signal } from 'lucide-react';
+import { Wifi, Battery, Signal, Send } from 'lucide-react';
 import SectionHeader from '../ui/SectionHeader';
 import { aiInAction } from '../../lib/content';
 
 const FloatingShapes = dynamic(() => import('../3d/FloatingShapes'), { ssr: false });
+
+// Base clock time used AFTER the scripted demo finishes. New user messages
+// start at 9:44 and advance one minute per exchange for realism.
+const POST_DEMO_START_MIN = 9 * 60 + 44;
+
+function formatClock(minutesFromMidnight) {
+  const h24 = Math.floor(minutesFromMidnight / 60) % 24;
+  const m   = minutesFromMidnight % 60;
+  const ampm = h24 >= 12 ? 'PM' : 'AM';
+  const h12  = (h24 % 12) || 12;
+  return `${h12}:${m.toString().padStart(2, '0')} ${ampm}`;
+}
+
+function pickReply(text) {
+  const lower = text.toLowerCase();
+  for (const { match, text: reply } of aiInAction.cannedReplies) {
+    if (new RegExp(match, 'i').test(lower)) return reply;
+  }
+  return aiInAction.fallbackReply;
+}
 
 export default function AiInAction() {
   const sectionRef = useRef(null);
   const [messages, setMessages] = useState([]);
   const [typing, setTyping] = useState(false);
   const [started, setStarted] = useState(false);
+  const [demoDone, setDemoDone] = useState(false);
+  const [input, setInput] = useState('');
+  // Cumulative simulated clock for post-demo messages (in minutes from midnight)
+  const clockRef = useRef(POST_DEMO_START_MIN);
 
   useEffect(() => {
     const el = sectionRef.current;
     if (!el) return;
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && !started) {
-          setStarted(true);
-        }
+        if (entries[0].isIntersecting && !started) setStarted(true);
       },
       { threshold: 0.35 },
     );
@@ -51,10 +73,35 @@ export default function AiInAction() {
         setMessages((prev) => [...prev, msg]);
         idx++;
       }
+      if (!cancelled) setDemoDone(true);
     };
     step();
     return () => { cancelled = true; };
   }, [started]);
+
+  const advanceClock = () => {
+    clockRef.current += 1;
+    return formatClock(clockRef.current);
+  };
+
+  const handleSend = async (e) => {
+    e.preventDefault();
+    const text = input.trim();
+    if (!text || typing) return;
+
+    setInput('');
+    const userTime = advanceClock();
+    setMessages((prev) => [...prev, { role: 'customer', text, time: userTime }]);
+
+    setTyping(true);
+    const reply = pickReply(text);
+    const thinkMs = 900 + Math.min(reply.length * 15, 1600);
+    await new Promise((r) => setTimeout(r, thinkMs));
+
+    const aiTime = formatClock(clockRef.current); // same minute — reads as instant
+    setTyping(false);
+    setMessages((prev) => [...prev, { role: 'ai', text: reply, time: aiTime }]);
+  };
 
   return (
     <section ref={sectionRef} className="snap-section relative">
@@ -80,18 +127,28 @@ export default function AiInAction() {
             <span className="px-3 py-1.5 rounded-full bg-brand-500/10 border border-brand-500/20 text-brand-300">
               Books demo
             </span>
+            <span className="px-3 py-1.5 rounded-full bg-brand-500/10 border border-brand-500/20 text-brand-300">
+              {demoDone ? 'Try it — type below' : 'Live demo running…'}
+            </span>
           </div>
         </div>
 
         <div className="flex justify-center">
-          <PhoneMock messages={messages} typing={typing} />
+          <PhoneMock
+            messages={messages}
+            typing={typing}
+            demoDone={demoDone}
+            input={input}
+            setInput={setInput}
+            onSend={handleSend}
+          />
         </div>
       </div>
     </section>
   );
 }
 
-function PhoneMock({ messages, typing }) {
+function PhoneMock({ messages, typing, demoDone, input, setInput, onSend }) {
   const scrollRef = useRef(null);
   useEffect(() => {
     if (scrollRef.current) {
@@ -120,7 +177,7 @@ function PhoneMock({ messages, typing }) {
           <div className="w-9 h-9 rounded-full bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center text-white font-bold text-sm">X</div>
           <div className="flex-1">
             <div className="text-white text-sm font-medium">Xavier · your AI</div>
-            <div className="text-white/60 text-[10px]">online</div>
+            <div className="text-white/60 text-[10px]">{typing ? 'typing…' : 'online'}</div>
           </div>
         </div>
         <div
@@ -146,7 +203,12 @@ function PhoneMock({ messages, typing }) {
                       : 'bg-[#005c4b] text-white rounded-br-sm'
                   }`}
                 >
-                  {msg.text}
+                  <div>{msg.text}</div>
+                  {msg.time && (
+                    <div className="mt-1 text-[9px] text-white/40 text-right leading-none">
+                      {msg.time}
+                    </div>
+                  )}
                 </div>
               </motion.div>
             ))}
@@ -167,10 +229,27 @@ function PhoneMock({ messages, typing }) {
             )}
           </AnimatePresence>
         </div>
-        <div className="absolute bottom-0 inset-x-0 h-14 bg-[#1f2c33] flex items-center px-3 gap-2 z-10">
-          <div className="flex-1 h-9 rounded-full bg-[#2a3942] px-4 flex items-center text-white/40 text-xs">Message</div>
-          <div className="w-9 h-9 rounded-full bg-[#00a884] flex items-center justify-center text-white text-sm">✓</div>
-        </div>
+        <form
+          onSubmit={onSend}
+          className="absolute bottom-0 inset-x-0 h-14 bg-[#1f2c33] flex items-center px-3 gap-2 z-10"
+        >
+          <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder={demoDone ? 'Type a message…' : 'Watch the demo — then chat'}
+            disabled={!demoDone || typing}
+            className="flex-1 h-9 rounded-full bg-[#2a3942] px-4 text-white text-xs placeholder:text-white/40 focus:outline-none focus:ring-1 focus:ring-brand-500/60 disabled:opacity-60"
+          />
+          <button
+            type="submit"
+            disabled={!demoDone || typing || !input.trim()}
+            aria-label="Send message"
+            className="w-9 h-9 rounded-full bg-[#00a884] hover:bg-[#00c299] disabled:opacity-40 disabled:hover:bg-[#00a884] flex items-center justify-center text-white text-sm transition-colors"
+          >
+            <Send className="w-4 h-4" />
+          </button>
+        </form>
       </div>
     </motion.div>
   );
