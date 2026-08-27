@@ -5,10 +5,8 @@ import dynamic from 'next/dynamic';
 import { ArrowRight, PlayCircle, ArrowDown } from 'lucide-react';
 import { hero } from '../../lib/content';
 
-// The robot itself now lives in the global RobotOrchestrator (see layout.jsx)
-// so it can travel across sections. Hero just leaves an empty right column
-// where the fixed-canvas robot happens to render.
 const NeuralMesh = dynamic(() => import('../3d/NeuralMesh'), { ssr: false });
+const HeroRobot  = dynamic(() => import('../HeroRobot'),      { ssr: false });
 
 export default function Hero() {
   return (
@@ -115,15 +113,13 @@ export default function Hero() {
             </motion.div>
           </div>
 
-          {/* ─── RIGHT COLUMN: reserved space for the global robot ─
-             The robot is rendered by the fixed-canvas RobotOrchestrator (see layout.jsx)
-             and its "hero" position happens to align with this column. Keeping this
-             div preserves the two-column layout balance + a subtle glow behind the robot. */}
+          {/* ─── RIGHT COLUMN: 3D robot that tracks the cursor ────── */}
           <div
             className="relative h-[400px] sm:h-[500px] lg:h-[600px] w-full hidden lg:block"
             aria-hidden
           >
             <div className="absolute inset-8 blur-3xl bg-gradient-to-br from-brand-500/30 to-brand-700/20 rounded-full" />
+            <HeroRobot />
           </div>
         </div>
       </div>
