@@ -50,7 +50,7 @@ export default function Hero() {
                 initial={{ opacity: 0, y: -50 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1.1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-                className="block text-white text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] xl:text-[6.5rem]"
+                className="block text-white whitespace-nowrap text-4xl sm:text-5xl md:text-6xl lg:text-[4.25rem] xl:text-[5rem]"
               >
                 {hero.headlineLine1}
               </motion.span>
@@ -58,7 +58,7 @@ export default function Hero() {
                 initial={{ opacity: 0, y: -50 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1.1, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                className="block text-gradient text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] xl:text-[6.5rem]"
+                className="block text-gradient whitespace-nowrap text-4xl sm:text-5xl md:text-6xl lg:text-[4.25rem] xl:text-[5rem]"
               >
                 {hero.headlineLine2}
               </motion.span>
