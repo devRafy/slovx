@@ -1,14 +1,18 @@
 'use client';
 
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import dynamic from 'next/dynamic';
 import { ArrowRight, PlayCircle, ArrowDown } from 'lucide-react';
 import { hero } from '../../lib/content';
+import VideoModal from '../ui/VideoModal';
 
 const NeuralMesh = dynamic(() => import('../3d/NeuralMesh'), { ssr: false });
 const HeroRobot  = dynamic(() => import('../HeroRobot'),      { ssr: false });
 
 export default function Hero() {
+  const [videoOpen, setVideoOpen] = useState(false);
+
   return (
     <section className="snap-section relative">
       {/* Subtle particle backdrop — dimmed so it doesn't compete with the robot */}
@@ -88,13 +92,14 @@ export default function Hero() {
                 {hero.ctaPrimary}
                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
               </a>
-              <a
-                href="#how"
+              <button
+                type="button"
+                onClick={() => setVideoOpen(true)}
                 className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-white font-medium transition-all backdrop-blur-sm"
               >
                 <PlayCircle className="w-4 h-4" />
                 {hero.ctaSecondary}
-              </a>
+              </button>
             </motion.div>
 
             {/* Stats row — comes last, cascade continues */}
@@ -134,6 +139,12 @@ export default function Hero() {
         <span className="text-[10px] tracking-[0.3em] uppercase">Scroll</span>
         <ArrowDown className="w-4 h-4 animate-bounce" />
       </motion.div>
+
+      <VideoModal
+        open={videoOpen}
+        onClose={() => setVideoOpen(false)}
+        src="/agent-demo.mp4"
+      />
     </section>
   );
 }

@@ -112,6 +112,29 @@ export const aiInAction = {
   ],
 };
 
+export const security = {
+  eyebrow: 'TRUST & SECURITY',
+  title:   'Hardened Cognitive Architecture',
+  subtitle: "Built for teams that can't afford a single pipeline leak.",
+  items: [
+    { icon: 'ShieldCheck', title: 'Dual-Intent Interception Firewall',
+      body: 'Every inbound message is screened for adversarial intent before it ever reaches the reasoning layer.' },
+    { icon: 'Braces',      title: 'Structural XML Input Isolation',
+      body: 'User input is parsed and quarantined in typed containers — never spliced into system prompts.' },
+    { icon: 'ScrollText',  title: 'Deterministic ReAct Reasoning Logs',
+      body: 'Every decision traceable step-by-step. Reproducible audits, no black-box replies.' },
+    { icon: 'BadgeCheck',  title: 'SOC 2 Type II & GDPR Infrastructure',
+      body: 'Continuously audited controls, EU data residency, and DPA-ready processing.' },
+    { icon: 'Scale',       title: 'California SB 1001 Disclosure Filter',
+      body: 'Automated bot-identity disclosure so every jurisdiction stays compliant, always.' },
+    { icon: 'EyeOff',      title: 'Asynchronous PII Masking Engine',
+      body: 'Personally identifiable data is redacted at ingestion — before any model ever sees it.' },
+    { icon: 'Lock',        title: 'Data At-Rest Cryptography (AES-256)',
+      body: 'All conversation stores encrypted with rotated keys and hardware-backed KMS.' },
+  ],
+  cta: { label: 'Visit our Trust & Security Center', href: '/architecture' },
+};
+
 export const pricing = {
   eyebrow: 'PRICING',
   title:   'Simple pricing. Real ROI.',
