@@ -5,6 +5,7 @@ export const nav = {
   links: [
     { label: 'Home',         href: '/' },
     { label: 'Platform',     href: '/platform' },
+    { label: 'Services',     href: '/services' },
     { label: 'About us',     href: '/about' },
     { label: 'Architecture', href: '/architecture' },
     { label: 'Pricing',      href: '/#pricing' },
