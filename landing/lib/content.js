@@ -4,6 +4,7 @@
 export const nav = {
   links: [
     { label: 'Home',         href: '/' },
+    { label: 'Platform',     href: '/platform' },
     { label: 'About us',     href: '/about' },
     { label: 'Architecture', href: '/architecture' },
     { label: 'Pricing',      href: '/#pricing' },
