@@ -8,28 +8,28 @@ import FooterMini from '../../components/ui/FooterMini';
 
 const CARDS = [
   {
-    tag: '01 / T&C',
+    tag: 'T&C',
     icon: ScrollText,
     title: 'Terms & Conditions',
     body:  'Platform rules, billing boundaries, and the responsibilities of using an autonomous AI sales agent.',
     href:  '/legal/terms',
   },
   {
-    tag: '02 / PRIVACY',
+    tag: 'PRIVACY',
     icon: Shield,
     title: 'Privacy Policy',
     body:  "What data Xavier processes, how it's used, and the rights you and your leads have over it.",
     href:  '/legal/privacy',
   },
   {
-    tag: '03 / SECURITY',
+    tag: 'SECURITY',
     icon: ShieldCheck,
     title: 'Trust & Security Center',
     body:  'Encryption, tenant isolation, AI output safeguards, and how we handle vulnerability reports.',
     href:  '/trust',
   },
   {
-    tag: '04 / COOKIES',
+    tag: 'COOKIES',
     icon: Cookie,
     title: 'Website Tracking & Cookies',
     body:  'What SlovX.com tracks, why, and how to control it — separate from your Xavier conversations.',

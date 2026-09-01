@@ -8,6 +8,7 @@ export const nav = {
     { label: 'Services',     href: '/services' },
     { label: 'About us',     href: '/about' },
     { label: 'Architecture', href: '/architecture' },
+    { label: 'ROI',          href: '/roi-calculator' },
     { label: 'Pricing',      href: '/#pricing' },
     { label: 'Contact Us',   href: '/contact' },
   ],
