@@ -132,7 +132,7 @@ function Badges() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {platformBadges.items.map((b, i) => (
           <motion.div key={i} {...fade(0.1 + i * 0.08)}
-            className="flex flex-col items-center gap-2 p-5 rounded-2xl bg-ink-800/60 border border-white/5 hover:border-brand-500/30 transition-colors text-center"
+            className="glow-border flex flex-col items-center gap-2 p-5 rounded-2xl bg-ink-800/60 border border-white/5 hover:border-brand-500/30 transition-colors text-center"
           >
             <div className="flex gap-0.5 mb-1">
               {[...Array(b.stars)].map((_, s) => (
@@ -168,7 +168,7 @@ function PlatformBoxes() {
           const Icon = ICONS[box.icon] ?? Zap;
           return (
             <motion.div key={i} {...fade(0.1 + i * 0.1)}
-              className="rounded-2xl bg-ink-800/60 border border-white/5 p-7 hover:border-brand-500/25 transition-all"
+              className="glow-border rounded-2xl bg-ink-800/60 border border-white/5 p-7 hover:border-brand-500/25 transition-all"
             >
               <div className="flex items-center gap-3 mb-5">
                 <div className="w-10 h-10 rounded-xl bg-brand-500/10 border border-brand-500/20 flex items-center justify-center">
@@ -200,7 +200,7 @@ function PlatformBoxes() {
           const Icon = ICONS[f.icon] ?? Zap;
           return (
             <motion.div key={i} {...fade(0.35 + i * 0.08)}
-              className="flex gap-3 p-4 rounded-xl bg-white/3 border border-white/5 hover:border-brand-500/20 transition-colors"
+              className="glow-border flex gap-3 p-4 rounded-xl bg-white/3 border border-white/5 hover:border-brand-500/20 transition-colors"
             >
               <Icon className="w-5 h-5 text-brand-400 shrink-0 mt-0.5" />
               <div>
@@ -289,7 +289,7 @@ function Enterprise() {
           initial={{ opacity: 0, x: 16 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          className="rounded-2xl bg-ink-800/60 border border-brand-500/20 p-7"
+          className="glow-border rounded-2xl bg-ink-800/60 border border-brand-500/20 p-7"
         >
           <h3 className="font-display font-bold text-xl text-white mb-6">{tab.title}</h3>
           <ul className="space-y-4">
@@ -341,7 +341,7 @@ function Verticals() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35 }}
-          className="rounded-2xl bg-ink-800/60 border border-white/5 p-6 md:p-8"
+          className="glow-border rounded-2xl bg-ink-800/60 border border-white/5 p-6 md:p-8"
         >
           <h3 className="font-display font-bold text-xl text-white mb-6">
             {tab.label} — {tab.title}
@@ -378,7 +378,7 @@ function Partners() {
           const Icon = ICONS[p.icon] ?? Zap;
           return (
             <motion.div key={i} {...fade(0.1 + i * 0.1)}
-              className="rounded-2xl bg-ink-800/60 border border-white/5 p-6 hover:border-brand-500/25 transition-all"
+              className="glow-border rounded-2xl bg-ink-800/60 border border-white/5 p-6 hover:border-brand-500/25 transition-all"
             >
               <div className="w-11 h-11 rounded-xl bg-brand-500/10 border border-brand-500/20 flex items-center justify-center mb-4">
                 <Icon className="w-5 h-5 text-brand-400" />
@@ -418,7 +418,7 @@ function SecurityFaq() {
             const isOpen = open === i;
             return (
               <motion.div key={i} {...fade(0.1 + i * 0.07)}
-                className={`rounded-xl border overflow-hidden transition-colors ${
+                className={`glow-border rounded-xl border overflow-hidden transition-colors ${
                   isOpen ? 'bg-brand-500/5 border-brand-500/30' : 'bg-ink-800/50 border-white/5 hover:border-white/10'
                 }`}
               >

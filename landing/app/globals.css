@@ -101,6 +101,44 @@ html {
     z-index: -1;
   }
 
+  /* Rotating conic-gradient border — appears on hover.
+     A bright indigo arc travels around the card edge.
+     Uses @property so the --angle can be animated smoothly. */
+  .glow-border {
+    position: relative;
+    isolation: isolate;
+  }
+  .glow-border::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1.5px;
+    background: conic-gradient(
+      from var(--glow-angle, 0deg),
+      transparent 0%,
+      rgba(99, 102, 241, 0.05) 15%,
+      rgba(129, 140, 248, 0.9) 25%,
+      rgba(165, 180, 252, 1)  30%,
+      rgba(129, 140, 248, 0.9) 35%,
+      rgba(99, 102, 241, 0.05) 45%,
+      transparent 60%
+    );
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .glow-border:hover::before {
+    opacity: 1;
+    animation: glow-spin 3.5s linear infinite;
+  }
+
   /* Eyebrow label */
   .eyebrow {
     display: inline-block;
@@ -114,6 +152,17 @@ html {
     border: 1px solid rgba(99, 102, 241, 0.15);
     margin-bottom: 1.5rem;
   }
+}
+
+/* Custom property + keyframes for the rotating conic-gradient border.
+   Kept outside @layer so the @property registration is global. */
+@property --glow-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+@keyframes glow-spin {
+  to { --glow-angle: 360deg; }
 }
 
 /* Marquee */
