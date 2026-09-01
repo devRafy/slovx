@@ -312,8 +312,11 @@ export const footer = {
     {
       title: 'Legal',
       links: [
-        { label: 'Privacy Policy',  href: '/privacy' },
-        { label: 'Terms of Service', href: '/terms' },
+        { label: 'Legal Hub',        href: '/legal'          },
+        { label: 'Privacy Policy',   href: '/legal/privacy'  },
+        { label: 'Terms & Conditions', href: '/legal/terms'  },
+        { label: 'Cookie Policy',    href: '/legal/cookies'  },
+        { label: 'Trust & Security', href: '/trust'          },
       ],
     },
   ],
