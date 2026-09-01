@@ -103,10 +103,20 @@ html {
 
   /* Rotating conic-gradient border — appears on hover.
      A bright indigo arc travels around the card edge.
-     Uses @property so the --angle can be animated smoothly. */
+     Uses @property so the --angle can be animated smoothly.
+     Card itself also lifts + tilts on hover (subtle 3D "flip" feel). */
   .glow-border {
     position: relative;
     isolation: isolate;
+    transition:
+      transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 0.45s ease,
+      border-color 0.3s ease;
+    will-change: transform;
+  }
+  .glow-border:hover {
+    transform: perspective(900px) rotateX(2deg) translateY(-6px) scale(1.012);
+    box-shadow: 0 25px 50px -20px rgba(99, 102, 241, 0.4);
   }
   .glow-border::before {
     content: '';
@@ -139,6 +149,33 @@ html {
     animation: glow-spin 3.5s linear infinite;
   }
 
+  /* Shine sweep — a diagonal light sweep travels across the card on hover.
+     Combined with the lift + rotating border, reads as a card "flipping to life". */
+  .glow-border::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(
+      115deg,
+      transparent 30%,
+      rgba(255, 255, 255, 0.05) 45%,
+      rgba(165, 180, 252, 0.18) 50%,
+      rgba(255, 255, 255, 0.05) 55%,
+      transparent 70%
+    );
+    background-size: 250% 100%;
+    background-position: 150% 0;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 0;
+    transition: opacity 0.25s ease;
+  }
+  .glow-border:hover::after {
+    opacity: 1;
+    animation: glow-shine 1.2s ease-out;
+  }
+
   /* Eyebrow label */
   .eyebrow {
     display: inline-block;
@@ -163,6 +200,10 @@ html {
 }
 @keyframes glow-spin {
   to { --glow-angle: 360deg; }
+}
+@keyframes glow-shine {
+  from { background-position: 150% 0; }
+  to   { background-position: -50% 0; }
 }
 
 /* Marquee */
