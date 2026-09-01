@@ -96,7 +96,7 @@ export default function ArchitecturePage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-50px' }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="rounded-2xl bg-ink-800/50 border border-white/5 p-6 md:p-7 hover:border-brand-500/30 transition-colors backdrop-blur-sm"
+                className="glow-border rounded-2xl bg-ink-800/50 border border-white/5 p-6 md:p-7 hover:border-brand-500/30 transition-colors backdrop-blur-sm"
               >
                 <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-brand-500/10 border border-brand-500/20 mb-5">
                   <Icon className="w-5 h-5 text-brand-400" />
@@ -192,7 +192,7 @@ export default function ArchitecturePage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-40px' }}
                 transition={{ duration: 0.5, delay: i * 0.08 }}
-                className="rounded-2xl bg-ink-800/50 border border-white/5 p-6 md:p-7 hover:border-brand-500/30 transition-colors backdrop-blur-sm"
+                className="glow-border rounded-2xl bg-ink-800/50 border border-white/5 p-6 md:p-7 hover:border-brand-500/30 transition-colors backdrop-blur-sm"
               >
                 <div className="flex items-center gap-3 mb-3">
                   <div className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-brand-500/10 border border-brand-500/20">
@@ -236,7 +236,7 @@ export default function ArchitecturePage() {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true, margin: '-30px' }}
                 transition={{ duration: 0.4, delay: i * 0.05 }}
-                className="rounded-xl bg-ink-800/40 border border-white/5 p-4 md:p-5 hover:border-brand-500/30 transition-colors"
+                className="glow-border rounded-xl bg-ink-800/40 border border-white/5 p-4 md:p-5 hover:border-brand-500/30 transition-colors"
               >
                 <Icon className="w-5 h-5 text-brand-400 mb-3" />
                 <div className="text-sm font-semibold text-white">{t.label}</div>

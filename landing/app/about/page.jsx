@@ -89,7 +89,7 @@ export default function AboutPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-50px' }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="rounded-2xl bg-ink-800/50 border border-white/5 p-6 md:p-8 hover:border-brand-500/30 transition-colors backdrop-blur-sm"
+                className="glow-border rounded-2xl bg-ink-800/50 border border-white/5 p-6 md:p-8 hover:border-brand-500/30 transition-colors backdrop-blur-sm"
               >
                 <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-brand-500/10 border border-brand-500/20 mb-5">
                   <Icon className="w-5 h-5 text-brand-400" />
@@ -128,7 +128,7 @@ export default function AboutPage() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, margin: '-30px' }}
               transition={{ duration: 0.5, delay: i * 0.1 }}
-              className="flex items-start gap-4 p-5 rounded-xl bg-ink-800/40 border border-white/5"
+              className="glow-border flex items-start gap-4 p-5 rounded-xl bg-ink-800/40 border border-white/5"
             >
               <span className="flex items-center justify-center w-8 h-8 rounded-full bg-brand-500/10 border border-brand-500/20 shrink-0">
                 <Check className="w-4 h-4 text-brand-400" />

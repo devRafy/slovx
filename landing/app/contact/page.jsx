@@ -78,7 +78,7 @@ export default function ContactPage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="rounded-2xl bg-ink-800/50 border border-white/5 p-6 md:p-8 backdrop-blur-sm space-y-5"
+            className="glow-border rounded-2xl bg-ink-800/50 border border-white/5 p-6 md:p-8 backdrop-blur-sm space-y-5"
           >
             <div>
               <label className="block text-sm font-medium text-white/80 mb-2">Your name</label>
@@ -169,7 +169,7 @@ export default function ContactPage() {
             {CONTACT_METHODS.map((m) => {
               const Icon = m.icon;
               const inner = (
-                <div className="rounded-xl bg-ink-800/40 border border-white/5 p-5 hover:border-brand-500/30 transition-colors">
+                <div className="glow-border rounded-xl bg-ink-800/40 border border-white/5 p-5 hover:border-brand-500/30 transition-colors">
                   <div className="flex items-center gap-3 mb-2">
                     <div className="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-brand-500/10 border border-brand-500/20">
                       <Icon className="w-4 h-4 text-brand-400" />

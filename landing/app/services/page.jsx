@@ -25,7 +25,7 @@ function ServiceCard({ svc, index }) {
   return (
     <motion.article
       {...fade(0.1 + index * 0.08)}
-      className={`relative rounded-2xl border bg-gradient-to-br ${svc.accent} ${svc.border}
+      className={`glow-border relative rounded-2xl border bg-gradient-to-br ${svc.accent} ${svc.border}
         backdrop-blur-md overflow-hidden flex flex-col transition-all duration-300
         hover:shadow-lg hover:shadow-brand-500/10`}
     >

@@ -31,7 +31,7 @@ export default function Pricing() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-60px' }}
               transition={{ duration: 0.9, delay: 0.4 + i * 0.15, ease: [0.16, 1, 0.3, 1] }}
-              className={`relative rounded-2xl p-6 md:p-7 backdrop-blur-md transition-all ${
+              className={`glow-border relative rounded-2xl p-6 md:p-7 backdrop-blur-md transition-all ${
                 tier.featured
                   ? 'bg-gradient-to-b from-brand-500/10 to-brand-950/50 border-2 border-brand-500/40 lg:-translate-y-4 shadow-2xl shadow-brand-500/20'
                   : 'bg-ink-800/60 border border-white/5 hover:border-white/10'

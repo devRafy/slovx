@@ -37,7 +37,7 @@ export default function Security() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-60px' }}
                 transition={{ duration: 0.7, delay: 0.35 + i * 0.08, ease: [0.16, 1, 0.3, 1] }}
-                className="group relative rounded-2xl bg-ink-800/60 border border-white/5 p-5 md:p-6 backdrop-blur-md transition-all hover:border-brand-500/30 hover:bg-ink-800/80"
+                className="glow-border group relative rounded-2xl bg-ink-800/60 border border-white/5 p-5 md:p-6 backdrop-blur-md transition-all hover:border-brand-500/30 hover:bg-ink-800/80"
               >
                 <div className="inline-flex items-center justify-center w-11 h-11 rounded-xl bg-brand-500/10 border border-brand-500/20 mb-4 group-hover:bg-brand-500/20 transition-colors">
                   <Icon className="w-5 h-5 text-brand-400" />

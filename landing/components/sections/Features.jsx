@@ -39,7 +39,7 @@ function FeatureCard({ item, index }) {
         transform: `perspective(1000px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
         transformStyle: 'preserve-3d',
       }}
-      className="group relative rounded-2xl bg-ink-800/70 border border-white/5 p-6 md:p-7 transition-all duration-300 hover:border-brand-500/30 backdrop-blur-md overflow-hidden"
+      className="glow-border group relative rounded-2xl bg-ink-800/70 border border-white/5 p-6 md:p-7 transition-all duration-300 hover:border-brand-500/30 backdrop-blur-md overflow-hidden"
     >
       <div
         className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"

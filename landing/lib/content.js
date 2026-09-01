@@ -4,7 +4,7 @@
 export const nav = {
   links: [
     { label: 'Home',         href: '/' },
-    { label: 'Platform',     href: '/platform' },
+    { label: 'Businesses',   href: '/businesses' },
     { label: 'Services',     href: '/services' },
     { label: 'About us',     href: '/about' },
     { label: 'Architecture', href: '/architecture' },
