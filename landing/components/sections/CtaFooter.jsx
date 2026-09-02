@@ -93,7 +93,7 @@ export default function CtaFooter() {
       {/* Footer — NOT a snap section (short + always visible below the last snap) */}
       <footer className="relative border-t border-white/5 bg-ink-950/80 backdrop-blur-sm">
         <div className="container-narrow py-12 md:py-16">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-10">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 md:gap-10">
             <div className="col-span-2 md:col-span-1">
               <a href="#" className="flex items-center gap-2 mb-4">
                 <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center">

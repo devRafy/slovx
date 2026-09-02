@@ -11,7 +11,7 @@ export default function FooterMini() {
   return (
     <footer className="relative border-t border-white/5 bg-ink-950/80 mt-24">
       <div className="container-narrow py-12 md:py-16">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-10">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 md:gap-10">
           {/* Brand block */}
           <div className="col-span-2 md:col-span-1">
             <Link href="/" className="flex items-center gap-2 mb-4">

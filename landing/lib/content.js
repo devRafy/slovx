@@ -358,11 +358,19 @@ export const footer = {
       ],
     },
     {
+      title: 'Solutions',
+      links: [
+        { label: 'Businesses',   href: '/businesses'      },
+        { label: 'Services',     href: '/services'        },
+        { label: 'ROI Calculator', href: '/roi-calculator' },
+      ],
+    },
+    {
       title: 'Company',
       links: [
-        { label: 'About',   href: '#' },
-        { label: 'Contact', href: 'mailto:hello@slovx.com' },
-        { label: 'Careers', href: '#' },
+        { label: 'About',   href: '/about'   },
+        { label: 'Contact', href: '/contact' },
+        { label: 'Careers', href: '#'        },
       ],
     },
     {
