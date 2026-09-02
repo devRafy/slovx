@@ -217,6 +217,61 @@ export const pricing = {
   ],
 };
 
+export const pricingFaq = {
+  eyebrow: 'PRICING FAQ',
+  title:   'Everything about plans, limits, and billing.',
+  items: [
+    {
+      q: 'What counts as a "lead" or "conversation" toward my monthly limit?',
+      a: 'A conversation is a unique lead within a rolling 30-day window — not per message. Every reply to that same lead in that window is free. If they message you again 31 days later, that opens a new conversation.',
+    },
+    {
+      q: 'What happens if I go over my monthly conversation limit?',
+      a: "We won't cut Xavier off mid-close. Overages are billed at $0.50/lead on Assistant, $0.35 on BDR Suite, and $0.25 on Enterprise. You'll get an email as you approach your cap so you can upgrade if it makes more sense.",
+    },
+    {
+      q: 'Is there a free trial? Do I need a credit card?',
+      a: '14 days free on any plan. No credit card required to start — you can add it later. Cancel anytime from your dashboard with one click.',
+    },
+    {
+      q: 'Which plan should I pick for my business?',
+      a: 'Assistant ($549/mo) fits boutique brands testing AI on their inbound. BDR Suite ($1,499/mo) is the sweet spot for scale-ups and clinics running qualification at ~1,000 conversations/mo. Enterprise ($3,500+/mo) is for agencies, luxury brands, and B2B teams needing custom limits, RBAC, and CRM sync.',
+    },
+    {
+      q: 'What payment methods do you accept?',
+      a: 'Credit and debit cards worldwide, processed via Paddle (our Merchant of Record — they handle billing, tax, and refunds). Enterprise accounts can pay by bank transfer, ACH, or annual invoice.',
+    },
+    {
+      q: 'Are prices in USD? What about VAT, GST, or sales tax?',
+      a: 'All plans are listed in USD. Paddle automatically calculates and adds VAT, GST, or sales tax based on your billing country — it appears clearly on your invoice, no surprises.',
+    },
+    {
+      q: 'Can I upgrade or downgrade my plan later?',
+      a: 'Yes, anytime. Upgrades take effect immediately with pro-rated billing. Downgrades apply at the start of your next billing cycle so you keep the plan you paid for.',
+    },
+    {
+      q: 'Do you charge per seat or per user?',
+      a: 'No per-seat pricing. Every plan includes unlimited team seats. Enterprise adds role-based access control (RBAC) so you can restrict who can pause the bot, export leads, or edit configuration.',
+    },
+    {
+      q: 'Do you offer refunds?',
+      a: 'EU and UK customers are covered by the 14-day statutory refund window — email billing@slovx.com and we\'ll process it. Outside those regions we review case-by-case; if Xavier didn\'t do what we promised, we\'ll make it right.',
+    },
+    {
+      q: 'Are there discounts for annual billing, non-profits, or open-source?',
+      a: 'Annual billing gets 2 months free (~17% off) on Assistant and BDR Suite. Non-profit, educational, and open-source projects — reach out; we\'re flexible when the mission is right.',
+    },
+    {
+      q: 'Do I need my own WhatsApp Business number?',
+      a: 'Yes — Xavier connects to your existing (or new) Meta WhatsApp Business API number. We\'ll walk you through the Meta verification during onboarding; it usually takes under 15 minutes end-to-end.',
+    },
+    {
+      q: 'What if I need higher limits than Enterprise offers?',
+      a: 'We do custom deals for high-volume brands running >10,000 conversations/mo. Contact sales@slovx.com — we\'ll spec a dedicated instance with your own throughput, SLA, and success manager.',
+    },
+  ],
+};
+
 export const faq = {
   eyebrow: 'FAQ',
   title:   'The questions everyone asks before signing up.',

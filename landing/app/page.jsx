@@ -5,6 +5,7 @@ import Features      from '../components/sections/Features';
 import AiInAction    from '../components/sections/AiInAction';
 import Security      from '../components/sections/Security';
 import Pricing       from '../components/sections/Pricing';
+import PricingFaq    from '../components/sections/PricingFaq';
 import RoiCalculator from '../components/sections/RoiCalculator';
 import Faq           from '../components/sections/Faq';
 import CtaFooter     from '../components/sections/CtaFooter';
@@ -23,6 +24,7 @@ export default function Page() {
       <AiInAction />
       <Security />
       <Pricing />
+      <PricingFaq />
       <RoiCalculator />
       <Faq />
       <CtaFooter />
