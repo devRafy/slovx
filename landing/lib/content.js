@@ -9,7 +9,7 @@ export const nav = {
     { label: 'About us',     href: '/about' },
     { label: 'Architecture', href: '/architecture' },
     { label: 'ROI',          href: '/roi-calculator' },
-    { label: 'Pricing',      href: '/#pricing' },
+    { label: 'Pricing',      href: '/pricing' },
     { label: 'Contact Us',   href: '/contact' },
   ],
   ctaSignIn: 'Sign in',

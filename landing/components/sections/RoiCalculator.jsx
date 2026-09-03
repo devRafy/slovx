@@ -17,7 +17,7 @@ export default function RoiCalculator() {
           title="What is slow replying actually costing you?"
           subtitle="Move the sliders to match your business. The numbers update instantly."
         />
-        <RoiCalculatorBody ctaHref="#pricing" />
+        <RoiCalculatorBody ctaHref="/pricing" />
       </div>
     </section>
   );

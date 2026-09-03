@@ -4,15 +4,14 @@ import HowItWorks    from '../components/sections/HowItWorks';
 import Features      from '../components/sections/Features';
 import AiInAction    from '../components/sections/AiInAction';
 import Security      from '../components/sections/Security';
-import Pricing       from '../components/sections/Pricing';
-import PricingFaq    from '../components/sections/PricingFaq';
 import RoiCalculator from '../components/sections/RoiCalculator';
 import Faq           from '../components/sections/Faq';
 import CtaFooter     from '../components/sections/CtaFooter';
 
 /**
- * Main landing page. Sections use pure CSS for smooth scroll + gradient
- * bridges between backgrounds (see .snap-section rules in globals.css).
+ * Main landing page. Pricing lives on its own dedicated /pricing page.
+ * Sections use pure CSS for smooth scroll + gradient bridges between
+ * backgrounds (see .snap-section rules in globals.css).
  */
 export default function Page() {
   return (
@@ -23,8 +22,6 @@ export default function Page() {
       <Features />
       <AiInAction />
       <Security />
-      <Pricing />
-      <PricingFaq />
       <RoiCalculator />
       <Faq />
       <CtaFooter />

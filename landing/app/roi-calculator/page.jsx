@@ -17,7 +17,7 @@ export default function RoiCalculatorPage() {
       />
 
       <section className="container-narrow max-w-6xl py-8 md:py-12">
-        <RoiCalculatorBody ctaHref="/#pricing" />
+        <RoiCalculatorBody ctaHref="/pricing" />
       </section>
 
       {/* How the math works — brief methodology so numbers feel credible */}
