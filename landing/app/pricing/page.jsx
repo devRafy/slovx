@@ -1,5 +1,6 @@
 import PageHero from '../../components/ui/PageHero';
 import PricingTiers from '../../components/ui/PricingTiers';
+import PricingComparison from '../../components/ui/PricingComparison';
 import PricingFaq from '../../components/sections/PricingFaq';
 import FooterMini from '../../components/ui/FooterMini';
 import { pricing } from '../../lib/content';
@@ -26,6 +27,9 @@ export default function PricingPage() {
           14-day free trial · No credit card · Cancel anytime
         </p>
       </section>
+
+      {/* Feature-by-feature comparison table */}
+      <PricingComparison />
 
       {/* Pricing-specific FAQ */}
       <PricingFaq />

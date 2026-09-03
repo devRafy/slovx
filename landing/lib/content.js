@@ -217,6 +217,65 @@ export const pricing = {
   ],
 };
 
+export const pricingComparison = {
+  eyebrow: 'SIDE BY SIDE',
+  title:   'Compare every plan at a glance',
+  tiers: [
+    { name: 'SlovX AI\nAssistant',  accent: 'default'  },
+    { name: 'Autonomous\nBDR Suite', accent: 'featured' },
+    { name: 'Xavier\nEnterprise',    accent: 'default'  },
+  ],
+  categories: [
+    {
+      name: 'CORE AGENT ENGINE',
+      rows: [
+        { feature: '24/7 Smart Screening Agent',                 values: [true,  true,  true ] },
+        { feature: 'Closer / Negotiation Agent',                 values: [false, true,  true ] },
+        { feature: 'Background Sentiment Audit Agent (concurrent)', values: [false, false, true ] },
+        { feature: 'Anti-Hallucination Pricing Guardrail',       values: [true,  true,  true ] },
+      ],
+    },
+    {
+      name: 'CONVERSATION HANDLING',
+      rows: [
+        { feature: 'Multi-Language Auto-Reply',                       values: [true,  true,  true ] },
+        { feature: 'Smart Multi-Text Burst Queue',                    values: [true,  true,  true ] },
+        { feature: 'Instant Answer Cache (sub-second FAQ replies)',   values: [false, true,  true ] },
+        { feature: 'Audio Voice Note Transcription',                  values: [false, true,  true ] },
+        { feature: 'Global Cultural & Dialect Adapter (Gulf/Khaleeji)', values: [false, false, true ] },
+        { feature: 'Real-Time Currency Conversion (AED/SAR/USD)',     values: [false, false, true ] },
+      ],
+    },
+    {
+      name: 'AUTOMATION & TOOLS',
+      rows: [
+        { feature: 'Hands-Free Calendar Booking',                             values: [false, true,  true ] },
+        { feature: 'Live Google Sheets Sync',                                 values: [false, true,  true ] },
+        { feature: 'Auto Lead Profile Creation',                              values: [true,  true,  true ] },
+        { feature: 'Time-Aware Night Fallback (auto-book while you sleep)',  values: [false, false, true ] },
+        { feature: '"Whale Catcher" Lead Enrichment & Auto-Routing',         values: [false, false, true ] },
+        { feature: 'CRM Sync (HubSpot / Salesforce / Pipedrive)',            values: [false, false, true ] },
+      ],
+    },
+    {
+      name: 'TEAM & GOVERNANCE',
+      rows: [
+        { feature: 'Dashboard "Pause Bot" Switch',              values: [true,  true,  true ] },
+        { feature: 'Human-in-the-Loop Emergency Handoff',       values: [false, false, true ] },
+        { feature: 'Multi-User Role-Based Access (RBAC)',       values: [false, false, true ] },
+      ],
+    },
+    {
+      name: 'TRUST & COMPLIANCE',
+      rows: [
+        { feature: 'Official Meta WhatsApp API Channel',        values: [true,  true,  true ] },
+        { feature: '24-Hour Window & STOP/Opt-Out Compliance',  values: [true,  true,  true ] },
+        { feature: 'PDF / CSV Reporting & Export',              values: [false, false, true ] },
+      ],
+    },
+  ],
+};
+
 export const pricingFaq = {
   eyebrow: 'PRICING FAQ',
   title:   'Everything about plans, limits, and billing.',
