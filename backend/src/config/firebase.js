@@ -1,10 +1,14 @@
-import admin from 'firebase-admin';
+import { initializeApp, cert, getApps } from 'firebase-admin/app';
+import { getAuth } from 'firebase-admin/auth';
 import { env } from './env.js';
 
 /**
  * Firebase Admin SDK — used to verify ID tokens the frontend gets after a
  * Google sign-in. Initialised lazily so the server still boots when the
  * three FIREBASE_* env vars aren't set (Google sign-in just returns 501).
+ *
+ * Uses the modular firebase-admin v13+ API (`firebase-admin/app` +
+ * `firebase-admin/auth`), which is the current recommended import shape.
  */
 
 let app;
@@ -21,8 +25,6 @@ function init() {
   // quotes, so this is a no-op in those cases (safe either way).
   const privateKey = env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n');
 
-  // Sanity check — the key must have BEGIN/END markers with real newlines
-  // between, otherwise the JWT signing library throws a cryptic error.
   if (!privateKey.includes('-----BEGIN PRIVATE KEY-----') ||
       !privateKey.includes('-----END PRIVATE KEY-----')) {
     console.error('[firebase] FIREBASE_PRIVATE_KEY is malformed — missing BEGIN/END markers');
@@ -33,8 +35,10 @@ function init() {
     return null;
   }
 
-  app = admin.initializeApp({
-    credential: admin.credential.cert({
+  // Guard against double-init in dev when nodemon hot-reloads.
+  const existing = getApps()[0];
+  app = existing ?? initializeApp({
+    credential: cert({
       projectId:   env.FIREBASE_PROJECT_ID,
       clientEmail: env.FIREBASE_CLIENT_EMAIL,
       privateKey,
@@ -59,5 +63,5 @@ export async function verifyFirebaseIdToken(idToken) {
     err.statusCode = 501;
     throw err;
   }
-  return admin.auth(instance).verifyIdToken(idToken);
+  return getAuth(instance).verifyIdToken(idToken);
 }
