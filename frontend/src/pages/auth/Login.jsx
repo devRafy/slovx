@@ -85,7 +85,7 @@ export default function Login() {
                   to="/forgot-password"
                   className="text-xs text-brand-600 hover:underline font-medium"
                 >
-                  {t('auth.forgotPassword', 'Forgot?')}
+                  {t('auth.forgotPassword', 'Forgot password?')}
                 </Link>
               </div>
               <input

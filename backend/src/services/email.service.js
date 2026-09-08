@@ -1,16 +1,28 @@
-import { Resend } from 'resend';
+import nodemailer from 'nodemailer';
 import { env } from '../config/env.js';
 
 /**
- * Transactional email service. Uses Resend when RESEND_API_KEY is set;
- * otherwise logs the message to the console so local dev works without
- * an email provider.
+ * Transactional email service via SMTP (Nodemailer).
+ * When SMTP_* env vars aren't set, prints the message to the backend
+ * console so local dev works without an SMTP account.
  */
 
-const resend = env.RESEND_API_KEY ? new Resend(env.RESEND_API_KEY) : null;
+let transporter = null;
+if (env.SMTP_HOST && env.SMTP_USER && env.SMTP_PASS) {
+  transporter = nodemailer.createTransport({
+    host: env.SMTP_HOST,
+    port: env.SMTP_PORT,
+    // Port 465 uses implicit TLS; port 587 (and others) upgrade via STARTTLS.
+    secure: env.SMTP_PORT === 465,
+    auth: {
+      user: env.SMTP_USER,
+      pass: env.SMTP_PASS,
+    },
+  });
+}
 
 async function send({ to, subject, html, text }) {
-  if (!resend) {
+  if (!transporter) {
     console.log('\n────── [email:dev-console] ──────');
     console.log(`To:      ${to}`);
     console.log(`Subject: ${subject}`);
@@ -19,19 +31,15 @@ async function send({ to, subject, html, text }) {
     return { simulated: true };
   }
 
-  const { data, error } = await resend.emails.send({
+  const info = await transporter.sendMail({
     from: env.EMAIL_FROM,
     to,
     subject,
     html,
     text,
   });
-
-  if (error) {
-    console.error('[email] Resend send failed:', error);
-    throw new Error(error.message || 'Failed to send email');
-  }
-  return data;
+  console.log(`[email] Sent to ${to} — messageId=${info.messageId}`);
+  return info;
 }
 
 export async function sendPasswordResetEmail({ to, name, resetUrl }) {

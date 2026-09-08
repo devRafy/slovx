@@ -22,10 +22,14 @@ const schema = z.object({
   FIREBASE_PROJECT_ID:    z.string().optional(),
   FIREBASE_CLIENT_EMAIL:  z.string().optional(),
   FIREBASE_PRIVATE_KEY:   z.string().optional(),
-  // Resend — for password-reset emails. When missing, forgot-password logs
-  // the reset link to the console instead (fine for local dev).
-  RESEND_API_KEY:         z.string().optional(),
-  EMAIL_FROM:             z.string().default('Xavier <onboarding@resend.dev>'),
+  // SMTP — for transactional emails (password reset, etc.).
+  // When SMTP_HOST/USER/PASS are missing, forgot-password logs the reset
+  // link to the console instead of sending — fine for local dev.
+  SMTP_HOST:              z.string().optional(),
+  SMTP_PORT:              z.coerce.number().default(587),
+  SMTP_USER:              z.string().optional(),
+  SMTP_PASS:              z.string().optional(),
+  EMAIL_FROM:             z.string().default('Xavier <no-reply@xavier.local>'),
 });
 
 const parsed = schema.safeParse(process.env);
