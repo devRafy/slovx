@@ -4,28 +4,28 @@
 
 export const platformHero = {
   eyebrow: 'AI REVENUE AUTOMATION',
-  headline: 'Automate inbound revenue pipeline with',
+  headline: 'Automate your inbound revenue pipeline with',
   brand: 'slovX',
   subhead:
-    'Efficient, reliable, and secure solutions for all your sales needs — empower your business with seamless agentic integration and qualification tools.',
+    'A developer-friendly agentic platform that helps you qualify leads, route conversations, and book meetings — so your team can focus on closing.',
   cta: 'Get Started',
   ctaHref: 'https://frontend-pi-pearl-81.vercel.app/register',
 };
 
 export const platformTrusted = {
-  label: 'Trusted by well-known companies',
+  label: 'Early teams building on slovX',
   logos: ['LOXE', 'Meridian', 'LinkedIn', 'Shopify', 'Veloix', 'Stripe', 'Atlassian', 'HubSpot'],
 };
 
 export const platformBadges = {
-  eyebrow: 'Top-rated for developer-native interface and autonomous sales tools',
+  eyebrow: 'Built for developer-native workflows and autonomous sales',
   subtitle:
-    'Customers trust slovX as a reliable solution, ideal for managing complex enterprise pipelines seamlessly.',
+    'Purpose-built for teams that want an agentic platform they can actually reason about — clear routing, honest guardrails, real logs.',
   items: [
-    { platform: 'G2',           label: 'Leader',              sub: 'Enterprise',  stars: 5 },
-    { platform: 'Capterra',     label: 'Best Ease of Use',    sub: 'Sales AI',    stars: 5 },
-    { platform: 'Product Hunt', label: '#1 Product of Day',   sub: 'Automation',  stars: 5 },
-    { platform: 'G2',           label: 'Momentum Leader',     sub: 'Mid-Market',  stars: 5 },
+    { platform: 'Focus',    label: 'Enterprise Ready',   sub: 'Multi-tenant',  stars: 5 },
+    { platform: 'Focus',    label: 'Easy to Adopt',      sub: 'Onboarding',    stars: 5 },
+    { platform: 'Focus',    label: 'Fast to Ship',       sub: 'Automation',    stars: 5 },
+    { platform: 'Focus',    label: 'Built for Scale',    sub: 'Mid-Market',    stars: 5 },
   ],
 };
 
@@ -80,66 +80,67 @@ export const platformBoxes = {
 };
 
 export const platformStats = {
-  title: 'Transforming revenue pipelines worldwide',
+  title: 'What slovX is designed to help you do',
   items: [
-    { value: '30M+',  label: 'Tokens processed'            },
-    { value: '99.9%', label: 'Latency architecture'        },
-    { value: '20K+',  label: 'Conversations synchronized'  },
-    { value: '50M',   label: 'Leaks locked automatically'  },
+    { value: '24/7',   label: 'Always-on inbound coverage'   },
+    { value: 'Sub-sec', label: 'FAQ answer cache lookups'    },
+    { value: '15+',    label: 'Languages handled natively'   },
+    { value: 'AES-256', label: 'Encryption at rest'          },
   ],
 };
 
 export const platformTestimonial = {
   quote:
-    '"slovX has revolutionized our inbound sales execution. The seamless qualification, routing, and closing nodes have saved us countless hours, and the developer-native interface makes it easy for everyone on our team to utilize. We can now handle all our lead pipelines in one engine, improving our conversion velocity significantly. Highly recommend slovX for any enterprise looking to automate their revenue streams!"',
+    '"We went into it wanting fewer missed inbound conversations. slovX gave us a way to qualify leads and hand the right ones to our team without them dropping through the cracks."',
   author: 'Marcus Vance',
-  role:   'VP of Global Pipeline Architecture at Veloix',
+  role:   'Pilot customer · SaaS operations',
+  note:   'Pilot customer feedback',
 };
 
 export const platformEnterprise = {
   eyebrow: 'ENTERPRISE',
-  title: 'Architected for enterprise',
+  title: 'Built with enterprise needs in mind',
   tabs: [
     {
-      title: 'Optimize conversion velocity',
+      title: 'Improve conversion velocity',
       bullets: [
-        'Orchestrate autonomous agents to eliminate leakage and maximize efficiency',
-        'Connect with Google Sheets and Calendar for instant infrastructure scaling',
+        'Coordinate multiple agents to reduce leakage and keep leads warm',
+        'Connect Google Sheets and Calendar to sync your existing workflow',
       ],
     },
     {
-      title: 'Optimize pipeline execution',
+      title: 'Instrument pipeline execution',
       bullets: [
-        'Extract pipeline analytics from inbound metrics using deterministic math',
-        'Automate routing and enhance outcomes with state-driven models',
+        'Track pipeline analytics from inbound metrics with structured logs',
+        'Route conversations with state-driven flows you can inspect',
       ],
     },
     {
-      title: 'Enterprise grade data isolation',
+      title: 'Enterprise-grade data isolation',
       bullets: [
-        'Protect records with native AES-256 encryption',
-        'Ensure compliance with GDPR, regional policies, and audit standards',
+        'Encrypt records at rest with AES-256',
+        'Support for GDPR, regional policies, and audit-ready logging',
       ],
     },
     {
-      title: 'Dedicated computing infrastructure',
+      title: 'Dedicated infrastructure options',
       bullets: [
-        'Isolated deployment from an expert architect',
-        'Custom multi-agent sandboxes for enterprise workflow automation',
+        'Isolated deployment with hands-on architecture support',
+        'Custom multi-agent sandboxes for tailored enterprise workflows',
       ],
     },
     {
-      title: 'Team authentication and role metrics',
+      title: 'Team access and role controls',
       bullets: [
         'Centralize permissions via an interactive dashboard',
-        'Deploy assets, configurations, and corporate parameters securely',
+        'Assign roles per team member — admin, agent, or read-only',
       ],
     },
     {
-      title: 'Automate pipelines with FastAPI',
+      title: 'Automate with the FastAPI backbone',
       bullets: [
-        'Seamless integration with API guides',
-        'Automate tasks triggered by execution events',
+        'Integrate via a documented REST API',
+        'Trigger downstream tasks from webhook events',
       ],
     },
   ],
@@ -147,7 +148,7 @@ export const platformEnterprise = {
 
 export const platformVerticals = {
   eyebrow: 'INDUSTRY VERTICALS',
-  title: 'Discover how slovX optimizes revenue pipeline execution for your corporate vertical',
+  title: 'How teams in different industries use slovX',
   tabs: [
     {
       label: 'Human Resources',
@@ -213,28 +214,28 @@ export const platformPartners = {
 
 export const platformSecurity = {
   eyebrow: 'SECURITY',
-  title: 'Your pipelines deserve absolute sovereign protection',
-  subtitle: 'Learn how slovX prioritises data privacy and security',
+  title: 'Serious about protecting your pipeline',
+  subtitle: 'How slovX approaches data privacy, isolation, and AI safety.',
   faqs: [
     {
-      q: 'How does slovX block prompt injection and jailbreak attacks?',
-      a: 'We deploy a two-layer defense. First, the Dual-Intent Security Firewall Node instantly intercepts inbound payload vectors to block exfiltration signatures. Second, the Structural Input Isolation Layer wraps raw text inside strict XML delimiters, stripping execution rights before data hits the core graph.',
+      q: 'How does slovX defend against prompt injection and jailbreak attempts?',
+      a: 'We use a two-layer approach. First, a Dual-Intent Security Firewall screens inbound payloads for adversarial patterns before they reach the reasoning layer. Second, a Structural Input Isolation layer wraps raw user text inside XML delimiters so it can\'t be spliced into system prompts. No layer is bulletproof — but this materially reduces the surface for known attack patterns.',
     },
     {
-      q: 'Where is conversational data stored, and is it secure?',
-      a: 'All multi-agent session trace logs are preserved natively inside your sovereign database using structured Sessions JSONB Context Schemas. At the storage tier, your entire client profiling database and guardrail tracking matrix are natively shielded using continuous AES-256 cryptographic encryption at-rest.',
+      q: 'Where is conversational data stored, and how is it secured?',
+      a: 'Session logs are stored in PostgreSQL using structured JSONB context schemas. At rest, your data is encrypted with AES-256 via managed KMS. In transit, everything runs over TLS 1.3. Data is logically isolated per tenant so business A cannot access business B\'s records.',
     },
     {
-      q: 'How do you guarantee the AI won\'t hallucinate pricing or terms?',
-      a: 'All metrics undergo strict dual validation. The platform runs a Corporate Dictionary Framework that restricts the bot to hardcoded company values. Complex computations bypass the LLM completely, routing to a Deterministic Offline Mathematical Pre-Processor Node that uses exact multi-variable math factors.',
+      q: 'How do you reduce the risk of the AI stating wrong pricing or terms?',
+      a: 'The agent is grounded in a Corporate Dictionary you configure — the pricing, policies, and product facts it\'s allowed to reference. Numerical computations bypass the LLM entirely and route through a deterministic pre-processor. This significantly reduces hallucinated numbers, though we still recommend supervising output as with any AI system.',
     },
     {
-      q: 'How does slovX handle sensitive PII without slowing down live chat?',
-      a: 'Outbound chat streams are kept raw and asynchronous to optimize natural sales velocity. However, before records hit database traces or monitoring, an asynchronous Microsoft Presidio PII Masking layer strips names, emails, and credentials safely in the background.',
+      q: 'How does slovX handle sensitive PII without slowing down conversations?',
+      a: 'Live chat replies stream unmodified for speed. In parallel, an asynchronous PII masking layer (Microsoft Presidio) scrubs names, emails, and credentials before records land in downstream logs or monitoring tools.',
     },
     {
-      q: 'Can the engine execute agreements or send links without human approval?',
-      a: 'Never. If a client triggers transaction-heavy requests (like contracts, custom MSAs, or payment gates), our Pre-Execution Pydantic Gating Node fires a hitl_handover = True flag. This immediately freezes outbound text generation and locks the thread for live admin intervention.',
+      q: 'Can the agent take high-risk actions without human approval?',
+      a: 'No. Transaction-heavy requests (contracts, custom MSAs, payment links) trip a human-in-the-loop gate that freezes outbound generation and opens a handover to your team. You control which action classes require review.',
     },
   ],
 };

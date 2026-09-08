@@ -236,3 +236,22 @@ html {
 /* Scrollbar hide */
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* 3D flip-card helpers (used on /businesses PlatformBoxes) */
+.flip-perspective { perspective: 1400px; }
+.flip-card        { position: relative; transform-style: preserve-3d; transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1); }
+.flip-perspective:hover .flip-card { transform: rotateY(180deg); }
+.flip-face        { position: absolute; inset: 0; -webkit-backface-visibility: hidden; backface-visibility: hidden; }
+.flip-face-back   { transform: rotateY(180deg); }
+
+/* Gentle orbit for hero decorative rings */
+@keyframes orbit-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes orbit-reverse {
+  from { transform: rotate(360deg); }
+  to   { transform: rotate(0deg); }
+}
+.animate-orbit-slow    { animation: orbit-slow 22s linear infinite; }
+.animate-orbit-reverse { animation: orbit-reverse 32s linear infinite; }
