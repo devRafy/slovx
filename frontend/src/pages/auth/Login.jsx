@@ -5,6 +5,7 @@ import { useAuthStore } from '../../store/auth.store.js';
 import { authApi } from '../../api/auth.api.js';
 import { Zap } from 'lucide-react';
 import LanguageSwitcher from '../../components/LanguageSwitcher.jsx';
+import GoogleAuthButton from '../../components/GoogleAuthButton.jsx';
 
 export default function Login() {
   const { t } = useTranslation();
@@ -55,6 +56,15 @@ export default function Login() {
               {error}
             </div>
           )}
+
+          <GoogleAuthButton onError={setError} />
+
+          <div className="relative my-5">
+            <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-gray-200" /></div>
+            <div className="relative flex justify-center text-xs">
+              <span className="bg-white px-3 text-gray-400">{t('auth.orContinueWith', 'or')}</span>
+            </div>
+          </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>

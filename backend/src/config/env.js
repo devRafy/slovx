@@ -17,6 +17,11 @@ const schema = z.object({
   META_GRAPH_API_VERSION: z.string().default('v20.0'),
   FRONTEND_URL:           z.string().url().default('http://localhost:5173'),
   ENCRYPTION_KEY:         z.string().min(32, 'ENCRYPTION_KEY must be at least 32 characters'),
+  // Firebase Admin credentials (Google sign-in). Optional — endpoint returns
+  // 501 if not configured, so email/password auth keeps working without them.
+  FIREBASE_PROJECT_ID:    z.string().optional(),
+  FIREBASE_CLIENT_EMAIL:  z.string().optional(),
+  FIREBASE_PRIVATE_KEY:   z.string().optional(),
 });
 
 const parsed = schema.safeParse(process.env);

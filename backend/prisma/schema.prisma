@@ -14,8 +14,13 @@ datasource db {
 model Subscriber {
   id               String    @id @default(cuid())
   email            String    @unique
-  password         String
+  // Password is nullable — Google-signed-up users don't have one.
+  password         String?
   name             String
+  // Auth provider used at signup. EMAIL = classic email/password.
+  authProvider     AuthProvider @default(EMAIL)
+  // Firebase UID from Google sign-in (nullable for EMAIL users).
+  googleUid        String?   @unique
   plan             Plan      @default(TRIAL)
   isActive         Boolean   @default(true)
   botEnabled       Boolean   @default(true)
@@ -37,6 +42,11 @@ enum Plan {
   TRIAL
   STARTER
   PRO
+}
+
+enum AuthProvider {
+  EMAIL
+  GOOGLE
 }
 
 // ─────────────────────────────────────────────
