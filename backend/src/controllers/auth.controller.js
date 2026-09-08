@@ -1,5 +1,7 @@
 import { z } from 'zod';
+import jwt from 'jsonwebtoken';
 import { db } from '../config/database.js';
+import { env } from '../config/env.js';
 import { verifyFirebaseIdToken } from '../config/firebase.js';
 import { sendSuccess, sendError } from '../utils/response.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
@@ -8,6 +10,12 @@ import {
   generateTokens, saveRefreshToken,
   rotateRefreshToken, revokeRefreshToken,
 } from '../services/auth.service.js';
+import { sendPasswordResetEmail } from '../services/email.service.js';
+
+// Reset tokens are signed JWTs (1h expiry). Namespaced with a purpose claim
+// so they can't be used as regular access tokens.
+const RESET_TOKEN_TTL = '1h';
+const RESET_TOKEN_PURPOSE = 'password-reset';
 
 export const registerSchema = z.object({
   name:     z.string().min(2).max(100),
@@ -28,6 +36,18 @@ export const loginSchema = z.object({
 
 export const googleLoginSchema = z.object({
   idToken: z.string().min(10, 'Firebase ID token is required'),
+});
+
+export const forgotPasswordSchema = z.object({
+  email: z.string().email(),
+});
+
+export const resetPasswordSchema = z.object({
+  token:    z.string().min(10, 'Reset token is required'),
+  password: z.string().min(8).max(72).regex(
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
+    'Password must contain uppercase, lowercase, and a number',
+  ),
 });
 
 export const register = asyncHandler(async (req, res) => {
@@ -121,6 +141,64 @@ export const googleLogin = asyncHandler(async (req, res) => {
 
   const { password: _, ...safe } = subscriber;
   sendSuccess(res, { subscriber: safe, ...tokens }, 'Google sign-in successful');
+});
+
+export const forgotPassword = asyncHandler(async (req, res) => {
+  const { email } = req.body;
+
+  // Always respond with the same success message — never disclose whether an
+  // email exists (email-enumeration protection). We just skip sending if
+  // there's no user, or if the user signed up via Google.
+  const subscriber = await db.subscriber.findUnique({ where: { email } });
+
+  if (subscriber && subscriber.isActive && subscriber.password) {
+    const token = jwt.sign(
+      { sub: subscriber.id, purpose: RESET_TOKEN_PURPOSE },
+      env.JWT_SECRET,
+      { expiresIn: RESET_TOKEN_TTL },
+    );
+    const resetUrl = `${env.FRONTEND_URL.replace(/\/$/, '')}/reset-password?token=${encodeURIComponent(token)}`;
+
+    // Fire-and-forget so we don't leak send-timing information about whether
+    // an account exists. Errors are still logged inside email.service.
+    sendPasswordResetEmail({ to: email, name: subscriber.name, resetUrl })
+      .catch((err) => console.error('[forgot-password] Email send failed:', err.message));
+  } else if (subscriber && !subscriber.password) {
+    console.log(`[forgot-password] Skipped for Google-only account: ${email}`);
+  }
+
+  sendSuccess(res, {}, "If an account exists for that email, we've sent a password-reset link.");
+});
+
+export const resetPassword = asyncHandler(async (req, res) => {
+  const { token, password } = req.body;
+
+  let payload;
+  try {
+    payload = jwt.verify(token, env.JWT_SECRET);
+  } catch {
+    return sendError(res, 'This reset link is invalid or has expired. Please request a new one.', 400);
+  }
+
+  if (payload.purpose !== RESET_TOKEN_PURPOSE) {
+    return sendError(res, 'This reset link is invalid or has expired. Please request a new one.', 400);
+  }
+
+  const subscriber = await db.subscriber.findUnique({ where: { id: payload.sub } });
+  if (!subscriber || !subscriber.isActive) {
+    return sendError(res, 'Account not found', 404);
+  }
+
+  const hashed = await hashPassword(password);
+  await db.subscriber.update({
+    where: { id: subscriber.id },
+    data:  { password: hashed },
+  });
+
+  // Revoke any active refresh tokens — force re-login everywhere for safety.
+  await db.refreshToken.deleteMany({ where: { subscriberId: subscriber.id } });
+
+  sendSuccess(res, {}, 'Password updated. You can now sign in with your new password.');
 });
 
 export const refresh = asyncHandler(async (req, res) => {
