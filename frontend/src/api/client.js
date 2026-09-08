@@ -17,12 +17,19 @@ client.interceptors.request.use((config) => {
   return config;
 });
 
-// On 401, attempt token refresh once then log out
+// Endpoints that authenticate the user — a 401 here is a bad-credentials
+// rejection, not an expired session, so we must NOT try to refresh + redirect.
+const AUTH_ENDPOINTS = ['/auth/login', '/auth/register', '/auth/google', '/auth/refresh'];
+
+// On 401, attempt token refresh once then log out — except for auth endpoints.
 client.interceptors.response.use(
   (res) => res,
   async (err) => {
     const original = err.config;
-    if (err.response?.status === 401 && !original._retry) {
+    const url = original?.url || '';
+    const isAuthEndpoint = AUTH_ENDPOINTS.some((path) => url.includes(path));
+
+    if (err.response?.status === 401 && !original._retry && !isAuthEndpoint) {
       original._retry = true;
       try {
         const { refreshToken } = useAuthStore.getState();

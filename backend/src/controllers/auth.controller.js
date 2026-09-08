@@ -76,6 +76,13 @@ export const googleLogin = asyncHandler(async (req, res) => {
     decoded = await verifyFirebaseIdToken(idToken);
   } catch (err) {
     if (err.statusCode === 501) return sendError(res, err.message, 501);
+    // Log the real cause so we can debug config problems (bad private key,
+    // wrong project ID, clock skew, revoked token, etc). Do NOT leak the
+    // internal message back to the client.
+    console.error('[auth/google] Firebase verifyIdToken failed:', {
+      code:    err.code,
+      message: err.message,
+    });
     return sendError(res, 'Invalid Google credentials', 401);
   }
 

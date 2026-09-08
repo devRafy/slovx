@@ -17,7 +17,21 @@ function init() {
   }
 
   // Vercel/other envs escape newlines in the private key — restore them.
+  // dotenv on some setups already converts \n → real newline inside double
+  // quotes, so this is a no-op in those cases (safe either way).
   const privateKey = env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n');
+
+  // Sanity check — the key must have BEGIN/END markers with real newlines
+  // between, otherwise the JWT signing library throws a cryptic error.
+  if (!privateKey.includes('-----BEGIN PRIVATE KEY-----') ||
+      !privateKey.includes('-----END PRIVATE KEY-----')) {
+    console.error('[firebase] FIREBASE_PRIVATE_KEY is malformed — missing BEGIN/END markers');
+    return null;
+  }
+  if (!privateKey.includes('\n')) {
+    console.error('[firebase] FIREBASE_PRIVATE_KEY has no real newlines — check .env quoting');
+    return null;
+  }
 
   app = admin.initializeApp({
     credential: admin.credential.cert({
@@ -27,6 +41,7 @@ function init() {
     }),
   });
 
+  console.log(`[firebase] Admin initialised for project ${env.FIREBASE_PROJECT_ID}`);
   return app;
 }
 
