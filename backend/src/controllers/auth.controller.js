@@ -159,12 +159,17 @@ export const forgotPassword = asyncHandler(async (req, res) => {
     );
     const resetUrl = `${env.FRONTEND_URL.replace(/\/$/, '')}/reset-password?token=${encodeURIComponent(token)}`;
 
-    // Fire-and-forget so we don't leak send-timing information about whether
-    // an account exists. Errors are still logged inside email.service.
-    sendPasswordResetEmail({ to: email, name: subscriber.name, resetUrl })
-      .catch((err) => console.error('[forgot-password] Email send failed:', err.message));
+    try {
+      await sendPasswordResetEmail({ to: email, name: subscriber.name, resetUrl });
+      console.log(`[forgot-password] Reset email dispatched to ${email}`);
+    } catch (err) {
+      console.error('[forgot-password] Email send failed:', err.message, err.stack);
+      // Still return the same success message — never disclose the send-status.
+    }
   } else if (subscriber && !subscriber.password) {
     console.log(`[forgot-password] Skipped for Google-only account: ${email}`);
+  } else {
+    console.log(`[forgot-password] No matching account for ${email}`);
   }
 
   sendSuccess(res, {}, "If an account exists for that email, we've sent a password-reset link.");

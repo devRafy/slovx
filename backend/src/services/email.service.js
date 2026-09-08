@@ -16,9 +16,18 @@ if (env.SMTP_HOST && env.SMTP_USER && env.SMTP_PASS) {
     secure: env.SMTP_PORT === 465,
     auth: {
       user: env.SMTP_USER,
-      pass: env.SMTP_PASS,
+      // Gmail displays app passwords with spaces (e.g. "abcd efgh ijkl mnop")
+      // — strip them defensively; Gmail's SMTP server accepts either form,
+      // but a trailing space or non-Gmail SMTP servers can choke.
+      pass: env.SMTP_PASS.replace(/\s+/g, ''),
     },
   });
+
+  // Verify SMTP connectivity at startup so misconfiguration surfaces
+  // immediately instead of the first time someone hits forgot-password.
+  transporter.verify()
+    .then(() => console.log(`[email] SMTP ready — ${env.SMTP_USER} via ${env.SMTP_HOST}:${env.SMTP_PORT}`))
+    .catch((err) => console.error('[email] SMTP verify FAILED:', err.message));
 }
 
 async function send({ to, subject, html, text }) {
