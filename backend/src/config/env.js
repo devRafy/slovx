@@ -16,6 +16,9 @@ const schema = z.object({
   META_VERIFY_TOKEN:      z.string().min(1, 'META_VERIFY_TOKEN is required'),
   META_GRAPH_API_VERSION: z.string().default('v20.0'),
   FRONTEND_URL:           z.string().url().default('http://localhost:5173'),
+  // Optional comma-separated list of additional allowed CORS origins
+  // (e.g. custom domains). Vercel *.vercel.app previews are auto-allowed.
+  EXTRA_FRONTEND_ORIGINS: z.string().optional(),
   ENCRYPTION_KEY:         z.string().min(32, 'ENCRYPTION_KEY must be at least 32 characters'),
   // Firebase Admin credentials (Google sign-in). Optional — endpoint returns
   // 501 if not configured, so email/password auth keeps working without them.

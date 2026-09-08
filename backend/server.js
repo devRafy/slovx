@@ -24,7 +24,34 @@ app.set('trust proxy', 1);
 
 // ── Security & logging ────────────────────────────────────────
 app.use(helmet());
-app.use(cors({ origin: env.FRONTEND_URL, credentials: true }));
+
+// CORS — allow the production frontend, localhost dev, any *.vercel.app
+// preview deployment, and any extra origins listed in the optional
+// EXTRA_FRONTEND_ORIGINS env var (comma-separated).
+const EXTRA_ORIGINS = (env.EXTRA_FRONTEND_ORIGINS || '')
+  .split(',')
+  .map((s) => s.trim())
+  .filter(Boolean);
+
+const ALLOWED_ORIGINS = [
+  env.FRONTEND_URL,
+  'http://localhost:5173',
+  'http://localhost:4173',
+  ...EXTRA_ORIGINS,
+];
+const VERCEL_PREVIEW = /^https:\/\/[a-z0-9-]+\.vercel\.app$/i;
+
+app.use(cors({
+  origin(origin, cb) {
+    // Non-browser requests (curl, server-to-server) have no Origin header.
+    if (!origin) return cb(null, true);
+    if (ALLOWED_ORIGINS.includes(origin))    return cb(null, true);
+    if (VERCEL_PREVIEW.test(origin))         return cb(null, true);
+    return cb(new Error(`CORS: origin ${origin} not allowed`));
+  },
+  credentials: true,
+}));
+
 app.use(morgan(env.NODE_ENV === 'development' ? 'dev' : 'combined'));
 
 // ── Body parsing ──────────────────────────────────────────────
