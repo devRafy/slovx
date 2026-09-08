@@ -85,15 +85,15 @@ app.use((_req, res) => {
 // ── Global error handler ──────────────────────────────────────
 app.use(errorHandler);
 
+// Bind the HTTP server FIRST so Railway's healthcheck on /health always
+// answers, even if the DB is slow to come up or briefly unreachable.
+// Then attempt DB connection in the background; log errors but don't crash.
+app.listen(env.PORT, '0.0.0.0', () => {
+  console.log(`Xavier SaaS backend running on port ${env.PORT} [${env.NODE_ENV}]`);
+});
+
 connectDB()
-  .then(() => {
-    app.listen(env.PORT, () => {
-      console.log(`Xavier SaaS backend running on port ${env.PORT} [${env.NODE_ENV}]`);
-    });
-  })
-  .catch((err) => {
-    console.error('❌ Failed to connect to database:', err.message);
-    process.exit(1);
-  });
+  .then(() => console.log('✅ Database connected'))
+  .catch((err) => console.error('❌ Failed to connect to database:', err.message));
 
 export default app;
