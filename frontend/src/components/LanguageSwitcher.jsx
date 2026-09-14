@@ -70,24 +70,33 @@ export default function LanguageSwitcher({ variant = 'dark', align = 'left' }) {
 
       {open && (
         <div
-          className={`absolute z-[100] min-w-[180px] max-h-[70vh] overflow-y-auto rounded-lg bg-white border border-gray-200 shadow-xl ${
-            dropUp ? 'bottom-full mb-1' : 'top-full mt-1'
-          } ${align === 'right' ? 'right-0' : 'left-0'}`}
+          className={`absolute z-[100] min-w-[180px] max-h-[70vh] overflow-y-auto rounded-lg shadow-xl ${
+            variant === 'dark'
+              ? 'bg-ink-800 border border-white/10 scrollbar-dark'
+              : 'bg-white border border-gray-200'
+          } ${dropUp ? 'bottom-full mb-1' : 'top-full mt-1'} ${align === 'right' ? 'right-0' : 'left-0'}`}
         >
           {SUPPORTED_LANGUAGES.map((lng) => {
             const isActive = lng.code === active.code;
+            const itemCls = variant === 'dark'
+              ? (isActive
+                  ? 'text-brand-300 font-medium bg-brand-500/10'
+                  : 'text-white/80 hover:bg-white/5')
+              : (isActive
+                  ? 'text-brand-600 font-medium bg-brand-50/50'
+                  : 'text-gray-700 hover:bg-gray-50');
             return (
               <button
                 key={lng.code}
                 type="button"
                 onClick={() => change(lng.code)}
-                className={`flex items-center justify-between w-full px-3 py-2 text-sm text-left hover:bg-gray-50 ${
-                  isActive ? 'text-brand-600 font-medium bg-brand-50/50' : 'text-gray-700'
-                }`}
+                className={`flex items-center justify-between w-full px-3 py-2 text-sm text-left ${itemCls}`}
                 dir={lng.dir}
               >
                 <span>{lng.native}</span>
-                {isActive && <Check className="w-4 h-4 text-brand-600 shrink-0" />}
+                {isActive && (
+                  <Check className={`w-4 h-4 shrink-0 ${variant === 'dark' ? 'text-brand-300' : 'text-brand-600'}`} />
+                )}
               </button>
             );
           })}

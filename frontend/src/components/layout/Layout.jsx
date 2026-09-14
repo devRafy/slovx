@@ -41,9 +41,9 @@ export default function Layout() {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex min-h-screen">
       {/* Mobile top bar (only < md) */}
-      <header className="md:hidden fixed top-0 inset-x-0 z-30 h-14 bg-brand-950 text-white flex items-center justify-between px-4">
+      <header className="md:hidden fixed top-0 inset-x-0 z-30 h-14 bg-ink-900 border-b border-white/10 text-white flex items-center justify-between px-4">
         <button
           onClick={() => setMobileOpen(true)}
           className="p-2 -ml-2 rounded-lg hover:bg-white/10"
@@ -79,7 +79,7 @@ export default function Layout() {
         className={`
           fixed md:sticky top-0 left-0 z-50 md:z-0
           w-64 h-screen shrink-0
-          bg-brand-950 text-white flex flex-col
+          bg-ink-900 border-r border-white/10 text-white flex flex-col
           transform transition-transform duration-200
           ${mobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
         `}

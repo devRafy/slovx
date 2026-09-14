@@ -2,6 +2,46 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ─── Dark theme base (matches landing page) ──────────────────────────
+   Raw hex values so the body always renders correctly even if a
+   Tailwind config change hasn't been picked up by the dev server.
+   Colors mirror landing/tailwind.config.js:
+     ink.950 = #050508  (page bg)
+     ink.900 = #0a0a12  (sidebar / elevated surface)
+     ink.800 = #111120  (cards)
+     brand.500 = #6366f1 (indigo, radial glow) */
+:root {
+  --ink-950: #050508;
+  --ink-900: #0a0a12;
+  --ink-800: #111120;
+  --ink-700: #1a1a2e;
+}
+
 @layer base {
-  body { @apply bg-slate-50 text-slate-800 antialiased; }
+  html {
+    -webkit-font-smoothing: antialiased;
+    color-scheme: dark;
+  }
+  body {
+    color: #ffffff;
+    background-color: #050508;
+    background-image: radial-gradient(
+      ellipse 60% 40% at 50% 0%,
+      rgba(99, 102, 241, 0.15),
+      transparent 70%
+    );
+    background-attachment: fixed;
+    min-height: 100vh;
+  }
+}
+
+@layer utilities {
+  /* Custom scrollbar for dark surfaces */
+  .scrollbar-dark::-webkit-scrollbar { width: 8px; height: 8px; }
+  .scrollbar-dark::-webkit-scrollbar-track { background: transparent; }
+  .scrollbar-dark::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 4px;
+  }
+  .scrollbar-dark::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.16); }
 }
