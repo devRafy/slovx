@@ -1,49 +1,38 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { signInWithGoogle, isFirebaseConfigured } from '../lib/firebase.js';
-import { authApi } from '../api/auth.api.js';
-import { useAuthStore } from '../store/auth.store.js';
+import { supabase } from '../lib/supabase.js';
 
 /**
- * "Continue with Google" button. Handles the full flow:
- *   1. Firebase popup → Google ID token
- *   2. POST /auth/google → backend upserts + issues our JWT
- *   3. login() into the Zustand store
- *   4. navigate — dashboard if business is set up, onboarding otherwise
+ * "Continue with Google" button. Kicks off Supabase's Google OAuth flow.
+ * Supabase redirects to Google, then back to `redirectTo` where the client
+ * picks up the session from the URL (`detectSessionInUrl: true` in
+ * lib/supabase.js). onAuthStateChange in the auth store then flips the
+ * session on and the App route guard sends the user to /dashboard.
  *
- * Renders nothing if Firebase env vars aren't set, so the UI stays clean
- * during local dev before you paste in the config.
+ * Requires the Google provider to be enabled in the Supabase dashboard:
+ *   Authentication → Providers → Google → Enable, with a Google Cloud
+ *   OAuth Client ID + Secret and the Supabase callback URL added as an
+ *   authorised redirect URI on the Google side.
  */
 export default function GoogleAuthButton({ onError }) {
   const { t } = useTranslation();
-  const { login } = useAuthStore();
-  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-
-  if (!isFirebaseConfigured) return null;
 
   const handleClick = async () => {
     onError?.('');
     setLoading(true);
-    try {
-      const idToken = await signInWithGoogle();
-      const { data } = await authApi.googleLogin(idToken);
-      login(data.data);
-      const isComplete = data.data.subscriber?.businessConfig?.isComplete;
-      navigate(isComplete ? '/dashboard' : '/onboarding/business');
-    } catch (err) {
-      // Ignore user closing the popup — nothing to report.
-      if (err.code === 'auth/popup-closed-by-user' || err.code === 'auth/cancelled-popup-request') {
-        return;
-      }
-      const msg =
-        err.response?.data?.message ||
-        err.message ||
-        t('auth.googleFailed', 'Google sign-in failed. Please try again.');
-      onError?.(msg);
-    } finally {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/dashboard`,
+        queryParams: { prompt: 'select_account' },
+      },
+    });
+    // signInWithOAuth returns immediately after starting the redirect —
+    // if there's no error the browser is already navigating away.
+    if (error) {
       setLoading(false);
+      onError?.(error.message || t('auth.googleFailed', 'Google sign-in failed. Please try again.'));
     }
   };
 

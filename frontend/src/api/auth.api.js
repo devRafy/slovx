@@ -1,11 +1,8 @@
 import client from './client.js';
 
+// Auth flows (register / login / password reset / OAuth) go through
+// @supabase/supabase-js directly on the frontend. The only backend auth
+// endpoint we still call is /me for the subscriber profile.
 export const authApi = {
-  register:        (data)              => client.post('/auth/register', data),
-  login:           (data)              => client.post('/auth/login', data),
-  googleLogin:     (idToken)           => client.post('/auth/google', { idToken }),
-  forgotPassword:  (email)             => client.post('/auth/forgot-password', { email }),
-  resetPassword:   (token, password)   => client.post('/auth/reset-password', { token, password }),
-  logout:          (refreshToken)      => client.post('/auth/logout', { refreshToken }),
-  me:              ()                  => client.get('/auth/me'),
+  me: () => client.get('/auth/me'),
 };

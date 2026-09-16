@@ -20,10 +20,22 @@ const buildNavItems = (t) => [
 export default function Layout() {
   const { t } = useTranslation();
   const navItems = buildNavItems(t);
-  const { subscriber, refreshToken, logout } = useAuthStore();
+  const { session, subscriber, setSubscriber, logout } = useAuthStore();
   const navigate = useNavigate();
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  // Fetch the subscriber profile on first mount / login. The backend
+  // /auth/me endpoint auto-creates a Subscriber row for a fresh Supabase
+  // user, so this doubles as the "sync" call.
+  useEffect(() => {
+    if (!session || subscriber) return;
+    let cancelled = false;
+    authApi.me()
+      .then((r) => { if (!cancelled) setSubscriber(r.data.data); })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, [session, subscriber, setSubscriber]);
 
   // Auto-close mobile drawer whenever route changes
   useEffect(() => { setMobileOpen(false); }, [location.pathname]);
@@ -35,8 +47,7 @@ export default function Layout() {
   }, [mobileOpen]);
 
   const handleLogout = async () => {
-    await authApi.logout(refreshToken).catch(() => {});
-    logout();
+    await logout();
     navigate('/login');
   };
 

@@ -5,10 +5,13 @@ const schema = z.object({
   PORT:                   z.coerce.number().default(4000),
   DATABASE_URL:           z.string().min(1, 'DATABASE_URL is required'),
   DIRECT_URL:             z.string().min(1, 'DIRECT_URL is required'),
-  JWT_SECRET:             z.string().min(32, 'JWT_SECRET must be at least 32 characters'),
-  JWT_EXPIRES_IN:         z.string().default('7d'),
-  JWT_REFRESH_SECRET:     z.string().min(32, 'JWT_REFRESH_SECRET must be at least 32 characters'),
-  JWT_REFRESH_EXPIRES_IN: z.string().default('30d'),
+
+  // Supabase — replaces custom JWT + Firebase Admin + SMTP flows.
+  // Auth tokens are issued by Supabase; the backend only verifies them.
+  SUPABASE_URL:              z.string().url('SUPABASE_URL must be a valid URL'),
+  SUPABASE_SERVICE_ROLE_KEY: z.string().min(20, 'SUPABASE_SERVICE_ROLE_KEY is required'),
+  SUPABASE_JWT_SECRET:       z.string().min(20, 'SUPABASE_JWT_SECRET is required'),
+
   ANTHROPIC_API_KEY:      z.string().startsWith('sk-ant-', 'Invalid Anthropic API key'),
   ANTHROPIC_MODEL:        z.string().default('claude-sonnet-4-6'),
   META_APP_ID:            z.string().min(1, 'META_APP_ID is required'),
@@ -20,19 +23,6 @@ const schema = z.object({
   // (e.g. custom domains). Vercel *.vercel.app previews are auto-allowed.
   EXTRA_FRONTEND_ORIGINS: z.string().optional(),
   ENCRYPTION_KEY:         z.string().min(32, 'ENCRYPTION_KEY must be at least 32 characters'),
-  // Firebase Admin credentials (Google sign-in). Optional — endpoint returns
-  // 501 if not configured, so email/password auth keeps working without them.
-  FIREBASE_PROJECT_ID:    z.string().optional(),
-  FIREBASE_CLIENT_EMAIL:  z.string().optional(),
-  FIREBASE_PRIVATE_KEY:   z.string().optional(),
-  // SMTP — for transactional emails (password reset, etc.).
-  // When SMTP_HOST/USER/PASS are missing, forgot-password logs the reset
-  // link to the console instead of sending — fine for local dev.
-  SMTP_HOST:              z.string().optional(),
-  SMTP_PORT:              z.coerce.number().default(587),
-  SMTP_USER:              z.string().optional(),
-  SMTP_PASS:              z.string().optional(),
-  EMAIL_FROM:             z.string().default('Xavier <no-reply@xavier.local>'),
 });
 
 const parsed = schema.safeParse(process.env);
