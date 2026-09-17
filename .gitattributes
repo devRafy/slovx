@@ -1,0 +1,7 @@
+# Force LF line endings for files that run on Linux (EC2). CRLF breaks
+# shebangs and confuses bash/nginx at parse time.
+*.sh          text eol=lf
+*.conf        text eol=lf
+Procfile      text eol=lf
+.ebignore     text eol=lf
+.env.example  text eol=lf
