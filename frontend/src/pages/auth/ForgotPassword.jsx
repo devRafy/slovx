@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Zap, ArrowLeft, CheckCircle2 } from 'lucide-react';
-import { supabase } from '../../lib/supabase.js';
+import { authApi } from '../../api/auth.api.js';
 import LanguageSwitcher from '../../components/LanguageSwitcher.jsx';
 
 export default function ForgotPassword() {
@@ -16,17 +16,15 @@ export default function ForgotPassword() {
     e.preventDefault();
     setError('');
     setLoading(true);
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/reset-password`,
-    });
-    setLoading(false);
-    // Show the same confirmation regardless of outcome — Supabase already
-    // shields against email enumeration, but this keeps UX consistent.
-    if (error) {
-      setError(error.message || t('auth.forgotFailed', 'Something went wrong. Please try again.'));
-      return;
+    try {
+      await authApi.forgotPassword(email);
+      // Backend always returns success (email-enumeration protection).
+      setSent(true);
+    } catch (err) {
+      setError(err.response?.data?.message ?? t('auth.forgotFailed', 'Something went wrong. Please try again.'));
+    } finally {
+      setLoading(false);
     }
-    setSent(true);
   };
 
   return (
@@ -57,7 +55,7 @@ export default function ForgotPassword() {
                 {t('auth.checkYourInbox', 'Check your inbox')}
               </h1>
               <p className="text-sm text-gray-500 text-center leading-relaxed">
-                {t('auth.resetSentBody', "If an account exists for that email, we've sent a password-reset link.")}
+                {t('auth.resetSentBody', "If an account exists for that email, we've sent a password-reset link. The link expires in 1 hour.")}
               </p>
             </>
           ) : (
@@ -83,7 +81,6 @@ export default function ForgotPassword() {
                   <input
                     type="email"
                     required
-                    autoComplete="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="you@example.com"

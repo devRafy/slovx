@@ -23,22 +23,14 @@ import Layout        from './components/layout/Layout.jsx';
 import Privacy       from './pages/legal/Privacy.jsx';
 import Terms         from './pages/legal/Terms.jsx';
 
-// Wait for the initial Supabase session hydrate before deciding public vs
-// private, so we don't briefly flash /login for a signed-in user on refresh.
-const useAuthReady = () => useAuthStore((s) => s.ready);
-
 const PrivateRoute = ({ children }) => {
-  const ready   = useAuthReady();
-  const session = useAuthStore((s) => s.session);
-  if (!ready) return null;
-  return session ? children : <Navigate to="/login" replace />;
+  const token = useAuthStore((s) => s.accessToken);
+  return token ? children : <Navigate to="/login" replace />;
 };
 
 const PublicRoute = ({ children }) => {
-  const ready   = useAuthReady();
-  const session = useAuthStore((s) => s.session);
-  if (!ready) return null;
-  return session ? <Navigate to="/" replace /> : children;
+  const token = useAuthStore((s) => s.accessToken);
+  return token ? <Navigate to="/" replace /> : children;
 };
 
 export default function App() {
@@ -53,10 +45,7 @@ export default function App() {
         <Route path="/login"           element={<PublicRoute><Login /></PublicRoute>} />
         <Route path="/register"        element={<PublicRoute><Register /></PublicRoute>} />
         <Route path="/forgot-password" element={<PublicRoute><ForgotPassword /></PublicRoute>} />
-        {/* /reset-password must NOT bounce authenticated users away — a
-            recovery-session user IS technically signed in and needs to
-            land on this page to set their new password. */}
-        <Route path="/reset-password"  element={<ResetPassword />} />
+        <Route path="/reset-password"  element={<PublicRoute><ResetPassword /></PublicRoute>} />
 
         {/* Onboarding — requires auth */}
         <Route path="/onboarding/business"  element={<PrivateRoute><BusinessSetup /></PrivateRoute>} />

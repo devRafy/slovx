@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useAuthStore } from '../../store/auth.store.js';
+import { authApi } from '../../api/auth.api.js';
 import { Zap } from 'lucide-react';
-import { supabase } from '../../lib/supabase.js';
 import LanguageSwitcher from '../../components/LanguageSwitcher.jsx';
 import GoogleAuthButton from '../../components/GoogleAuthButton.jsx';
 
@@ -11,24 +12,22 @@ export default function Login() {
   const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const { login } = useAuthStore();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({
-      email:    form.email,
-      password: form.password,
-    });
-    setLoading(false);
-    if (error) {
-      setError(error.message || t('auth.loginFailed'));
-      return;
+    try {
+      const { data } = await authApi.login(form);
+      login(data.data);
+      navigate('/');
+    } catch (err) {
+      setError(err.response?.data?.message ?? t('auth.loginFailed'));
+    } finally {
+      setLoading(false);
     }
-    // onAuthStateChange in the store will flip session on; route guard
-    // then unblocks the dashboard. We navigate explicitly to save a tick.
-    navigate('/');
   };
 
   return (
@@ -73,7 +72,6 @@ export default function Login() {
               <input
                 type="email"
                 required
-                autoComplete="email"
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
                 className="w-full px-3 py-2.5 rounded-lg border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent"
@@ -93,7 +91,6 @@ export default function Login() {
               <input
                 type="password"
                 required
-                autoComplete="current-password"
                 value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
                 className="w-full px-3 py-2.5 rounded-lg border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent"

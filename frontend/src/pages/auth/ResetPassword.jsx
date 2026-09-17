@@ -1,44 +1,21 @@
-import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Zap, CheckCircle2, XCircle } from 'lucide-react';
-import { supabase } from '../../lib/supabase.js';
+import { authApi } from '../../api/auth.api.js';
 import LanguageSwitcher from '../../components/LanguageSwitcher.jsx';
 
-/**
- * Supabase password reset flow:
- *   1. User clicks the email link → lands here with a recovery session
- *      already established (the Supabase client picks up the token from
- *      the URL because `detectSessionInUrl: true`).
- *   2. We call supabase.auth.updateUser({ password }) — the recovery
- *      session authorises this write.
- *   3. Success → sign out and bounce to /login so they enter the new
- *      password fresh.
- *
- * If someone lands here without a recovery session (opened the page
- * directly), we show the "invalid link" state.
- */
 export default function ResetPassword() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [params] = useSearchParams();
+  const token = params.get('token') || '';
 
-  const [hasSession, setHasSession] = useState(null); // null = checking
-  const [password, setPassword]       = useState('');
-  const [confirmPassword, setConfirm] = useState('');
-  const [loading, setLoading]         = useState(false);
-  const [error, setError]             = useState('');
-  const [done, setDone]               = useState(false);
-
-  useEffect(() => {
-    // Small delay: Supabase client parses the URL hash on mount, then
-    // fires onAuthStateChange. Checking getSession() after that resolves.
-    let cancelled = false;
-    (async () => {
-      const { data } = await supabase.auth.getSession();
-      if (!cancelled) setHasSession(Boolean(data.session));
-    })();
-    return () => { cancelled = true; };
-  }, []);
+  const [password, setPassword]         = useState('');
+  const [confirmPassword, setConfirm]   = useState('');
+  const [loading, setLoading]           = useState(false);
+  const [error, setError]               = useState('');
+  const [done, setDone]                 = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -50,18 +27,19 @@ export default function ResetPassword() {
     }
 
     setLoading(true);
-    const { error } = await supabase.auth.updateUser({ password });
-    setLoading(false);
-
-    if (error) {
-      setError(error.message || t('auth.resetFailed', 'Something went wrong. Please request a new reset link.'));
-      return;
+    try {
+      await authApi.resetPassword(token, password);
+      setDone(true);
+      // Send them to /login after a short beat.
+      setTimeout(() => navigate('/login', { replace: true }), 2000);
+    } catch (err) {
+      setError(
+        err.response?.data?.message ??
+        t('auth.resetFailed', 'Something went wrong. Please request a new reset link.'),
+      );
+    } finally {
+      setLoading(false);
     }
-
-    // Force a fresh sign-in with the new password.
-    await supabase.auth.signOut();
-    setDone(true);
-    setTimeout(() => navigate('/login', { replace: true }), 2000);
   };
 
   return (
@@ -81,9 +59,7 @@ export default function ResetPassword() {
         </div>
 
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
-          {hasSession === null ? (
-            <p className="text-sm text-gray-500 text-center">{t('common.loading')}</p>
-          ) : !hasSession ? (
+          {!token ? (
             <>
               <div className="flex justify-center mb-4">
                 <div className="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center">
@@ -117,7 +93,7 @@ export default function ResetPassword() {
                 {t('auth.resetTitle', 'Set a new password')}
               </h1>
               <p className="text-sm text-gray-500 mb-6">
-                {t('auth.resetSubtitle', "Choose a strong password you haven't used elsewhere.")}
+                {t('auth.resetSubtitle', 'Choose a strong password you haven\'t used elsewhere.')}
               </p>
 
               {error && (
@@ -135,7 +111,6 @@ export default function ResetPassword() {
                     type="password"
                     required
                     minLength={8}
-                    autoComplete="new-password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
@@ -153,7 +128,6 @@ export default function ResetPassword() {
                     type="password"
                     required
                     minLength={8}
-                    autoComplete="new-password"
                     value={confirmPassword}
                     onChange={(e) => setConfirm(e.target.value)}
                     placeholder="••••••••"
