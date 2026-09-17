@@ -7,7 +7,7 @@ import { supabase } from '../lib/supabase.js';
  * Supabase redirects to Google, then back to `redirectTo` where the client
  * picks up the session from the URL (`detectSessionInUrl: true` in
  * lib/supabase.js). onAuthStateChange in the auth store then flips the
- * session on and the App route guard sends the user to /dashboard.
+ * session on and the App route guard sends the user to the dashboard.
  *
  * Requires the Google provider to be enabled in the Supabase dashboard:
  *   Authentication → Providers → Google → Enable, with a Google Cloud
@@ -24,7 +24,7 @@ export default function GoogleAuthButton({ onError }) {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/dashboard`,
+        redirectTo: `${window.location.origin}${import.meta.env.BASE_URL}`,
         queryParams: { prompt: 'select_account' },
       },
     });

@@ -30,7 +30,7 @@ export default function Register() {
         // Name is copied to auth.users.raw_user_meta_data; backend reads it
         // when auto-creating the Subscriber row on first authenticated call.
         data: { name: form.name },
-        emailRedirectTo: `${window.location.origin}/dashboard`,
+        emailRedirectTo: `${window.location.origin}${import.meta.env.BASE_URL}`,
       },
     });
     setLoading(false);

@@ -27,8 +27,8 @@ export default function Login() {
       return;
     }
     // onAuthStateChange in the store will flip session on; route guard
-    // then unblocks /dashboard. We navigate explicitly to save a tick.
-    navigate('/dashboard');
+    // then unblocks the dashboard. We navigate explicitly to save a tick.
+    navigate('/');
   };
 
   return (

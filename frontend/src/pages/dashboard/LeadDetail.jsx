@@ -36,7 +36,7 @@ export default function LeadDetail() {
   return (
     <div className="flex-1 p-4 sm:p-6 lg:p-8 max-w-4xl w-full">
       <Link
-        to="/dashboard/leads"
+        to="/leads"
         className="inline-flex items-center gap-1.5 text-sm text-white/60 hover:text-white mb-4 sm:mb-6"
       >
         <ArrowLeft className="w-4 h-4" /> Back to Leads
@@ -185,7 +185,7 @@ function LoadingState() {
 function ErrorState({ phone }) {
   return (
     <div className="flex-1 p-8 text-center">
-      <Link to="/dashboard/leads" className="inline-flex items-center gap-1.5 text-sm text-white/60 hover:text-white mb-6">
+      <Link to="/leads" className="inline-flex items-center gap-1.5 text-sm text-white/60 hover:text-white mb-6">
         <ArrowLeft className="w-4 h-4" /> Back to Leads
       </Link>
       <p className="text-white/40">Lead not found for {decodeURIComponent(phone)}</p>

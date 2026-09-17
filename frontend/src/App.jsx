@@ -1,6 +1,12 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuthStore } from './store/auth.store.js';
 
+// In production the SPA is served under /dashboard/* (nginx routes / to
+// the landing page). BASE_URL is injected by Vite at build time from
+// `base` in vite.config.js. Passing it as BrowserRouter's basename lets
+// route definitions stay path-relative — no /dashboard prefix inside code.
+const routerBase = import.meta.env.BASE_URL.replace(/\/$/, '') || '/';
+
 import Login          from './pages/auth/Login.jsx';
 import Register       from './pages/auth/Register.jsx';
 import ForgotPassword from './pages/auth/ForgotPassword.jsx';
@@ -32,12 +38,12 @@ const PublicRoute = ({ children }) => {
   const ready   = useAuthReady();
   const session = useAuthStore((s) => s.session);
   if (!ready) return null;
-  return session ? <Navigate to="/dashboard" replace /> : children;
+  return session ? <Navigate to="/" replace /> : children;
 };
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={routerBase}>
       <Routes>
         {/* Public — legal (always accessible, auth-agnostic) */}
         <Route path="/privacy" element={<Privacy />} />
@@ -57,7 +63,7 @@ export default function App() {
         <Route path="/onboarding/whatsapp"  element={<PrivateRoute><WhatsAppConnect /></PrivateRoute>} />
 
         {/* Dashboard — requires auth */}
-        <Route path="/dashboard" element={<PrivateRoute><Layout /></PrivateRoute>}>
+        <Route path="/" element={<PrivateRoute><Layout /></PrivateRoute>}>
           <Route index             element={<Overview />} />
           <Route path="chats"      element={<Chats />} />
           <Route path="leads"      element={<Leads />} />
@@ -66,7 +72,7 @@ export default function App() {
           <Route path="billing"    element={<Billing />} />
         </Route>
 
-        <Route path="*" element={<Navigate to="/dashboard" replace />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
   );

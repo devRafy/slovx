@@ -9,12 +9,15 @@ import { useAuthStore } from '../../store/auth.store.js';
 import { authApi } from '../../api/auth.api.js';
 import LanguageSwitcher from '../LanguageSwitcher.jsx';
 
+// Paths are basename-relative — React Router prefixes them with the
+// `basename` set on BrowserRouter (in App.jsx). In prod that's /dashboard,
+// so /chats renders as /dashboard/chats in the address bar.
 const buildNavItems = (t) => [
-  { to: '/dashboard',           label: t('nav.overview'), icon: LayoutDashboard, end: true },
-  { to: '/dashboard/chats',     label: t('nav.chats'),    icon: MessageSquare },
-  { to: '/dashboard/leads',     label: t('nav.leads'),    icon: Users },
-  { to: '/dashboard/settings',  label: t('nav.settings'), icon: Settings },
-  { to: '/dashboard/billing',   label: t('nav.billing'),  icon: CreditCard },
+  { to: '/',          label: t('nav.overview'), icon: LayoutDashboard, end: true },
+  { to: '/chats',     label: t('nav.chats'),    icon: MessageSquare },
+  { to: '/leads',     label: t('nav.leads'),    icon: Users },
+  { to: '/settings',  label: t('nav.settings'), icon: Settings },
+  { to: '/billing',   label: t('nav.billing'),  icon: CreditCard },
 ];
 
 export default function Layout() {

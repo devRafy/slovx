@@ -126,7 +126,7 @@ export default function Leads() {
           filtered.map((lead) => (
             <Link
               key={lead.id}
-              to={`/dashboard/leads/${encodeURIComponent(lead.customerPhone)}`}
+              to={`/leads/${encodeURIComponent(lead.customerPhone)}`}
               className="block bg-ink-800/60 backdrop-blur rounded-xl border border-white/10 p-4 active:bg-white/5"
             >
               <div className="flex items-start justify-between gap-3 mb-2">
@@ -196,7 +196,7 @@ export default function Leads() {
                 <tr key={lead.id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
                   <td className="px-5 py-3.5">
                     <Link
-                      to={`/dashboard/leads/${encodeURIComponent(lead.customerPhone)}`}
+                      to={`/leads/${encodeURIComponent(lead.customerPhone)}`}
                       className="flex items-center gap-2.5 group"
                     >
                       <div className="w-7 h-7 rounded-full bg-brand-500/20 text-brand-300 flex items-center justify-center text-xs font-semibold shrink-0">

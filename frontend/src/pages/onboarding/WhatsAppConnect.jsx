@@ -97,7 +97,7 @@ export default function WhatsAppConnect() {
     return (
       <ConnectedState
         displayPhone={waStatus.displayPhone}
-        onContinue={() => navigate('/dashboard')}
+        onContinue={() => navigate('/')}
         onDisconnect={handleDisconnect}
       />
     );
@@ -188,7 +188,7 @@ export default function WhatsAppConnect() {
 
           {(status === 'success' || status === 'idle') && (
             <button
-              onClick={() => navigate('/dashboard')}
+              onClick={() => navigate('/')}
               className={`w-full py-3 rounded-xl font-medium transition-colors ${
                 status === 'success'
                   ? 'bg-brand-600 hover:bg-brand-700 text-white'
