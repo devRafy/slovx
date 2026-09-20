@@ -145,7 +145,7 @@ export default function Hero() {
       <VideoModal
         open={videoOpen}
         onClose={() => setVideoOpen(false)}
-        src="/agent-demo.mp4"
+        src="/agentdemo.mp4"
       />
     </section>
   );
