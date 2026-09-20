@@ -86,7 +86,9 @@ export default function Hero() {
               className="mt-8 md:mt-10 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3"
             >
               <a
-                href="https://frontend-pi-pearl-81.vercel.app/register"
+                href="/dashboard/register"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="group inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-brand-600 hover:bg-brand-500 text-white font-medium transition-all shadow-lg shadow-brand-500/30 hover:shadow-brand-500/60"
               >
                 {hero.ctaPrimary}

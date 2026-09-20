@@ -65,7 +65,9 @@ export default function PricingTiers() {
           </ul>
 
           <a
-            href="https://frontend-pi-pearl-81.vercel.app/register"
+            href="/dashboard/register"
+            target="_blank"
+            rel="noopener noreferrer"
             className={`block w-full text-center px-4 py-3 rounded-lg font-semibold text-sm transition-all mt-auto ${
               tier.ctaVariant === 'primary'
                 ? 'bg-brand-600 hover:bg-brand-500 text-white shadow-lg shadow-brand-500/25 hover:shadow-brand-500/50'

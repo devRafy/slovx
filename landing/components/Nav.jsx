@@ -79,16 +79,21 @@ export default function Nav() {
             })}
           </nav>
 
-          {/* Desktop CTAs */}
+          {/* Desktop CTAs — app links open in a new tab so users can flip
+              back to the marketing site without losing their place. */}
           <div className="hidden md:flex items-center gap-3">
             <a
-              href="https://frontend-pi-pearl-81.vercel.app/login"
+              href="/dashboard/login"
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-sm text-white/70 hover:text-white transition-colors"
             >
               {nav.ctaSignIn}
             </a>
             <a
-              href="https://frontend-pi-pearl-81.vercel.app/register"
+              href="/dashboard/register"
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-sm px-4 py-2 rounded-lg bg-brand-600 hover:bg-brand-500 text-white font-medium transition-colors shadow-lg shadow-brand-500/25"
             >
               {nav.ctaStart}
@@ -124,13 +129,17 @@ export default function Nav() {
             })}
             <div className="pt-6 mt-6 border-t border-white/10 flex flex-col gap-3">
               <a
-                href="https://frontend-pi-pearl-81.vercel.app/login"
+                href="/dashboard/login"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-white/70 hover:text-white transition-colors"
               >
                 {nav.ctaSignIn}
               </a>
               <a
-                href="https://frontend-pi-pearl-81.vercel.app/register"
+                href="/dashboard/register"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-center px-4 py-3 rounded-lg bg-brand-600 text-white font-medium"
               >
                 {nav.ctaStart}

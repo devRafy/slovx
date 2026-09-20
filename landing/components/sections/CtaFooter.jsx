@@ -14,8 +14,11 @@ export default function CtaFooter() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (email.trim()) {
-      const url = `https://frontend-pi-pearl-81.vercel.app/register?email=${encodeURIComponent(email.trim())}`;
-      window.location.href = url;
+      // Open the register page in a new tab so the visitor keeps the
+      // marketing page open behind it. Same-origin URL — nginx serves
+      // the SPA at /dashboard/*.
+      const url = `/dashboard/register?email=${encodeURIComponent(email.trim())}`;
+      window.open(url, '_blank', 'noopener,noreferrer');
     }
   };
 
