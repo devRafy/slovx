@@ -65,7 +65,7 @@ export default function PricingTiers() {
           </ul>
 
           <a
-            href="/dashboard/register"
+            href="https://app.slovx.com/register"
             target="_blank"
             rel="noopener noreferrer"
             className={`block w-full text-center px-4 py-3 rounded-lg font-semibold text-sm transition-all mt-auto ${

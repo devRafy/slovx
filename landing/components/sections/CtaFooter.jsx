@@ -14,10 +14,9 @@ export default function CtaFooter() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (email.trim()) {
-      // Open the register page in a new tab so the visitor keeps the
-      // marketing page open behind it. Same-origin URL — nginx serves
-      // the SPA at /dashboard/*.
-      const url = `/dashboard/register?email=${encodeURIComponent(email.trim())}`;
+      // Open the register page on the app subdomain in a new tab so the
+      // visitor keeps the marketing page open behind it.
+      const url = `https://app.slovx.com/register?email=${encodeURIComponent(email.trim())}`;
       window.open(url, '_blank', 'noopener,noreferrer');
     }
   };

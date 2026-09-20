@@ -56,7 +56,8 @@ if [ ! -f .env.production ]; then
 fi
 
 npm ci
-VITE_BASE_PATH=/dashboard/ npm run build
+# SPA is served at the root of app.slovx.com, so base path is '/'.
+VITE_BASE_PATH=/ npm run build
 
 echo "▶ Frontend: syncing to $FRONTEND_WEB..."
 sudo rsync -a --delete dist/ "$FRONTEND_WEB/"
@@ -69,7 +70,7 @@ sudo systemctl reload nginx
 echo ""
 echo "✅ Deploy complete."
 echo ""
-echo "SMOKE TEST:"
-echo "  curl -sS http://localhost/health         # backend via nginx"
-echo "  curl -sSI http://localhost/              # landing"
-echo "  curl -sSI http://localhost/dashboard/    # SPA"
+echo "SMOKE TEST (from the EC2 shell — Host header matters, so use -H):"
+echo "  curl -sS  -H 'Host: app.slovx.com' http://localhost/health   # backend via nginx"
+echo "  curl -sSI -H 'Host: slovx.com'     http://localhost/         # landing"
+echo "  curl -sSI -H 'Host: app.slovx.com' http://localhost/         # dashboard SPA"
