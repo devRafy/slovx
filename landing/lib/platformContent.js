@@ -9,7 +9,7 @@ export const platformHero = {
   subhead:
     'A developer-friendly agentic platform that helps you qualify leads, route conversations, and book meetings — so your team can focus on closing.',
   cta: 'Get Started',
-  ctaHref: 'https://frontend-pi-pearl-81.vercel.app/register',
+  ctaHref: '/dashboard/register',
 };
 
 export const platformTrusted = {
@@ -243,7 +243,7 @@ export const platformSecurity = {
 export const platformCta = {
   title: 'Start with slovX today',
   items: [
-    { label: 'Free Trial',  href: 'https://frontend-pi-pearl-81.vercel.app/register', primary: true  },
+    { label: 'Free Trial',  href: '/dashboard/register', primary: true  },
     { label: 'Book a Demo', href: '/contact',                                          primary: false },
   ],
 };

@@ -77,6 +77,45 @@ export default function AboutPage() {
         </motion.p>
       </section>
 
+      {/* Video demo — sits between the story and the "what it does" boxes so
+          visitors see the chatbot in action before reading the feature list. */}
+      <section className="container-narrow max-w-4xl py-16 md:py-24">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-50px' }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-8 md:mb-10"
+        >
+          <span className="eyebrow">SEE IT IN ACTION</span>
+          <h2 className="font-display font-bold text-3xl sm:text-4xl md:text-5xl leading-tight tracking-tight text-white mb-3">
+            Watch Xavier work a real conversation.
+          </h2>
+          <p className="text-white/60 max-w-xl mx-auto">
+            A short glimpse of the chatbot handling an inbound WhatsApp lead — qualifying,
+            answering questions, and knowing when to close.
+          </p>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-50px' }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="glow-border relative rounded-2xl overflow-hidden border border-white/10 bg-ink-950/60 backdrop-blur"
+        >
+          <video
+            src="/agentdemo.mp4"
+            controls
+            playsInline
+            preload="metadata"
+            className="block w-full h-auto"
+          >
+            Your browser doesn&apos;t support the video tag.
+          </video>
+        </motion.div>
+      </section>
+
       {/* 3 Boxes */}
       <section className="container-narrow py-16 md:py-24">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
@@ -155,7 +194,9 @@ export default function AboutPage() {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <a
-              href="https://frontend-pi-pearl-81.vercel.app/register"
+              href="/dashboard/register"
+              target="_blank"
+              rel="noopener noreferrer"
               className="group inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-brand-600 hover:bg-brand-500 text-white font-medium transition-all shadow-lg shadow-brand-500/30 hover:shadow-brand-500/60"
             >
               Start free trial
