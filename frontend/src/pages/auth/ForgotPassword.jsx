@@ -5,7 +5,6 @@ import { ArrowLeft, CheckCircle2 } from 'lucide-react';
 import { authApi } from '../../api/auth.api.js';
 import LanguageSwitcher from '../../components/LanguageSwitcher.jsx';
 import Logo from '../../components/Logo.jsx';
-$line
 
 export default function ForgotPassword() {
   const { t } = useTranslation();
