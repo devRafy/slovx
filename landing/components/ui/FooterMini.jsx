@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { Zap } from 'lucide-react';
 import { footer } from '../../lib/content';
 import SocialLinks from './SocialLinks';
 
@@ -15,11 +14,8 @@ export default function FooterMini() {
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 md:gap-10">
           {/* Brand block */}
           <div className="col-span-2 md:col-span-1">
-            <Link href="/" className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center">
-                <Zap className="w-4 h-4 text-white" />
-              </div>
-              <span className="font-display font-bold text-lg">Xavier</span>
+            <Link href="/" className="inline-flex items-center mb-4" aria-label="SlovX home">
+              <img src="/logo-light.png" alt="SlovX" width="74" height="48" className="h-12 w-auto" />
             </Link>
             <p className="text-sm text-white/50 leading-relaxed max-w-xs">
               {footer.tagline}

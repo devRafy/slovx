@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Zap, CheckCircle2, XCircle } from 'lucide-react';
+import { CheckCircle2, XCircle } from 'lucide-react';
 import { authApi } from '../../api/auth.api.js';
 import LanguageSwitcher from '../../components/LanguageSwitcher.jsx';
+import Logo from '../../components/Logo.jsx';
+$line
 
 export default function ResetPassword() {
   const { t } = useTranslation();
@@ -51,10 +53,7 @@ export default function ResetPassword() {
       <div className="w-full max-w-sm">
         <div className="flex justify-center mb-8">
           <div className="flex items-center gap-2">
-            <div className="w-9 h-9 bg-brand-600 rounded-xl flex items-center justify-center">
-              <Zap className="w-5 h-5 text-white" />
-            </div>
-            <span className="text-2xl font-bold text-gray-900">Xavier</span>
+            <Logo variant="dark" className="h-14" />
           </div>
         </div>
 

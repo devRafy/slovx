@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Zap } from 'lucide-react';
+import Logo from '../../components/Logo.jsx';
 
 export default function Terms() {
   return (
@@ -206,10 +206,7 @@ function LegalHeader() {
     <header className="border-b border-gray-200 bg-white">
       <div className="max-w-3xl mx-auto px-6 py-4 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-brand-600 rounded-lg flex items-center justify-center">
-            <Zap className="w-4 h-4 text-white" />
-          </div>
-          <span className="text-lg font-bold text-gray-900">Xavier</span>
+          <Logo variant="dark" className="h-10" />
         </Link>
         <nav className="flex gap-4 text-sm text-gray-600">
           <Link to="/privacy" className="hover:text-brand-600">Privacy</Link>

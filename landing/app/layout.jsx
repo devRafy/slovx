@@ -41,6 +41,7 @@ export const metadata = {
     description: 'AI that closes deals on WhatsApp. In 15 languages. While you sleep.',
   },
   robots: { index: true, follow: true },
+  icons: { icon: '/logo-mark.png', apple: '/logo-mark.png' },
 };
 
 export const viewport = {

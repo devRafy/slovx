@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { businessApi } from '../../api/business.api.js';
-import { Zap, Plus, Trash2, Loader2 } from 'lucide-react';
+import { Plus, Trash2, Loader2 } from 'lucide-react';
+import Logo from '../../components/Logo.jsx';
 
 const TIMEZONES = [
   'Asia/Karachi', 'Asia/Dubai', 'Asia/Kolkata', 'Asia/Riyadh',
@@ -172,10 +173,7 @@ export default function BusinessSetup() {
     <div className="min-h-screen bg-gray-50 py-10 px-4">
       <div className="max-w-2xl mx-auto">
         <div className="flex items-center gap-2 mb-8">
-          <div className="w-8 h-8 bg-brand-600 rounded-lg flex items-center justify-center">
-            <Zap className="w-4 h-4 text-white" />
-          </div>
-          <span className="text-xl font-bold text-gray-900">Xavier</span>
+          <Logo variant="dark" className="h-11" />
         </div>
 
         <div className="mb-6">

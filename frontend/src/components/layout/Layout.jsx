@@ -1,13 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Outlet, NavLink, useNavigate, useLocation } from 'react-router-dom';
-import {
-  LayoutDashboard, MessageSquare, Users, Settings, CreditCard,
-  LogOut, Zap, Menu, X,
-} from 'lucide-react';
+import { LayoutDashboard, MessageSquare, Users, Settings, CreditCard, LogOut, Menu, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../../store/auth.store.js';
 import { authApi } from '../../api/auth.api.js';
 import LanguageSwitcher from '../LanguageSwitcher.jsx';
+import Logo from '../Logo.jsx';
 
 // Paths are basename-relative — React Router prefixes them with the
 // `basename` set on BrowserRouter (in App.jsx). In prod that's /dashboard,
@@ -54,12 +52,7 @@ export default function Layout() {
         >
           <Menu className="w-5 h-5" />
         </button>
-        <div className="flex items-center gap-2">
-          <div className="w-6 h-6 bg-brand-500 rounded-md flex items-center justify-center">
-            <Zap className="w-3.5 h-3.5 text-white" />
-          </div>
-          <span className="text-sm font-bold">Xavier</span>
-        </div>
+        <Logo className="h-9" />
         <div className="flex items-center gap-1">
           <LanguageSwitcher variant="dark" align="right" />
           <div className="w-9 h-9 rounded-full bg-brand-600 flex items-center justify-center text-xs font-bold">
@@ -89,11 +82,9 @@ export default function Layout() {
       >
         <div className="px-6 py-6 border-b border-white/10 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-brand-500 rounded-lg flex items-center justify-center">
-              <Zap className="w-4 h-4 text-white" />
-            </div>
+            <Logo className="h-11" />
             <div>
-              <div className="text-lg font-bold tracking-tight">Xavier</div>
+              <div className="text-sm font-semibold text-white">Xavier</div>
               <div className="text-white/40 text-xs">AI Sales Platform</div>
             </div>
           </div>
