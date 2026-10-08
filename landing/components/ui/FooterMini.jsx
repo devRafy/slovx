@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Zap } from 'lucide-react';
 import { footer } from '../../lib/content';
+import SocialLinks from './SocialLinks';
 
 /**
  * Lightweight footer for inner pages (About, Architecture, Contact).
@@ -23,6 +24,7 @@ export default function FooterMini() {
             <p className="text-sm text-white/50 leading-relaxed max-w-xs">
               {footer.tagline}
             </p>
+            <SocialLinks />
           </div>
 
           {footer.columns.map((col) => (

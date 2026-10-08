@@ -406,6 +406,9 @@ export const cta = {
 
 export const footer = {
   tagline: 'The AI that closes deals on WhatsApp — so you can sleep at night.',
+  socials: [
+    { label: 'Instagram', href: 'https://www.instagram.com/slovx.ai' },
+  ],
   columns: [
     {
       title: 'Product',

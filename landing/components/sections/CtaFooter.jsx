@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import dynamic from 'next/dynamic';
 import { ArrowRight, Zap } from 'lucide-react';
 import { cta, footer } from '../../lib/content';
+import SocialLinks from '../ui/SocialLinks';
 
 const Globe = dynamic(() => import('../3d/Globe'), { ssr: false });
 
@@ -106,6 +107,7 @@ export default function CtaFooter() {
               <p className="text-sm text-white/50 leading-relaxed max-w-xs">
                 {footer.tagline}
               </p>
+              <SocialLinks />
             </div>
             {footer.columns.map((col) => (
               <div key={col.title}>
