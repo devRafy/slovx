@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Zap, Menu, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { nav } from '../lib/content';
 
 /**
@@ -54,11 +54,8 @@ export default function Nav() {
       >
         <div className="container-narrow flex items-center justify-between h-16">
           {/* Logo → home */}
-          <Link href="/" className="flex items-center gap-2 group">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center shadow-lg shadow-brand-500/30 group-hover:shadow-brand-500/60 transition-shadow">
-              <Zap className="w-4 h-4 text-white" />
-            </div>
-            <span className="font-display font-bold text-lg tracking-tight">Xavier</span>
+          <Link href="/" className="flex items-center" aria-label="SlovX home">
+            <img src="/logo-light.png" alt="SlovX" width="68" height="44" className="h-11 w-auto" />
           </Link>
 
           {/* Desktop links */}

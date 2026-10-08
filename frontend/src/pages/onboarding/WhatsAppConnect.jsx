@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { businessApi } from '../../api/business.api.js';
-import { Zap, CheckCircle2, AlertCircle, Loader2, Send } from 'lucide-react';
+import { CheckCircle2, AlertCircle, Loader2, Send } from 'lucide-react';
+import Logo from '../../components/Logo.jsx';
 
 // Strip BOM/whitespace — Vercel env vars added via piped stdin can carry a UTF-8 BOM
 const stripBom = (s) => (s || '').replace(/^﻿/, '').trim();
@@ -107,10 +108,7 @@ export default function WhatsAppConnect() {
     <div className="min-h-screen bg-gray-50 py-10 px-4">
       <div className="max-w-lg mx-auto">
         <div className="flex items-center gap-2 mb-8">
-          <div className="w-8 h-8 bg-brand-600 rounded-lg flex items-center justify-center">
-            <Zap className="w-4 h-4 text-white" />
-          </div>
-          <span className="text-xl font-bold text-gray-900">Xavier</span>
+          <Logo variant="dark" className="h-11" />
         </div>
 
         <div className="mb-6">

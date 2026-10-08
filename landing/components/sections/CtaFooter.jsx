@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import dynamic from 'next/dynamic';
-import { ArrowRight, Zap } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { cta, footer } from '../../lib/content';
 import SocialLinks from '../ui/SocialLinks';
 
@@ -98,11 +98,8 @@ export default function CtaFooter() {
         <div className="container-narrow py-12 md:py-16">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 md:gap-10">
             <div className="col-span-2 md:col-span-1">
-              <a href="#" className="flex items-center gap-2 mb-4">
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center">
-                  <Zap className="w-4 h-4 text-white" />
-                </div>
-                <span className="font-display font-bold text-lg">Xavier</span>
+              <a href="#" className="inline-flex items-center mb-4" aria-label="SlovX home">
+                <img src="/logo-light.png" alt="SlovX" width="74" height="48" className="h-12 w-auto" />
               </a>
               <p className="text-sm text-white/50 leading-relaxed max-w-xs">
                 {footer.tagline}
