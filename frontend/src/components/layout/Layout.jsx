@@ -81,13 +81,7 @@ export default function Layout() {
         `}
       >
         <div className="px-6 py-6 border-b border-white/10 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Logo className="h-11" />
-            <div>
-              <div className="text-sm font-semibold text-white">Xavier</div>
-              <div className="text-white/40 text-xs">AI Sales Platform</div>
-            </div>
-          </div>
+          <Logo className="h-12" />
           <button
             onClick={() => setMobileOpen(false)}
             className="md:hidden p-2 -mr-2 rounded-lg hover:bg-white/10"
