@@ -5,7 +5,6 @@ import { CheckCircle2, XCircle } from 'lucide-react';
 import { authApi } from '../../api/auth.api.js';
 import LanguageSwitcher from '../../components/LanguageSwitcher.jsx';
 import Logo from '../../components/Logo.jsx';
-$line
 
 export default function ResetPassword() {
   const { t } = useTranslation();

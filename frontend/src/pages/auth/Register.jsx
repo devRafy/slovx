@@ -6,7 +6,6 @@ import { authApi } from '../../api/auth.api.js';
 import LanguageSwitcher from '../../components/LanguageSwitcher.jsx';
 import GoogleAuthButton from '../../components/GoogleAuthButton.jsx';
 import Logo from '../../components/Logo.jsx';
-$line
 
 export default function Register() {
   const { t } = useTranslation();
